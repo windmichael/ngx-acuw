@@ -2,6 +2,5 @@
  * Public API Surface of ngx-acuw
  */
 
-export * from './lib/ngx-acuw.service';
-export * from './lib/ngx-acuw.component';
-export * from './lib/ngx-acuw.module';
+export * from './lib/image-as-particles/image-as-particles.component';
+export * from './lib/image-as-particles/image-as-particles.module';

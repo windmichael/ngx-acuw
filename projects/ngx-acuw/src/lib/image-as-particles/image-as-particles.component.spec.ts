@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NgxAcuwComponent } from './ngx-acuw.component';
+import { ImageAsParticlesComponent } from './image-as-particles.component';
 
-describe('NgxAcuwComponent', () => {
-  let component: NgxAcuwComponent;
-  let fixture: ComponentFixture<NgxAcuwComponent>;
+describe('ImageAsParticlesComponent', () => {
+  let component: ImageAsParticlesComponent;
+  let fixture: ComponentFixture<ImageAsParticlesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NgxAcuwComponent ]
+      declarations: [ ImageAsParticlesComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NgxAcuwComponent);
+    fixture = TestBed.createComponent(ImageAsParticlesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
