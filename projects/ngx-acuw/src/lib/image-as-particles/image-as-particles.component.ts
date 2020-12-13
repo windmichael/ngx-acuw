@@ -108,7 +108,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
     if ( this._imageUrl === '') { return; }
 
     const canvasWidth = this.canvasRef.nativeElement.clientWidth;
-    const canvasHeight = this.canvasRef.nativeElement.clientHeight
+    const canvasHeight = this.canvasRef.nativeElement.clientHeight;
     // Set camera
     this.camera = new THREE.PerspectiveCamera(50, canvasWidth / canvasHeight, 1, 10000);
     this.camera.position.z = 300;

@@ -64,6 +64,7 @@
               "projects/ng-acuw-showcase/src/assets"
             ],
             "styles": [
+              "projects/ng-acuw-showcase/src/custom-theme.scss",
               "projects/ng-acuw-showcase/src/styles.css"
             ],
             "scripts": []

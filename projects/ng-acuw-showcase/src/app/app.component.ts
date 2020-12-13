@@ -5,21 +5,16 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'ng-acuw-showcase';
-  imageUrls: string[] = [
-    'assets/dog.png', 
-    'assets/pexels-photo.png', 
-    'assets/tiger.png', 
-    'assets/blue-parakeet-sits-on-eggs.png'];
-  selectedUrl: string = '';
-  backgroundColor: string = '#222222';
+  navItems: NavItem[] = [
+    { name: 'Image As Particles', routeLink: 'image-as-particles' },
+    { name: 'Chartjs Test', routeLink: 'chartjs-test' },
+    { name: 'Image Transition', routeLink: 'image-transition' }
+  ];
+}
 
-  ngOnInit() {
-    this.selectedUrl = this.imageUrls[0];
-  }
-
-  selectImage(selectedImageUrl: string) {
-    this.selectedUrl = selectedImageUrl;
-  }
+export interface NavItem{
+  name: string;
+  routeLink: string;
 }

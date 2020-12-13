@@ -1,21 +1,22 @@
-<div class="main-container">
-    <div class="flex-column">
-        <h2>Demo: Images as interactive partilces</h2>
-        <h3>Select Image:</h3>
-        <div class="image-selection-container">
-            <img class="image-selection" [ngClass]="{'image-active' : imageUrl === selectedUrl}" 
-            *ngFor="let imageUrl of imageUrls" 
-            [src]="imageUrl" (click)="selectImage(imageUrl)">
-        </div>
-        <div class="settings-container">
-            <div>
-                <span>Background Color:</span>
-                <input type="color" [(ngModel)]="backgroundColor">
-            </div>
-        </div>
-        <lib-image-as-particles [imageUrl]="selectedUrl" touchAction="none"
-            imageWidth="100%" imageHeight="100%" [backgroundColor]="backgroundColor"
-            horizontalAlignment="center" verticalAlignment="center">
-        </lib-image-as-particles>
+<mat-toolbar color="primary">
+    <button mat-icon-button aria-label="menue icon" (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <span>ACUW - Showcase</span>
+    <span class="spacer"></span>
+    <a mat-icon-button href="https://github.com/windmichael/ngx-acuw" target="_blank" aria-label="github button">
+        <img src="../assets/icons/GitHub-Mark-Light-64px.png" style="width: 35px;">
+    </a>
+</mat-toolbar>
+
+<mat-drawer-container class="example-container">
+    <mat-drawer #drawer mode="over" autoFocus="false">
+        <mat-nav-list>
+            <a class="nav-item" mat-list-item *ngFor="let navItem of navItems" [routerLink]="navItem.routeLink"> {{ navItem.name }} </a>
+        </mat-nav-list>
+    </mat-drawer>
+
+    <div>
+        <router-outlet></router-outlet>
     </div>
-</div>
+</mat-drawer-container>
