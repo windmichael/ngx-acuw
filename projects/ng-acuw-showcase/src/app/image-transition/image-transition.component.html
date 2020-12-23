@@ -1,1 +1,7 @@
-<div #threejsContainer class="threejs-container" (click)="toggle()"></div>
+<button class="settings-button" mat-mini-fab color="primary" aria-label="settings button" (click)="openSettingsDialog()">
+    <mat-icon>settings</mat-icon>
+</button>
+
+<div class="container">
+    <lib-lightbox [imageUrls]="imageUrls"></lib-lightbox>
+</div>

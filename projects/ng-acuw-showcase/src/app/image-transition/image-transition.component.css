@@ -1,4 +1,17 @@
-.threejs-container{
+.container{
+  width: 100%;
+  height: calc(100vh - 56px);
+}
+
+@media (min-width: 600px){
+  .container{
     width: 100%;
     height: calc(100vh - 64px);
   }
+}
+
+.settings-button{
+  position: fixed;
+  top: 80px;
+  right: 20px;
+}

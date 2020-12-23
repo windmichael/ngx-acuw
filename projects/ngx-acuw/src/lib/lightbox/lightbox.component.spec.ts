@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChartjsTestComponent } from './chartjs-test.component';
+import { LightboxComponent } from './lightbox.component';
 
-describe('ChartjsTestComponent', () => {
-  let component: ChartjsTestComponent;
-  let fixture: ComponentFixture<ChartjsTestComponent>;
+describe('LightboxComponent', () => {
+  let component: LightboxComponent;
+  let fixture: ComponentFixture<LightboxComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ChartjsTestComponent ]
+      declarations: [ LightboxComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ChartjsTestComponent);
+    fixture = TestBed.createComponent(LightboxComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
