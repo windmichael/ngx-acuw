@@ -1,7 +1,24 @@
-<button class="settings-button" mat-mini-fab color="primary" aria-label="settings button" (click)="openSettingsDialog()">
-    <mat-icon>settings</mat-icon>
+<button class="settings-button" mat-mini-fab color="accent" aria-label="settings button"
+    (click)="toggleSettingsDialog()">
+    <mat-icon>{{settingsOpen == false ? 'settings' : 'close'}}</mat-icon>
 </button>
 
+<div *ngIf="settingsOpen==true" class="settings-container mat-elevation-z6" [@settingsContainer]>
+    <h4>Settings</h4>
+    <mat-form-field appearance="fill">
+        <mat-label>Image size</mat-label>
+        <mat-select [(value)]="selectedImageSize">
+            <mat-option value="cover">cover</mat-option>
+            <mat-option value="contain">contain</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Transition duration (ms)</mat-label>
+        <input matInput type="number" [(ngModel)]="selectedTransitionDuration">
+      </mat-form-field>
+</div>
+
 <div class="container">
-    <lib-lightbox [imageUrls]="imageUrls"></lib-lightbox>
+    <lib-lightbox [imageUrls]="imageUrls" [imageSize]="selectedImageSize" 
+        [transitionDuration]="selectedTransitionDuration"></lib-lightbox>
 </div>

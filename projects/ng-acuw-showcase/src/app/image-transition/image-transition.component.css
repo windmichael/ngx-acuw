@@ -14,4 +14,16 @@
   position: fixed;
   top: 80px;
   right: 20px;
+  z-index: 2;
+}
+
+.settings-container{
+  position: fixed;
+  top: 70px;
+  right: 0px;
+  display: flex;
+  flex-direction: column;
+  padding: 35px 10px 10px 10px;
+  background-color: white;
+  border-radius: 5px;
 }

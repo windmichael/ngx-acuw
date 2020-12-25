@@ -1,14 +1,22 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { RxjsTween } from 'projects/ngx-acuw/src/lib/tween/rxjs-tween';
-import * as THREE from 'three';
-import { TextureLoader } from 'three';
-import { ImageTransitionDialogComponent } from './image-transition-dialog/image-transition-dialog.component';
+import { animate, animation, style, transition, trigger } from '@angular/animations';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-image-transition',
   templateUrl: './image-transition.component.html',
-  styleUrls: ['./image-transition.component.css']
+  styleUrls: ['./image-transition.component.css'],
+  animations: [
+    trigger('settingsContainer',[
+      transition(':enter', [
+        style({transform: 'translateX(100%)'}),
+        animate('300ms ease-in', style({transform: 'translateX(0%)'}))
+      ]),
+      transition(':leave', [
+        style({transform: 'translateX(0%)'}),
+        animate('300ms ease-in', style({transform: 'translateX(100%)'}))
+      ])
+    ])
+  ]
 })
 export class ImageTransitionComponent implements OnInit {
 
@@ -18,17 +26,16 @@ export class ImageTransitionComponent implements OnInit {
     'assets/image-transition/img3.jpg',
     'assets/image-transition/img1.jpg'
   ];
+  settingsOpen: boolean = false;
+  selectedImageSize: string = 'cover';
+  selectedTransitionDuration: number = 1000;
 
-  constructor(public dialog: MatDialog) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
 
-  openSettingsDialog() {
-    const dialogRef = this.dialog.open(ImageTransitionDialogComponent);
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
+  toggleSettingsDialog() {
+    this.settingsOpen = this.settingsOpen == true ? false : true;
   }
 }

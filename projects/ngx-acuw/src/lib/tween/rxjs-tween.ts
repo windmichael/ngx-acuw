@@ -41,11 +41,11 @@ export module RxjsTween {
                     if(Array.isArray(b) && Array.isArray(c)){
                         var tweenVals: number[] = new Array<number>();
                         for(var idx = 0; idx < b.length; idx++){
-                            tweenVals.push(easingFunction(t, b[idx], c[idx], d, s))
+                            tweenVals.push(c[idx]);
                         }
                         observer.next(tweenVals);
                     }else{
-                        observer.next(easingFunction(t, b, c, d, s));
+                        observer.next(c);
                     }
                     id = requestAnimationFrame(function () {
                         return observer.complete();

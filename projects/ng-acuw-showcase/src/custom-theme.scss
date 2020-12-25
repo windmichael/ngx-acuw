@@ -13,7 +13,7 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $ng-acuw-showcase-primary: mat-palette($mat-indigo);
-$ng-acuw-showcase-accent: mat-palette($mat-pink, A200, A100, A400);
+$ng-acuw-showcase-accent: mat-palette($mat-blue-grey, 900);
 
 // The warn palette is optional (defaults to red).
 $ng-acuw-showcase-warn: mat-palette($mat-red);

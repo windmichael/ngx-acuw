@@ -12,7 +12,17 @@ export class LightboxComponent implements AfterViewInit {
 
   @Input() imageUrls: string[] = new Array<string>();
   /** supported values: 'cover', 'contain' */
-  @Input() imageSize: string = 'cover';
+  @Input() 
+  get imageSize(): string { return this._imageSize; };
+  set imageSize(imageSize: string){
+    this._imageSize = imageSize;
+    if(this.mesh != null){
+      this.resize();
+    } 
+  }
+  private _imageSize: string = 'cover';
+  /** Transisiton duration in ms */
+  @Input() transitionDuration: number = 1000;
 
   private renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   private scene: THREE.Scene = new THREE.Scene();
@@ -181,7 +191,7 @@ export class LightboxComponent implements AfterViewInit {
     const imageAspect = texture.image.height/texture.image.width;
     const containerAspect = containerHeight/containerWidth;
     let a1; let a2;
-    if(this.imageSize === 'cover'){
+    if(this._imageSize === 'cover'){
       if(containerAspect>imageAspect) {
         a1 = (containerWidth/containerHeight) * imageAspect;
         a2 = 1;
@@ -189,7 +199,7 @@ export class LightboxComponent implements AfterViewInit {
         a1 = 1;
         a2 = (containerHeight/containerWidth) / imageAspect;
       }
-    } else if(this.imageSize === 'contain'){
+    } else if(this._imageSize === 'contain'){
       if(containerAspect<imageAspect) {
         a1 = (containerWidth/containerHeight) * imageAspect;
         a2 = 1;
@@ -232,7 +242,7 @@ export class LightboxComponent implements AfterViewInit {
       nextImage = this.currentImage + 1;
     }
     if(res == 0){
-      RxjsTween.createTween(RxjsTween.linear, 0, 1, 1000).subscribe(val => {
+      RxjsTween.createTween(RxjsTween.linear, 0, 1, this.transitionDuration).subscribe(val => {
         this.material.uniforms.progress.value = val;
       }, null, () => {
         this.tranistionOngoing = false;
@@ -245,7 +255,7 @@ export class LightboxComponent implements AfterViewInit {
         });
       });
     }else{
-      RxjsTween.createTween(RxjsTween.linear, 1, 0, 1000).subscribe(val => {
+      RxjsTween.createTween(RxjsTween.linear, 1, 0, this.transitionDuration).subscribe(val => {
         this.material.uniforms.progress.value = val;
       }, null, () => {
         this.tranistionOngoing = false;

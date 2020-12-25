@@ -8,19 +8,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ImageAsParticlesModule, LightboxModule } from 'projects/ngx-acuw/src/public-api';
 import { ImageAsParticlesComponent } from './image-as-particles/image-as-particles.component';
 import { ImageTransitionComponent } from './image-transition/image-transition.component';
-import { ImageTransitionDialogComponent } from './image-transition/image-transition-dialog/image-transition-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ImageAsParticlesComponent,
-    ImageTransitionComponent,
-    ImageTransitionDialogComponent
+    ImageTransitionComponent
   ],
   imports: [
     BrowserModule,
@@ -31,8 +30,9 @@ import { ImageTransitionDialogComponent } from './image-transition/image-transit
     MatListModule,
     BrowserAnimationsModule,
     MatButtonModule,
+    MatSelectModule,
     MatSidenavModule,
-    MatDialogModule,
+    MatInputModule,
     ImageAsParticlesModule,
     LightboxModule
   ],
