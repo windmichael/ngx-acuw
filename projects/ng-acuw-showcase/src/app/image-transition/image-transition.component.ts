@@ -1,4 +1,4 @@
-import { animate, animation, style, transition, trigger } from '@angular/animations';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -27,8 +27,10 @@ export class ImageTransitionComponent implements OnInit {
     'assets/image-transition/img1.jpg'
   ];
   settingsOpen: boolean = false;
+  selectedTransitionType: string = 'noise';
   selectedImageSize: string = 'cover';
   selectedTransitionDuration: number = 1000;
+  slectedToggleTransitionDirection: boolean = true;
 
   constructor() { }
 
