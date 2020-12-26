@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LightboxComponent } from './lightbox.component';
+import { ImageTransitionComponent } from './image-transition.component';
 
-describe('LightboxComponent', () => {
-  let component: LightboxComponent;
-  let fixture: ComponentFixture<LightboxComponent>;
+describe('ImageTransitionComponent', () => {
+  let component: ImageTransitionComponent;
+  let fixture: ComponentFixture<ImageTransitionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LightboxComponent ]
+      declarations: [ ImageTransitionComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LightboxComponent);
+    fixture = TestBed.createComponent(ImageTransitionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

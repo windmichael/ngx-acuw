@@ -11,7 +11,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ImageAsParticlesModule, LightboxModule } from 'projects/ngx-acuw/src/public-api';
+import { ImageAsParticlesModule, ImageTransitionModule } from 'projects/ngx-acuw/src/public-api';
 import { ImageAsParticlesComponent } from './image-as-particles/image-as-particles.component';
 import { ImageTransitionComponent } from './image-transition/image-transition.component';
 
@@ -34,7 +34,7 @@ import { ImageTransitionComponent } from './image-transition/image-transition.co
     MatSidenavModule,
     MatInputModule,
     ImageAsParticlesModule,
-    LightboxModule
+    ImageTransitionModule
   ],
   providers: [],
   bootstrap: [AppComponent]

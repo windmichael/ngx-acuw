@@ -4,11 +4,11 @@ import { TextureLoader } from 'three';
 import { RxjsTween } from '../tween/rxjs-tween';
 
 @Component({
-  selector: 'lib-lightbox',
-  templateUrl: './lightbox.component.html',
-  styleUrls: ['./lightbox.component.css']
+  selector: 'lib-image-transition',
+  templateUrl: './image-transition.component.html',
+  styleUrls: ['./image-transition.component.css']
 })
-export class LightboxComponent implements AfterViewInit {
+export class ImageTransitionComponent implements AfterViewInit {
 
   @Input() imageUrls: string[] = new Array<string>();
   /** supported values: 'cover', 'contain' */
