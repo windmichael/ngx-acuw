@@ -1,26 +1,45 @@
-.main-container{
+.container {
     width: 100%;
+    height: calc(100vh - 56px);
 }
 
-h2{
-    text-transform: uppercase;
+@media (min-width: 600px) {
+    .container {
+        width: 100%;
+        height: calc(100vh - 64px);
+    }
 }
 
-.flex-column{
+.settings-button {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 2;
+}
+
+.settings-container {
+    position: fixed;
+    top: 70px;
+    right: 0px;
     display: flex;
     flex-direction: column;
-    text-align: center;
+    padding: 0 10px 10px 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    min-width: 150px;
+    max-width: calc(100% - 20px);
+    z-index: 1;
 }
 
-.image-selection-container{
+.image-selection-container {
     display: flex;
     flex-direction: row;
     overflow-x: auto;
     padding: 10px 5px 10px 0;
 }
 
-@media (min-width: 450px){
-    .image-selection-container{
+@media (min-width: 450px) {
+    .image-selection-container {
         justify-content: center;
     }
 }
@@ -28,9 +47,9 @@ h2{
 .image-selection-container:after, :before {
     content: '';
     flex: 0 0 5px;
-  }
+}
 
-.image-selection{
+.image-selection {
     width: 100px;
     height: 100px;
     object-fit: cover;
@@ -41,35 +60,12 @@ h2{
     box-shadow: 0 0px 5px 3px rgba(0, 0, 0, 0.3);
 }
 
-.image-selection:hover{
+.image-selection:hover {
     opacity: 1;
     box-shadow: 0 0px 10px 5px rgba(0, 0, 0, 0.8);
 }
 
-.image-active{
+.image-active {
     opacity: 1;
     box-shadow: 0 0px 10px 5px rgba(0, 0, 0, 0.8);
-}
-
-.settings-container{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin: 10px 0 0 0;
-}
-
-.settings-container > div {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-.settings-container input{
-    margin: 0 5px 0 5px;
-}
-
-lib-image-as-particles{
-    margin: 10px 0 10px 0;
-    height: 80vh;
 }

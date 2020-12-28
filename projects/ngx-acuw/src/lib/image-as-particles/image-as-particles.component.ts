@@ -342,10 +342,15 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    * @param event 
    */
   onMouseMove(event: MouseEvent): void {
-    const offsetLeft = this.canvasRef.nativeElement.offsetLeft + this.canvasRef.nativeElement.children[0].offsetLeft;
-    const offsetTop = this.canvasRef.nativeElement.offsetTop + this.canvasRef.nativeElement.children[0].offsetTop;
-    this.mouse.x = (event.clientX - offsetLeft + window.scrollX) / this.canvasRef.nativeElement.children[0].clientWidth * 2 - 1;
-    this.mouse.y = - (event.clientY - offsetTop + window.scrollY) / this.canvasRef.nativeElement.children[0].clientHeight * 2 + 1;
+    // getBoundingClientRect retruns the distance in pixels of the top left corner of the element
+    // to the top left corner of the viewport
+    const domRect = (this.canvasRef.nativeElement as HTMLElement).getBoundingClientRect();
+    // get the offset distance between the canvas, which contains the particles, to the outer container element 
+    const offsetInCanvasTop = this.canvasRef.nativeElement.children[0].offsetTop;
+    const offsetInCanvasLeft = this.canvasRef.nativeElement.children[0].offsetLeft;
+    // Calculate the relative mouse position
+    this.mouse.x = (event.clientX - domRect.left - offsetInCanvasLeft) / this.canvasRef.nativeElement.children[0].clientWidth * 2 - 1;
+    this.mouse.y = - (event.clientY - domRect.top - offsetInCanvasTop) / this.canvasRef.nativeElement.children[0].clientHeight * 2 + 1;
     // console.info('raw: x= ' + event.clientX + ' , y= ' + event.clientY);
     // console.info('normalized: x= ' + this.mouse.x + ' , y= ' + this.mouse.y);
     this.raycaster.setFromCamera(this.mouse, this.camera);
@@ -362,10 +367,15 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    * @param event 
    */
   onTouchMove(event: TouchEvent): void {
-    const offsetLeft = this.canvasRef.nativeElement.offsetLeft + this.canvasRef.nativeElement.children[0].offsetLeft;
-    const offsetTop = this.canvasRef.nativeElement.offsetTop + this.canvasRef.nativeElement.children[0].offsetTop;
-    this.mouse.x = (event.touches[0].clientX - offsetLeft + window.scrollX) / this.canvasRef.nativeElement.children[0].clientWidth * 2 - 1;
-    this.mouse.y = - (event.touches[0].clientY - offsetTop + window.scrollY) / this.canvasRef.nativeElement.children[0].clientHeight * 2 + 1;
+    // getBoundingClientRect retruns the distance in pixels of the top left corner of the element
+    // to the top left corner of the viewport
+    const domRect = (this.canvasRef.nativeElement as HTMLElement).getBoundingClientRect();
+    // get the offset distance between the canvas, which contains the particles, to the outer container element 
+    const offsetInCanvasTop = this.canvasRef.nativeElement.children[0].offsetTop;
+    const offsetInCanvasLeft = this.canvasRef.nativeElement.children[0].offsetLeft;
+    // Calculate the relative mouse position
+    this.mouse.x = (event.touches[0].clientX - domRect.left - offsetInCanvasLeft) / this.canvasRef.nativeElement.children[0].clientWidth * 2 - 1;
+    this.mouse.y = - (event.touches[0].clientY - domRect.top - offsetInCanvasTop) / this.canvasRef.nativeElement.children[0].clientHeight * 2 + 1;
     this.raycaster.setFromCamera(this.mouse, this.camera);
 
     const intersects = this.raycaster.intersectObject(this.hitArea);

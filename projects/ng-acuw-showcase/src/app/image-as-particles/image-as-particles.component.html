@@ -1,19 +1,21 @@
-<div class="main-container">
-    <div class="flex-column">
-        <h2>Demo: Images as interactive partilces</h2>
-        <h3>Select Image:</h3>
-        <div class="image-selection-container">
-            <img class="image-selection" [ngClass]="{'image-active' : imageUrl === selectedUrl}"
-                *ngFor="let imageUrl of imageUrls" [src]="imageUrl" (click)="selectImage(imageUrl)">
-        </div>
-        <div class="settings-container">
-            <div>
-                <span>Background Color:</span>
-                <input type="color" [(ngModel)]="backgroundColor">
-            </div>
-        </div>
-        <lib-image-as-particles [imageUrl]="selectedUrl" touchAction="none" imageWidth="100%" imageHeight="100%"
-            [backgroundColor]="backgroundColor" horizontalAlignment="center" verticalAlignment="center">
-        </lib-image-as-particles>
+<button class="settings-button" mat-mini-fab color="accent" aria-label="settings button"
+    (click)="toggleSettingsDialog()">
+    <mat-icon>{{settingsOpen == false ? 'settings' : 'close'}}</mat-icon>
+</button>
+
+<div *ngIf="settingsOpen==true" class="settings-container mat-elevation-z6" [@settingsContainer]>
+    <h4>Settings</h4>
+    <p>Selected image:</p>
+    <div class="image-selection-container">
+        <img class="image-selection" [ngClass]="{'image-active' : imageUrl === selectedUrl}"
+            *ngFor="let imageUrl of imageUrls" [src]="imageUrl" (click)="selectImage(imageUrl)">
     </div>
+    <p>Background color:</p>
+    <input type="color" [(ngModel)]="backgroundColor">
+</div>
+
+<div class="container">
+    <lib-image-as-particles [imageUrl]="selectedUrl" touchAction="none" imageWidth="100%" imageHeight="100%"
+        [backgroundColor]="backgroundColor" horizontalAlignment="center" verticalAlignment="center">
+    </lib-image-as-particles>
 </div>
