@@ -1,3 +1,11 @@
+.top-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+
 .spacer {
   flex: 1 1 auto;
 }
@@ -12,6 +20,14 @@
   height: 48px;
 }
 
+.content-container{
+  position: absolute;
+  top: 55px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
 .nav-item{
   text-align: center;
 }
@@ -23,5 +39,9 @@
 @media (min-width: 600px){
   .toolbar-logo{
     height: 56px;
+  }
+
+  .content-container{
+    top: 64px;
   }
 }

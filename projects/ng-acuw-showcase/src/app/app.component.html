@@ -1,5 +1,5 @@
-<mat-toolbar color="primary">
-    <button mat-icon-button aria-label="menue icon" (click)="drawer.toggle()">
+<mat-toolbar class="top-toolbar" color="primary">
+    <button mat-icon-button aria-label="menue icon" (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
     </button>
     <a routerLink="/home">
@@ -7,20 +7,21 @@
     </a>
     <span>ACUW - Showcase</span>
     <span class="spacer"></span>
-    
+
     <a mat-icon-button href="https://github.com/windmichael/ngx-acuw" target="_blank" aria-label="github button">
         <img src="../assets/icons/GitHub-Mark-Light-64px.png" style="width: 35px;">
     </a>
 </mat-toolbar>
 
-<mat-drawer-container class="example-container">
-    <mat-drawer #drawer mode="over" autoFocus="false">
+<mat-sidenav-container class="content-container">
+    <mat-sidenav #sidenav mode="over" fixedInViewport="false">
         <mat-nav-list>
-            <a class="nav-item" [ngClass]="{'active-nav-item' : activeRoute == navItem.routeLink}" 
-            mat-list-item *ngFor="let navItem of navItems" [routerLink]="navItem.routeLink"> {{ navItem.name }} </a>
+            <a class="nav-item" [ngClass]="{'active-nav-item' : activeRoute == navItem.routeLink}" mat-list-item
+                *ngFor="let navItem of navItems" [routerLink]="navItem.routeLink"> {{ navItem.name }} </a>
         </mat-nav-list>
-    </mat-drawer>
-    <div>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
         <router-outlet></router-outlet>
-    </div>
-</mat-drawer-container>
+    </mat-sidenav-content>
+</mat-sidenav-container>
