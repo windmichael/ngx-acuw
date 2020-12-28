@@ -8,10 +8,20 @@
   justify-content: center;
 }
 
+.toolbar-logo{
+  height: 48px;
+}
+
 .nav-item{
   text-align: center;
 }
 
 .active-nav-item{
   background-color: rgba(0,0,0,.12);
+}
+
+@media (min-width: 600px){
+  .toolbar-logo{
+    height: 56px;
+  }
 }

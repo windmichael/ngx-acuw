@@ -61,7 +61,10 @@
             "aot": true,
             "assets": [
               "projects/ng-acuw-showcase/src/favicon.ico",
-              "projects/ng-acuw-showcase/src/assets"
+              "projects/ng-acuw-showcase/src/assets",
+              "projects/ng-acuw-showcase/src/manifest.webmanifest",
+              "projects/ng-acuw-showcase/src/browserconfig.xml",
+              "projects/ng-acuw-showcase/src/apple-touch-icon.png"
             ],
             "styles": [
               "projects/ng-acuw-showcase/src/custom-theme.scss",
@@ -125,7 +128,10 @@
             "karmaConfig": "projects/ng-acuw-showcase/karma.conf.js",
             "assets": [
               "projects/ng-acuw-showcase/src/favicon.ico",
-              "projects/ng-acuw-showcase/src/assets"
+              "projects/ng-acuw-showcase/src/assets",
+              "projects/ng-acuw-showcase/src/manifest.webmanifest",
+              "projects/ng-acuw-showcase/src/browserconfig.xml",
+              "projects/ng-acuw-showcase/src/apple-touch-icon.png"
             ],
             "styles": [
               "projects/ng-acuw-showcase/src/styles.css"
