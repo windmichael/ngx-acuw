@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { interval, Observable, Subscription } from 'rxjs';
 import * as THREE from 'three';
 import { TextureLoader } from 'three';
 import { RxjsTween } from '../tween/rxjs-tween';
@@ -22,7 +23,40 @@ export class ImageTransitionComponent implements AfterViewInit {
     }
   }
 
-  @Input() toggleTransitionDirection: boolean = true;
+  @Input() 
+  get autoPlay(): boolean { return this._autoPlay; };
+  set autoPlay(autoplay: boolean){
+    this._autoPlay = autoplay;
+    if(this.mesh != null){
+      if(this._autoPlay == true){
+        this.setAutoPlayInterval();
+      }else{
+        this.stopAutoPlayInterval();
+      }
+    }
+  }
+
+  @Input()
+  get autoPlayInterval(): number {return this._autoPlayInterval;};
+  set autoPlayInterval(autoPlayInterval: number){
+    this._autoPlayInterval = autoPlayInterval;
+  }
+
+  @Input()
+  get toggleTransitionDirection(): boolean { return this._toggleTransitionDirection; };
+  set toggleTransitionDirection(toggleTransitionDirection: boolean) {
+    this._toggleTransitionDirection = toggleTransitionDirection;
+    if (this._toggleTransitionDirection == false) {
+      // In case the progess is 1, change the progress to 0
+      const res = this.currentImage % 2;
+      if (res == 1) {
+        this.textures[0] = this.textures[1];
+        this.material.uniforms.texture1.value = this.textures[0];
+        this.updateTextureResolution(0);
+        this.material.uniforms.progress.value = 0;
+      }
+    }
+  }
 
   @Input() transitionDuration: number = 1000;
 
@@ -36,18 +70,18 @@ export class ImageTransitionComponent implements AfterViewInit {
   }
 
   @Input()
-  get scaleX(): number { return this._scaleX; };
-  set scaleX(scaleX: number) {
-    this._scaleX = scaleX;
+  get sizeX(): number { return this._scaleX; };
+  set sizeX(sizeX: number) {
+    this._scaleX = sizeX;
     if (this.material != null) {
       this.setShaderProperties();
     }
   }
 
   @Input()
-  get scaleY(): number { return this._scaleY; };
-  set scaleY(scaleY: number) {
-    this._scaleY = scaleY;
+  get sizeY(): number { return this._scaleY; };
+  set sizeY(sizeY: number) {
+    this._scaleY = sizeY;
     if (this.material != null) {
       this.setShaderProperties();
     }
@@ -71,6 +105,9 @@ export class ImageTransitionComponent implements AfterViewInit {
     }
   }
 
+  private _autoPlay: boolean = false;
+  private _autoPlayInterval: number = 5000;
+  private _toggleTransitionDirection: boolean = true;
   private _imageSize: string = 'cover';
   private _transitionType: string = 'split';
   private _intensity: number = 40.0;
@@ -87,6 +124,8 @@ export class ImageTransitionComponent implements AfterViewInit {
   private currentImage: number = 0;
   private tranistionOngoing: boolean = false;
   private shaders: ImageTransitionShaders = new ImageTransitionShaders();
+  private autoPlay$: Observable<number> = new Observable<number>();
+  private autoPlaySubscription: Subscription = new Subscription();
 
   @ViewChild('threejsContainer') threejsContainer!: ElementRef;
 
@@ -112,6 +151,12 @@ export class ImageTransitionComponent implements AfterViewInit {
     this.renderer.setSize(canvasWidth, canvasHeight);
 
     this.threejsContainer.nativeElement.appendChild(this.renderer.domElement);
+
+    // Init autoPlay Observable
+    if(this._autoPlay == true){
+      this.setAutoPlayInterval();
+    }
+    
 
     this.animate();
   }
@@ -165,6 +210,24 @@ export class ImageTransitionComponent implements AfterViewInit {
 
       this.resize();
     });
+  }
+
+  private setAutoPlayInterval(){
+    this.autoPlay$ = interval(this._autoPlayInterval);
+    this.autoPlaySubscription = this.autoPlay$.subscribe(x => {
+      this.next();
+    });
+  }
+
+  private resetAutoPlayInterval(){
+    this.autoPlaySubscription.unsubscribe();
+    this.autoPlaySubscription = this.autoPlay$.subscribe(x => {
+      this.next();
+    });
+  }
+
+  private stopAutoPlayInterval(){
+    this.autoPlaySubscription.unsubscribe();
   }
 
   private setShaderProperties() {
@@ -253,6 +316,13 @@ export class ImageTransitionComponent implements AfterViewInit {
     }
   }
 
+  clickNext(){
+    if(this._autoPlay == true){
+      this.resetAutoPlayInterval();
+    }
+    this.next();
+  }
+
   next(): void {
     if (this.tranistionOngoing) {
       return;
@@ -272,7 +342,7 @@ export class ImageTransitionComponent implements AfterViewInit {
     if (this.currentImage < this.imageUrls.length - 1) {
       nextImage = this.currentImage + 1;
     }
-    if(this.toggleTransitionDirection == true){
+    if (this.toggleTransitionDirection == true) {
       if (res == 0) {
         RxjsTween.createTween(RxjsTween.linear, 0, 1, this.transitionDuration).subscribe(val => {
           this.material.uniforms.progress.value = val;
@@ -300,7 +370,7 @@ export class ImageTransitionComponent implements AfterViewInit {
           });
         });
       }
-    }else{
+    } else {
       RxjsTween.createTween(RxjsTween.linear, 0, 1, this.transitionDuration).subscribe(val => {
         this.material.uniforms.progress.value = val;
       }, null, () => {

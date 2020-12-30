@@ -30,7 +30,13 @@ export class ImageTransitionComponent implements OnInit {
   selectedTransitionType: string = 'noise';
   selectedImageSize: string = 'cover';
   selectedTransitionDuration: number = 1000;
-  slectedToggleTransitionDirection: boolean = true;
+  selectedToggleTransitionDirection: boolean = true;
+  selectedAutoPlayEnabled: boolean = true;
+  selectedAutoPlayInterval: number = 5000;
+  selectedIntensity: number = 50.0;
+  selectedSizeX: number = 40.0;
+  selectedSizeY: number = 40.0;
+  selectedWidth: number = 0.5;
 
   constructor() { }
 
@@ -39,5 +45,13 @@ export class ImageTransitionComponent implements OnInit {
 
   toggleSettingsDialog() {
     this.settingsOpen = this.settingsOpen == true ? false : true;
+  }
+
+  formatLabelNumber(value: number) {
+    if (value >= 1000) {
+      return Math.round(value / 1000) + 'k';
+    }
+
+    return value;
   }
 }

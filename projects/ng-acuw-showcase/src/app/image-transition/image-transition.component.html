@@ -1,34 +1,74 @@
-<button class="settings-button" mat-mini-fab color="accent" aria-label="settings button"
-    (click)="toggleSettingsDialog()">
-    <mat-icon>{{settingsOpen == false ? 'settings' : 'close'}}</mat-icon>
-</button>
+<mat-tab-group mat-align-tabs="center">
+    <mat-tab label="Demo">
+        <button class="settings-button" mat-mini-fab color="accent" aria-label="settings button"
+            (click)="toggleSettingsDialog()">
+            <mat-icon>{{settingsOpen == false ? 'settings' : 'close'}}</mat-icon>
+        </button>
 
-<div *ngIf="settingsOpen==true" class="settings-container mat-elevation-z6" [@settingsContainer]>
-    <h4>Settings</h4>
-    <mat-form-field appearance="fill">
-        <mat-label>Image size</mat-label>
-        <mat-select [(value)]="selectedImageSize">
-            <mat-option value="cover">cover</mat-option>
-            <mat-option value="contain">contain</mat-option>
-        </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-        <mat-label>Transition duration (ms)</mat-label>
-        <input matInput type="number" [(ngModel)]="selectedTransitionDuration">
-    </mat-form-field>
-    <mat-slide-toggle [(ngModel)]="slectedToggleTransitionDirection">Toggle transition direction</mat-slide-toggle>
-    <mat-form-field appearance="fill">
-        <mat-label>Transition type</mat-label>
-        <mat-select [(value)]="selectedTransitionType">
-            <mat-option value="split">split</mat-option>
-            <mat-option value="fade">fade</mat-option>
-            <mat-option value="noise">noise</mat-option>
-        </mat-select>
-    </mat-form-field>
-</div>
+        <div *ngIf="settingsOpen==true" class="settings-container mat-elevation-z6" [@settingsContainer]>
+            <h4>Settings</h4>
+            <div class="inner-settings-container">
+                <mat-form-field appearance="fill">
+                    <mat-label>Image size</mat-label>
+                    <mat-select [(value)]="selectedImageSize">
+                        <mat-option value="cover">cover</mat-option>
+                        <mat-option value="contain">contain</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Transition duration (ms)</mat-label>
+                    <input matInput type="number" [(ngModel)]="selectedTransitionDuration">
+                </mat-form-field>
+                <mat-slide-toggle class="slide-toggle" [(ngModel)]="selectedToggleTransitionDirection">Toggle transition
+                    direction</mat-slide-toggle>
+                <mat-slide-toggle class="slide-toggle" [(ngModel)]="selectedAutoPlayEnabled">Auto play
+                </mat-slide-toggle>
+                <mat-form-field *ngIf="selectedAutoPlayEnabled==true" appearance="fill">
+                    <mat-label>Auto play interval (ms)</mat-label>
+                    <input matInput type="number" [(ngModel)]="selectedAutoPlayInterval">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Transition type</mat-label>
+                    <mat-select [(value)]="selectedTransitionType">
+                        <mat-option value="split">split</mat-option>
+                        <mat-option value="fade">fade</mat-option>
+                        <mat-option value="noise">noise</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <ng-container [ngSwitch]="selectedTransitionType">
+                    <ng-container *ngSwitchCase="'split'">
+                        <span>Intensity</span>
+                        <mat-slider thumbLabel tickInterval="1" min="0" max="100" [(ngModel)]="selectedIntensity">
+                        </mat-slider>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'noise'">
+                        <div class="slider">
+                            <span>SizeX</span>
+                            <mat-slider thumbLabel tickInterval="1" min="1" max="100" [(ngModel)]="selectedSizeX">
+                            </mat-slider>
+                        </div>
+                        <div class="slider">
+                            <span>SizeY</span>
+                            <mat-slider thumbLabel tickInterval="1" min="1" max="100" [(ngModel)]="selectedSizeY">
+                            </mat-slider>
+                        </div>
+                        <div class="slider">
+                            <span>Width</span>
+                            <mat-slider thumbLabel step="0.01" tickInterval="0.01" min="0.01" max="1"
+                                [(ngModel)]="selectedWidth"></mat-slider>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </div>
 
-<div class="container">
-    <lib-image-transition [imageUrls]="imageUrls" [transitionType]="selectedTransitionType"
-        [imageSize]="selectedImageSize" [transitionDuration]="selectedTransitionDuration"
-        [toggleTransitionDirection]="slectedToggleTransitionDirection"></lib-image-transition>
-</div>
+        <div class="container">
+            <lib-image-transition [imageUrls]="imageUrls" [transitionType]="selectedTransitionType"
+                [imageSize]="selectedImageSize" [transitionDuration]="selectedTransitionDuration"
+                [toggleTransitionDirection]="selectedToggleTransitionDirection" [autoPlay]="selectedAutoPlayEnabled"
+                [autoPlayInterval]="selectedAutoPlayInterval" [intensity]="selectedIntensity" [sizeX]="selectedSizeX"
+                [sizeY]="selectedSizeY" [width]="selectedWidth"></lib-image-transition>
+        </div>
+    </mat-tab>
+    <mat-tab label="Description">Description</mat-tab>
+</mat-tab-group>
