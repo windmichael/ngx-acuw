@@ -8,7 +8,7 @@
     <span>ACUW - Showcase</span>
     <span class="spacer"></span>
 
-    <a mat-icon-button href="https://github.com/windmichael/ngx-acuw" target="_blank" aria-label="github button">
+    <a href="https://github.com/windmichael/ngx-acuw" target="_blank">
         <img src="../assets/icons/GitHub-Mark-Light-64px.png" style="width: 35px;">
     </a>
 </mat-toolbar>
@@ -23,5 +23,18 @@
 
     <mat-sidenav-content>
         <router-outlet></router-outlet>
+        <mat-toolbar color="primary" class="footer">
+            <span>ACUW</span>
+            <div class="created-by-content">
+                <span>Created by </span>
+                <a class="external-link" href="https://michael-wind.web.app/" target="_blank"> Michael Wind</a>
+                <a href="https://michael-wind.web.app/" target="_blank">
+                    <img src="../assets/icons/mw_logo.svg" alt="MW Logo">
+                </a>
+                <a href="https://github.com/windmichael" target="_blank">
+                    <img src="../assets/icons/GitHub-Mark-Light-64px.png">
+                </a>
+            </div>
+        </mat-toolbar>
     </mat-sidenav-content>
 </mat-sidenav-container>

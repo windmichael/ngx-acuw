@@ -36,6 +36,32 @@
   background-color: rgba(0,0,0,.12);
 }
 
+.footer{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.created-by-content{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 16px;
+}
+
+.created-by-content img{
+  height: 20px;
+}
+
+.created-by-content a{
+  display: flex;
+  color: white;
+}
+
+.created-by-content > * {
+  margin: 0 0 0 5px;
+}
+
 @media (min-width: 600px){
   .toolbar-logo{
     height: 56px;
