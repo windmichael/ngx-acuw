@@ -1,10 +1,31 @@
 {
   "name": "ngx-acuw",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "description": "Angular components using WEBGL (threejs)",
+  "author": "Michael Wind",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/windmichael/ngx-acuw.git"
+  },
+  "bugs": {
+    "url": "https://github.com/windmichael/ngx-acuw/issues"
+  },
+  "homepage": "https://github.com/windmichael/ngx-acuw",
+  "keywords": [
+    "three.js",
+    "threejs",
+    "particles",
+    "interactive particles",
+    "angular",
+    "image as particles",
+    "particle effect",
+    "image transition",
+    "WEBGL"
+  ],
   "peerDependencies": {
     "@angular/common": "^11.0.3",
     "@angular/core": "^11.0.3",
-    "three": "^0.123.0"
+    "three": "^0.124.0"
   },
   "dependencies": {
     "tslib": "^2.0.0"
