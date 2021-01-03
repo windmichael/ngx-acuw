@@ -16,7 +16,10 @@ import { animate, style, transition, trigger } from '@angular/animations';
     <div *ngIf="showTouchGestureInfo==true" class="touch-gesture-info" [@showHideGestureInformation]>
       <div>
         <span>Use two fingers for touch animation</span>
-        <span class="material-icons">touch_app</span>
+        <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" fill="white" width="18px" height="18px">
+          <g><rect fill="none" height="24" width="24" x="0"/></g><g><g><g>
+            <path d="M9,11.24V7.5C9,6.12,10.12,5,11.5,5S14,6.12,14,7.5v3.74c1.21-0.81,2-2.18,2-3.74C16,5.01,13.99,3,11.5,3S7,5.01,7,7.5 C7,9.06,7.79,10.43,9,11.24z M18.84,15.87l-4.54-2.26c-0.17-0.07-0.35-0.11-0.54-0.11H13v-6C13,6.67,12.33,6,11.5,6 S10,6.67,10,7.5v10.74c-3.6-0.76-3.54-0.75-3.67-0.75c-0.31,0-0.59,0.13-0.79,0.33l-0.79,0.8l4.94,4.94 C9.96,23.83,10.34,24,10.75,24h6.79c0.75,0,1.33-0.55,1.44-1.28l0.75-5.27c0.01-0.07,0.02-0.14,0.02-0.2 C19.75,16.63,19.37,16.09,18.84,15.87z"/></g></g></g>
+          </svg>
       </div>
     </div>
   `,
@@ -50,14 +53,14 @@ import { animate, style, transition, trigger } from '@angular/animations';
     }
   `],
   animations: [
-    trigger('showHideGestureInformation',[
+    trigger('showHideGestureInformation', [
       transition(':enter', [
-        style({opacity: '0'}),
-        animate('300ms ease-in', style({opacity: '1'}))
+        style({ opacity: '0' }),
+        animate('300ms ease-in', style({ opacity: '1' }))
       ]),
       transition(':leave', [
-        style({opacity: '1'}),
-        animate('300ms ease-in', style({opacity: '0'}))
+        style({ opacity: '1' }),
+        animate('300ms ease-in', style({ opacity: '0' }))
       ])
     ])
   ]
@@ -143,7 +146,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    if ( this._imageUrl === '') { return; }
+    if (this._imageUrl === '') { return; }
 
     const canvasWidth = this.canvasRef.nativeElement.clientWidth;
     const canvasHeight = this.canvasRef.nativeElement.clientHeight;
@@ -344,14 +347,14 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
       (this.mesh.material as RawShaderMaterial).uniforms.uRandom.value = val[1];
       (this.mesh.material as RawShaderMaterial).uniforms.uDepth.value = val[2];
     }, () => { }, () => {
-      if(this.mesh != null){
-        if(this.mesh.parent != null) this.mesh.parent.remove(this.mesh);
+      if (this.mesh != null) {
+        if (this.mesh.parent != null) this.mesh.parent.remove(this.mesh);
         this.mesh.geometry.dispose();
         (this.mesh.material as RawShaderMaterial).dispose();
       }
-      
-      if(this.hitArea != null){
-        if(this.hitArea.parent != null) this.hitArea.parent.remove(this.hitArea);
+
+      if (this.hitArea != null) {
+        if (this.hitArea.parent != null) this.hitArea.parent.remove(this.hitArea);
         this.hitArea.geometry.dispose();
         (this.hitArea.material as RawShaderMaterial).dispose();
       }
@@ -405,14 +408,14 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    * @param event 
    */
   private onTouchMove(event: TouchEvent): void {
-    if(event.touches.length < 2){
+    if (event.touches.length < 2) {
       this.showTouchGestureInfo = true;
       this.gestureInfoSubscription.unsubscribe();
       this.gestureInfoSubscription = this.gestureInfo$.subscribe({
-        next: () => { 
+        next: () => {
           this.showTouchGestureInfo = false;
           this.gestureInfoSubscription.unsubscribe();
-         }
+        }
       });
       return;
     }
