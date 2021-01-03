@@ -14,11 +14,13 @@
 </mat-toolbar>
 
 <mat-sidenav-container class="content-container">
-    <mat-sidenav #sidenav mode="over" fixedInViewport="false">
-        <mat-nav-list>
-            <a class="nav-item" [ngClass]="{'active-nav-item' : activeRoute == navItem.routeLink}" mat-list-item
-                *ngFor="let navItem of navItems" [routerLink]="navItem.routeLink"> {{ navItem.name }} </a>
-        </mat-nav-list>
+    <mat-sidenav #sidenav mode="over" fixedInViewport="false" style="min-width: 220px;">
+        <mat-selection-list [multiple]="false">
+            <mat-list-option *ngFor="let navItem of navItems" [value]="navItem.routeLink" 
+                [selected]="activeRoute == navItem.routeLink" [routerLink]="navItem.routeLink">
+              {{navItem.name}}
+            </mat-list-option>
+          </mat-selection-list>
     </mat-sidenav>
 
     <mat-sidenav-content>

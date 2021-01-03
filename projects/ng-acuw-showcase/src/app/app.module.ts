@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ImageAsParticlesModule, ImageTransitionModule } from 'projects/ngx-acuw/src/public-api';
@@ -39,12 +40,14 @@ import { HomeComponent } from './home/home.component';
     MatSidenavModule,
     MatInputModule,
     MatSlideToggleModule,
+    MatDividerModule,
     MatTabsModule,
     MatSliderModule,
     ImageAsParticlesModule,
     ImageTransitionModule
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

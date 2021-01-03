@@ -18,3 +18,28 @@ a {
     position: relative;
     vertical-align: top;
 }
+
+code {
+    background-color: rgb(230, 230, 230);
+    font-family: Roboto Mono, monospace;
+    padding: 3px;
+    line-height: 25px;
+}
+
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+table {
+    border-collapse: collapse;
+}
+
+table td, table th {
+    border: 1px solid #ddd;
+    padding: 3px;
+}
+
+table tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, .03);
+}

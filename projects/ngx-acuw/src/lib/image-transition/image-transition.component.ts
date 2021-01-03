@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild } from '@angular/core';
 import { interval, Observable, Subscription } from 'rxjs';
 import * as THREE from 'three';
 import { TextureLoader } from 'three';
@@ -10,7 +10,7 @@ import { ImageTransitionShaders } from './shaders/imageTransitionShaders';
   templateUrl: './image-transition.component.html',
   styleUrls: ['./image-transition.component.css']
 })
-export class ImageTransitionComponent implements AfterViewInit {
+export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
 
   @Input() imageUrls: string[] = new Array<string>();
 
@@ -23,23 +23,29 @@ export class ImageTransitionComponent implements AfterViewInit {
     }
   }
 
-  @Input() 
+  @Input()
   get autoPlay(): boolean { return this._autoPlay; };
-  set autoPlay(autoplay: boolean){
+  set autoPlay(autoplay: boolean) {
     this._autoPlay = autoplay;
-    if(this.mesh != null){
-      if(this._autoPlay == true){
+    if (this.mesh != null) {
+      if (this._autoPlay == true) {
         this.setAutoPlayInterval();
-      }else{
+      } else {
         this.stopAutoPlayInterval();
       }
     }
   }
 
   @Input()
-  get autoPlayInterval(): number {return this._autoPlayInterval;};
-  set autoPlayInterval(autoPlayInterval: number){
+  get autoPlayInterval(): number { return this._autoPlayInterval; };
+  set autoPlayInterval(autoPlayInterval: number) {
     this._autoPlayInterval = autoPlayInterval;
+    if (this.mesh != null) {
+      if (this._autoPlay == true) {
+        this.stopAutoPlayInterval();
+        this.setAutoPlayInterval();
+      }
+    }
   }
 
   @Input()
@@ -115,6 +121,7 @@ export class ImageTransitionComponent implements AfterViewInit {
   private _scaleY: number = 50.0;
   private _width: number = 0.5
 
+  private animationFrameId!: number;
   private renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   private scene: THREE.Scene = new THREE.Scene();
   private camera!: THREE.PerspectiveCamera;
@@ -153,14 +160,36 @@ export class ImageTransitionComponent implements AfterViewInit {
     this.threejsContainer.nativeElement.appendChild(this.renderer.domElement);
 
     // Init autoPlay Observable
-    if(this._autoPlay == true){
+    if (this._autoPlay == true) {
       this.setAutoPlayInterval();
     }
-    
+
 
     this.animate();
   }
 
+  ngOnDestroy() {
+    // Cancel Animation
+    cancelAnimationFrame(this.animationFrameId);
+    // Stop autoplay animation
+    this.stopAutoPlayInterval();
+    // Remove threejs container from DOM
+    (this.threejsContainer.nativeElement as HTMLCanvasElement).removeChild(this.renderer.domElement);
+    // Dispose textures
+    this.textures.forEach(t => {
+      t.dispose();
+    });
+    // Dispose material
+    this.material.dispose();
+    // Clear scene
+    this.scene.clear();
+    // Dispose renderer
+    this.renderer.dispose();
+  }
+
+  /**
+   * Initializes the mesh
+   */
   private initMesh() {
     // Create geometry
     const geometry = new THREE.PlaneBufferGeometry(1, 1, 2, 2);
@@ -212,24 +241,36 @@ export class ImageTransitionComponent implements AfterViewInit {
     });
   }
 
-  private setAutoPlayInterval(){
+  /**
+   * Sets the autoPlay interval
+   */
+  private setAutoPlayInterval() {
     this.autoPlay$ = interval(this._autoPlayInterval);
     this.autoPlaySubscription = this.autoPlay$.subscribe(x => {
-      this.next();
+      this.showNextImage();
     });
   }
 
-  private resetAutoPlayInterval(){
+  /**
+   * Resets the autoPlay interval
+   */
+  private resetAutoPlayInterval() {
     this.autoPlaySubscription.unsubscribe();
     this.autoPlaySubscription = this.autoPlay$.subscribe(x => {
-      this.next();
+      this.showNextImage();
     });
   }
 
-  private stopAutoPlayInterval(){
+  /**
+   * Stops the autoPlay interval
+   */
+  private stopAutoPlayInterval() {
     this.autoPlaySubscription.unsubscribe();
   }
 
+  /**
+   * Sets the shader properties depending on the transition type
+   */
   private setShaderProperties() {
     switch (this.transitionType) {
       case 'split':
@@ -252,12 +293,18 @@ export class ImageTransitionComponent implements AfterViewInit {
     this.material.needsUpdate = true;
   }
 
-  animate(): void {
+  /**
+   * Animation
+   */
+  private animate(): void {
     this.renderer.render(this.scene, this.camera);
-    window.requestAnimationFrame(() => this.animate());
+    this.animationFrameId = window.requestAnimationFrame(() => this.animate());
   }
 
-  @HostListener('window:resize') resize(): void {
+  /**
+   * Resizes the canvas and updates the texture resulution information of the images
+   */
+  @HostListener('window:resize') private resize(): void {
     const containerWidth = this.threejsContainer.nativeElement.offsetWidth;
     const containerHeight = this.threejsContainer.nativeElement.offsetHeight;
     this.renderer.setSize(containerWidth, containerHeight);
@@ -276,8 +323,12 @@ export class ImageTransitionComponent implements AfterViewInit {
     this.camera.updateProjectionMatrix();
   }
 
-  updateTextureResolution(textureNumber: number) {
-    const texture = textureNumber == 0 ? this.textures[0] : this.textures[1];
+  /**
+   * Updates the resulution of the texture for the shader depending on the image size type
+   * @param textureNumber Number of the texture
+   */
+  private updateTextureResolution(textureNumber: number) {
+    const texture = this.textures[textureNumber];
     const containerWidth = this.threejsContainer.nativeElement.offsetWidth;
     const containerHeight = this.threejsContainer.nativeElement.offsetHeight;
 
@@ -285,7 +336,7 @@ export class ImageTransitionComponent implements AfterViewInit {
     const imageAspect = texture.image.height / texture.image.width;
     const containerAspect = containerHeight / containerWidth;
     let a1; let a2;
-    if (this.imageSize === 'cover') {
+    if (this._imageSize === 'cover') {
       if (containerAspect > imageAspect) {
         a1 = (containerWidth / containerHeight) * imageAspect;
         a2 = 1;
@@ -293,7 +344,7 @@ export class ImageTransitionComponent implements AfterViewInit {
         a1 = 1;
         a2 = (containerHeight / containerWidth) / imageAspect;
       }
-    } else if (this.imageSize === 'contain') {
+    } else if (this._imageSize === 'contain') {
       if (containerAspect < imageAspect) {
         a1 = (containerWidth / containerHeight) * imageAspect;
         a2 = 1;
@@ -316,14 +367,11 @@ export class ImageTransitionComponent implements AfterViewInit {
     }
   }
 
-  clickNext(){
-    if(this._autoPlay == true){
-      this.resetAutoPlayInterval();
-    }
-    this.next();
-  }
-
-  next(): void {
+  /**
+   * Starts the transition effect to the next image
+   * @param posDirection indicator, if the next or previous image should be loaded
+   */
+  private showNextImage(): void {
     if (this.tranistionOngoing) {
       return;
     }
@@ -389,4 +437,13 @@ export class ImageTransitionComponent implements AfterViewInit {
       });
     }
   }
+
+  //#region public methods
+  next() {
+    if (this._autoPlay == true) {
+      this.resetAutoPlayInterval();
+    }
+    this.showNextImage();
+  }
+  //#endregion
 }

@@ -4,27 +4,63 @@ import { Object3D, RawShaderMaterial, Texture } from 'three';
 import { TouchTexture } from './scripts/touch-texture';
 import { Shaders } from './scripts/shaders';
 import { RxjsTween } from '../tween/rxjs-tween';
+import { interval, Observable, Subscription } from 'rxjs';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'lib-image-as-particles',
   template: `
-    <div #container [style.background-color]="backgroundColor"
-                      [style.touch-action]="touchAction"
+    <div #container class="threejs-container" [style.background-color]="backgroundColor"
                       [style.justify-content]="justifyContent"
                       [style.align-items]="alignItems"></div>
+    <div *ngIf="showTouchGestureInfo==true" class="touch-gesture-info" [@showHideGestureInformation]>
+      <div>
+        <span>Use two fingers for touch animation</span>
+        <span class="material-icons">touch_app</span>
+      </div>
+    </div>
   `,
   styles: [`
-    div{
+    .threejs-container{
       position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
       width: 100%;
       height: 100%;
-      background-color: #222;
-      touch-action: none;
+      background-color: #222222;
     }
-  `]
+
+    .touch-gesture-info{
+      position: absolute;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      top: 20px;
+      color: white;
+    }
+
+    .touch-gesture-info div{
+      background-color: rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: row;
+      padding: 6px 10px 6px 10px;
+      border-radius: 5px;
+    }
+  `],
+  animations: [
+    trigger('showHideGestureInformation',[
+      transition(':enter', [
+        style({opacity: '0'}),
+        animate('300ms ease-in', style({opacity: '1'}))
+      ]),
+      transition(':leave', [
+        style({opacity: '1'}),
+        animate('300ms ease-in', style({opacity: '0'}))
+      ])
+    ])
+  ]
 })
 export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
 
@@ -44,6 +80,9 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
   private stopAnimation: boolean = false;
   private _imageUrl: string = '';
   private _imageChanging: boolean = false;
+  showTouchGestureInfo: boolean = false;
+  private gestureInfo$: Observable<number> = interval(2000);
+  private gestureInfoSubscription: Subscription = new Subscription();
   justifyContent: string = 'center';
   alignItems: string = 'center';
 
@@ -59,7 +98,6 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
   }
   get imageUrl(): string { return this._imageUrl; }
   @Input() backgroundColor: string = '#000000';
-  @Input() touchAction: string = 'none';
   @Input() imageWidth: string = '100%';
   @Input() imageHeight: string = '100%';
   @Input()
@@ -138,7 +176,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    * Creates the particles depending on the image and initializes the touch canvas
    * @param url url of the image
    */
-  initParticles(url: string): void {
+  private initParticles(url: string): void {
     const loader = new THREE.TextureLoader();
     loader.load(url, (texture) => {
       this.texture = texture;
@@ -161,7 +199,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    * Initializes the points
    * @param discard discard pixels darker than threshold #22
    */
-  initPoints(discard: boolean) {
+  private initPoints(discard: boolean) {
     const numPoints: number = this.width * this.height;
 
     var numVisible = numPoints;
@@ -262,14 +300,14 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
   /**
    * Initializes the touch area
    */
-  initTouch(): void {
+  private initTouch(): void {
     (this.mesh.material as RawShaderMaterial).uniforms.uTouch.value = this.touch.texture;
   }
 
   /**
    * Initializes the hit area
    */
-  initHitArea() {
+  private initHitArea() {
     const geometry = new THREE.PlaneGeometry(this.width, this.height, 1, 1);
     const material = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, wireframe: true, depthTest: false });
     material.visible = false;
@@ -281,7 +319,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    * animation for showing the particles
    * @param time time of animation in ms
    */
-  show(time: number = 1000): void {
+  private show(time: number = 1000): void {
     // Tween in
     RxjsTween.createTween(RxjsTween.easeInOutQuad, [0.5, 0.0, 70.0], [1.5, 2.0, 4.0], time).subscribe(val => {
       (this.mesh.material as RawShaderMaterial).uniforms.uSize.value = val[0];
@@ -296,7 +334,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    * animation for tween out the particles and destroy everything
    * @param time time of animation in ms
    */
-  triggerImageChange(time: number = 1000): void {
+  private triggerImageChange(time: number = 1000): void {
     const uSizeStart = (this.mesh.material as RawShaderMaterial).uniforms.uSize.value;
     const uRandomStart = (this.mesh.material as RawShaderMaterial).uniforms.uRandom.value;
     const uDepth = (this.mesh.material as RawShaderMaterial).uniforms.uDepth.value;
@@ -341,7 +379,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    * Handle mouse move event
    * @param event 
    */
-  onMouseMove(event: MouseEvent): void {
+  private onMouseMove(event: MouseEvent): void {
     // getBoundingClientRect retruns the distance in pixels of the top left corner of the element
     // to the top left corner of the viewport
     const domRect = (this.canvasRef.nativeElement as HTMLElement).getBoundingClientRect();
@@ -366,7 +404,19 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    * Handle touch move envent
    * @param event 
    */
-  onTouchMove(event: TouchEvent): void {
+  private onTouchMove(event: TouchEvent): void {
+    if(event.touches.length < 2){
+      this.showTouchGestureInfo = true;
+      this.gestureInfoSubscription.unsubscribe();
+      this.gestureInfoSubscription = this.gestureInfo$.subscribe({
+        next: () => { 
+          this.showTouchGestureInfo = false;
+          this.gestureInfoSubscription.unsubscribe();
+         }
+      });
+      return;
+    }
+    event.preventDefault();
     // getBoundingClientRect retruns the distance in pixels of the top left corner of the element
     // to the top left corner of the viewport
     const domRect = (this.canvasRef.nativeElement as HTMLElement).getBoundingClientRect();

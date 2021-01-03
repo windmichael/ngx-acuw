@@ -28,6 +28,18 @@ export class ImageAsParticlesComponent implements OnInit {
     'assets/blue-parakeet-sits-on-eggs.png'];
   selectedUrl: string = '';
   backgroundColor: string = '#222222';
+  importModule: string = `import { ImageAsParticlesModule } from 'ngx-acuw';
+
+@NgModule({
+  declarations: [AppComponent, ...],
+  imports: [ImageAsParticlesModule],  
+  bootstrap: [AppComponent]
+})
+export class AppModule {
+}`;
+  directiveExample: string = `<lib-image-as-particles 
+  [imageUrl]="selectedUrl">
+</lib-image-as-particles>`;
 
   constructor() { }
 

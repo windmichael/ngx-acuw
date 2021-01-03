@@ -21,10 +21,10 @@ import { Component, OnInit } from '@angular/core';
 export class ImageTransitionComponent implements OnInit {
 
   imageUrls: string[] = [
-    'assets/image-transition/img4.jpg',
+    'assets/image-transition/img1.jpg',
     'assets/image-transition/img2.jpg',
     'assets/image-transition/img3.jpg',
-    'assets/image-transition/img1.jpg'
+    'assets/image-transition/img4.jpg'
   ];
   settingsOpen: boolean = false;
   selectedTransitionType: string = 'noise';
@@ -37,6 +37,21 @@ export class ImageTransitionComponent implements OnInit {
   selectedSizeX: number = 40.0;
   selectedSizeY: number = 40.0;
   selectedWidth: number = 0.5;
+  importModule: string = `import { ImageTransitionModule } from 'ngx-acuw';
+
+@NgModule({
+  declarations: [AppComponent, ...],
+  imports: [ImageTransitionModule],  
+  bootstrap: [AppComponent]
+})
+export class AppModule {
+}`;
+  directiveExample: string = `<lib-image-transition 
+    [imageUrls]="imageUrls" 
+    transitionType="split"
+    imageSize="cover" 
+    [transitionDuration]="1000">
+  </lib-image-transition>`;
 
   constructor() { }
 

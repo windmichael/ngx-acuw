@@ -33,7 +33,8 @@
 }
 
 .active-nav-item{
-  background-color: rgba(0,0,0,.12);
+  background-color: var(--primary);
+  color: white;
 }
 
 .footer{

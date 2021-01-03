@@ -1,21 +1,108 @@
-<button class="settings-button" mat-mini-fab color="accent" aria-label="settings button"
-    (click)="toggleSettingsDialog()">
-    <mat-icon>{{settingsOpen == false ? 'settings' : 'close'}}</mat-icon>
-</button>
+<mat-tab-group mat-align-tabs="center" backgroundColor="primary" animationDuration="0ms">
+    <mat-tab label="Demo">
+        <ng-template matTabContent>
+            <button class="settings-button" mat-mini-fab color="accent" aria-label="settings button"
+                (click)="toggleSettingsDialog()">
+                <mat-icon>{{settingsOpen == false ? 'settings' : 'close'}}</mat-icon>
+            </button>
 
-<div *ngIf="settingsOpen==true" class="settings-container mat-elevation-z6" [@settingsContainer]>
-    <h4>Settings</h4>
-    <p>Selected image:</p>
-    <div class="image-selection-container">
-        <img class="image-selection" [ngClass]="{'image-active' : imageUrl === selectedUrl}"
-            *ngFor="let imageUrl of imageUrls" [src]="imageUrl" (click)="selectImage(imageUrl)">
-    </div>
-    <p>Background color:</p>
-    <input type="color" [(ngModel)]="backgroundColor">
-</div>
+            <div *ngIf="settingsOpen==true" class="settings-container mat-elevation-z6" [@settingsContainer]>
+                <h4>Settings</h4>
+                <p>Selected image:</p>
+                <div class="image-selection-container">
+                    <img class="image-selection" [ngClass]="{'image-active' : imageUrl === selectedUrl}"
+                        *ngFor="let imageUrl of imageUrls" [src]="imageUrl" (click)="selectImage(imageUrl)">
+                </div>
+                <p>Background color:</p>
+                <input type="color" [(ngModel)]="backgroundColor">
+            </div>
 
-<div class="container">
-    <lib-image-as-particles [imageUrl]="selectedUrl" touchAction="none" imageWidth="100%" imageHeight="100%"
-        [backgroundColor]="backgroundColor" horizontalAlignment="center" verticalAlignment="center">
-    </lib-image-as-particles>
-</div>
+            <div class="container">
+                <lib-image-as-particles [imageUrl]="selectedUrl" touchAction="none" imageWidth="100%" imageHeight="100%"
+                    [backgroundColor]="backgroundColor" horizontalAlignment="center" verticalAlignment="center">
+                </lib-image-as-particles>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Description">
+        <div class="description-container">
+            <div class="description-content">
+                <h2>Information</h2>
+                <mat-divider></mat-divider>
+                <p>
+                    The image-as-particles component is based on the great work and code of 
+                    <a class="external-link" href="https://github.com/brunoimbrizi/"
+                        target="_blank">Bruno Imbrizi</a>
+                    and brought to Angular.
+                    A description and a tutorial how the effect can be created can be found on 
+                    <a class="external-link" href="https://tympanus.net/codrops/2019/01/17/interactive-particles-with-three-js/"
+                        target="_blank">https://tympanus.net/codrops/2019/01/17/interactive-particles-with-three-js/ </a>
+                </p>
+
+                <h2>Installation</h2>
+                <mat-divider></mat-divider>
+
+                <h4>1. Install version 0.123.0 of three.js via npm:</h4>
+                <pre><code>npm install three@0.123.0</code></pre>
+
+                <h4>2. Install ACUW Library</h4>
+                <pre><code>npm install ngx-acuw</code></pre>
+
+                <h2>Usage</h2>
+                <mat-divider></mat-divider>
+
+                <h3>Import Module</h3>
+                <pre><code>{{importModule}}</code></pre>
+
+                <h3>Directive Example</h3>
+                <code>{{directiveExample}}</code>
+
+                <h2>Particle-As-Images API</h2>
+                <mat-divider></mat-divider>
+                <h3>Properties</h3>
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Default value</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>@Input() imageUrls: string</td>
+                        <td>null</td>
+                        <td>URL to the image</td>
+                    </tr>
+                    <tr>
+                        <td>@Input() backgroundColor: string</td>
+                        <td>#222222</td>
+                        <td>The background-color CSS property sets the background color of an element.</td>
+                    </tr>
+                    <tr>
+                        <td>@Input() imageWidth: string</td>
+                        <td>100%</td>
+                        <td>Width of the generated image in "px" or "%"</td>
+                    </tr>
+                    <tr>
+                        <td>@Input() imageHeight: string</td>
+                        <td>100%</td>
+                        <td>Height of the generated image in "px" or "%"</td>
+                    </tr>
+                    <tr>
+                        <td>@Input() transitionDuration: number</td>
+                        <td>1000</td>
+                        <td>Duration of the transition effenct in ms</td>
+                    </tr>
+                    <tr>
+                        <td>@Input() horizontalAlignment: string</td>
+                        <td>center</td>
+                        <td>Possible values: "start", "center", "end"</td>
+                    </tr>
+                    <tr>
+                        <td>@Input() verticalAlignment: string</td>
+                        <td>center</td>
+                        <td>Possible values: "top", "center", "bottom"</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>
