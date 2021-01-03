@@ -83,3 +83,8 @@
     max-width: 800px;
     margin: 0 10px 30px 10px;
 }
+
+.table-container{
+    width: 100vw;
+    overflow: auto;
+  }

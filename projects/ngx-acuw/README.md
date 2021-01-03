@@ -1,24 +1,23 @@
-# NgxAcuw
+# ngx-acuw (Angular Components using WEBGL)
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.3.
+ngx-acuw is a collection of components for Angular made with the 3D library three.js.
 
-## Code scaffolding
+<img src="./projects/ng-acuw-showcase/src/assets/acuw.svg" width="200"/>
 
-Run `ng generate component component-name --project ngx-acuw` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project ngx-acuw`.
-> Note: Don't forget to add `--project ngx-acuw` or else it will be added to the default project in your `angular.json` file. 
+## Showcase and Description
+[ngx-acuw](https://windmichael.github.io/ngx-acuw/)
 
-## Build
+## Dependencies
+* [Angular](https://angular.io) (*requires* Angular 11+ )
+* [three.js](https://threejs.org) (*requires* threejs )
 
-Run `ng build ngx-acuw` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Installation
+#### 1. Install `three.js` via npm:
+```
+npm install three
+```
 
-## Publishing
-
-After building your library with `ng build ngx-acuw`, go to the dist folder `cd dist/ngx-acuw` and run `npm publish`.
-
-## Running unit tests
-
-Run `ng test ngx-acuw` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+#### 2. Install `ngx-acuw` via npm:
+```
+npm install ngx-acuw
+```

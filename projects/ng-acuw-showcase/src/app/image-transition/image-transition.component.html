@@ -94,6 +94,7 @@
                     <a class="external-link" href="https://unsplash.com/" target="_blank">Unsplash</a>
                 </p>
 
+
                 <h2>Installation</h2>
                 <mat-divider></mat-divider>
 
@@ -115,88 +116,92 @@
                 <h2>Image Transition API</h2>
                 <mat-divider></mat-divider>
                 <h3>Properties</h3>
-                <table>
-                    <tr>
-                        <th>Name</th>
-                        <th>Default value</th>
-                        <th>Description</th>
-                    </tr>
-                    <tr>
-                        <td>@Input() imageUrls: string[]</td>
-                        <td></td>
-                        <td>Urls to the images</td>
-                    </tr>
-                    <tr>
-                        <td>@Input() imageSize: string</td>
-                        <td>cover</td>
-                        <td>Size of the image ("cover", "contain")</td>
-                    </tr>
-                    <tr>
-                        <td>@Input() autoPlay: boolean</td>
-                        <td>false</td>
-                        <td>Switch through the images automatically (true, false)</td>
-                    </tr>
-                    <tr>
-                        <td>@Input() autoPlayInterval: number</td>
-                        <td>5000</td>
-                        <td>AutoPlay interval in ms, if autoPlay is activated</td>
-                    </tr>
-                    <tr>
-                        <td>@Input() toggleTransitionDirection: boolean</td>
-                        <td>true</td>
-                        <td>true: animation effect is toggled from left to right. false: animation effect only in one
-                            direction</td>
-                    </tr>
-                    <tr>
-                        <td>@Input() transitionDuration: number</td>
-                        <td>1000</td>
-                        <td>Duration of the transition effenct in ms</td>
-                    </tr>
-                    <tr>
-                        <td>@Input() transitionType: string</td>
-                        <td>split</td>
-                        <td>Type of the transition (split, fade, noise)</td>
-                    </tr>
-                    <tr>
-                        <td>@Input() transitionType: string</td>
-                        <td>split</td>
-                        <td>Type of the transition (split, fade, noise)</td>
-                    </tr>
-                    <tr>
-                        <td>@Input() sizeX: string</td>
-                        <td>50.0</td>
-                        <td>Size at x-axis of the transition effect (applicable for type: 'noise')</td>
-                    </tr>
-                    <tr>
-                        <td>@Input() sizeY: string</td>
-                        <td>50.0</td>
-                        <td>Size at y-axis of the transition effect (applicable for type: 'noise')</td>
-                    </tr>
-                    <tr>
-                        <td>@Input() width: string</td>
-                        <td>0.5</td>
-                        <td>Width of the transition effect (applicable for type: 'noise')</td>
-                    </tr>
-                    <tr>
-                        <td>@Input() intensity: string</td>
-                        <td>40.0</td>
-                        <td>Intensity of the transition effect (applicable for type: 'split'</td>
-                    </tr>
-                </table>
+
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Default value</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>@Input() imageUrls: string[]</td>
+                            <td></td>
+                            <td>Urls to the images</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() imageSize: string</td>
+                            <td>cover</td>
+                            <td>Size of the image ("cover", "contain")</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() autoPlay: boolean</td>
+                            <td>false</td>
+                            <td>Switch through the images automatically (true, false)</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() autoPlayInterval: number</td>
+                            <td>5000</td>
+                            <td>AutoPlay interval in ms, if autoPlay is activated</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() toggleTransitionDirection: boolean</td>
+                            <td>true</td>
+                            <td>true: animation effect is toggled from left to right. false: animation effect only in
+                                one
+                                direction</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() transitionDuration: number</td>
+                            <td>1000</td>
+                            <td>Duration of the transition effenct in ms</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() transitionType: string</td>
+                            <td>split</td>
+                            <td>Type of the transition (split, fade, noise)</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() transitionType: string</td>
+                            <td>split</td>
+                            <td>Type of the transition (split, fade, noise)</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() sizeX: string</td>
+                            <td>50.0</td>
+                            <td>Size at x-axis of the transition effect (applicable for type: 'noise')</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() sizeY: string</td>
+                            <td>50.0</td>
+                            <td>Size at y-axis of the transition effect (applicable for type: 'noise')</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() width: string</td>
+                            <td>0.5</td>
+                            <td>Width of the transition effect (applicable for type: 'noise')</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() intensity: string</td>
+                            <td>40.0</td>
+                            <td>Intensity of the transition effect (applicable for type: 'split'</td>
+                        </tr>
+                    </table>
+                </div>
                 <h3>Methods</h3>
-                <table>
-                    <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                    </tr>
-                    <tr>
-                        <td>next()</td>
-                        <td>Loads the next image from the imageUrls array</td>
-                    </tr>
-                </table>
-
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>next()</td>
+                            <td>Loads the next image from the imageUrls array</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
-
         </div>
     </mat-tab>
 </mat-tab-group>
