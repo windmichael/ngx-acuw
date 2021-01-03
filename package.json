@@ -7,7 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "githubPublish": "ng build --prod --project ng-acuw-showcase --output-path docs --base-href https://windmichael.github.io/ngx-acuw/"
   },
   "private": true,
   "dependencies": {
