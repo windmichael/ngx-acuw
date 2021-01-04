@@ -8,7 +8,6 @@ ngx-acuw is a collection of components for Angular made with the 3D library thre
 [ngx-acuw](https://windmichael.github.io/ngx-acuw/)
 
 ## Dependencies
-* [Angular](https://angular.io) (*requires* Angular 11+ )
 * [three.js](https://threejs.org) (*requires* threejs )
 
 ## Installation
