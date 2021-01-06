@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './image-transition.component.html',
   styleUrls: ['./image-transition.component.css'],
   animations: [
-    trigger('settingsContainer',[
+    trigger('settingsContainer', [
       transition(':enter', [
         style({transform: 'translateX(100%)'}),
         animate('300ms ease-in', style({transform: 'translateX(0%)'}))
@@ -26,30 +26,30 @@ export class ImageTransitionComponent implements OnInit {
     'assets/image-transition/img3.jpg',
     'assets/image-transition/img4.jpg'
   ];
-  settingsOpen: boolean = false;
-  selectedTransitionType: string = 'noise';
-  selectedImageSize: string = 'cover';
-  selectedTransitionDuration: number = 1000;
-  selectedToggleTransitionDirection: boolean = true;
-  selectedAutoPlayEnabled: boolean = true;
-  selectedAutoPlayInterval: number = 5000;
-  selectedIntensity: number = 50.0;
-  selectedSizeX: number = 40.0;
-  selectedSizeY: number = 40.0;
-  selectedWidth: number = 0.5;
-  importModule: string = `import { ImageTransitionModule } from 'ngx-acuw';
+  settingsOpen = false;
+  selectedTransitionType = 'noise';
+  selectedImageSize = 'cover';
+  selectedTransitionDuration = 1000;
+  selectedToggleTransitionDirection = true;
+  selectedAutoPlayEnabled = true;
+  selectedAutoPlayInterval = 5000;
+  selectedIntensity = 50.0;
+  selectedSizeX = 40.0;
+  selectedSizeY = 40.0;
+  selectedWidth = 0.5;
+  importModule = `import { ImageTransitionModule } from 'ngx-acuw';
 
 @NgModule({
   declarations: [AppComponent, ...],
-  imports: [ImageTransitionModule],  
+  imports: [ImageTransitionModule],
   bootstrap: [AppComponent]
 })
 export class AppModule {
 }`;
-  directiveExample: string = `<lib-image-transition 
-    [imageUrls]="imageUrls" 
+  directiveExample = `<lib-image-transition
+    [imageUrls]="imageUrls"
     transitionType="split"
-    imageSize="cover" 
+    imageSize="cover"
     [transitionDuration]="1000">
   </lib-image-transition>`;
 
@@ -58,15 +58,15 @@ export class AppModule {
   ngOnInit(): void {
   }
 
-  toggleSettingsDialog() {
-    this.settingsOpen = this.settingsOpen == true ? false : true;
+  toggleSettingsDialog(): void {
+    this.settingsOpen = this.settingsOpen === true ? false : true;
   }
 
-  formatLabelNumber(value: number) {
+  formatLabelNumber(value: number): string {
     if (value >= 1000) {
       return Math.round(value / 1000) + 'k';
     }
 
-    return value;
+    return value.toString();
   }
 }

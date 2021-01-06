@@ -15,20 +15,20 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   @Input() imageUrls: string[] = new Array<string>();
 
   @Input()
-  get imageSize(): string { return this._imageSize; };
+  get imageSize(): string { return this.pImageSize; }
   set imageSize(imageSize: string) {
-    this._imageSize = imageSize;
+    this.pImageSize = imageSize;
     if (this.mesh != null) {
       this.resize();
     }
   }
 
   @Input()
-  get autoPlay(): boolean { return this._autoPlay; };
+  get autoPlay(): boolean { return this.pAutoPlay; }
   set autoPlay(autoplay: boolean) {
-    this._autoPlay = autoplay;
+    this.pAutoPlay = autoplay;
     if (this.mesh != null) {
-      if (this._autoPlay == true) {
+      if (this.pAutoPlay === true) {
         this.setAutoPlayInterval();
       } else {
         this.stopAutoPlayInterval();
@@ -37,11 +37,11 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   }
 
   @Input()
-  get autoPlayInterval(): number { return this._autoPlayInterval; };
+  get autoPlayInterval(): number { return this.pAutoPlayInterval; }
   set autoPlayInterval(autoPlayInterval: number) {
-    this._autoPlayInterval = autoPlayInterval;
+    this.pAutoPlayInterval = autoPlayInterval;
     if (this.mesh != null) {
-      if (this._autoPlay == true) {
+      if (this.pAutoPlay === true) {
         this.stopAutoPlayInterval();
         this.setAutoPlayInterval();
       }
@@ -49,13 +49,13 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   }
 
   @Input()
-  get toggleTransitionDirection(): boolean { return this._toggleTransitionDirection; };
+  get toggleTransitionDirection(): boolean { return this.pToggleTransitionDirection; }
   set toggleTransitionDirection(toggleTransitionDirection: boolean) {
-    this._toggleTransitionDirection = toggleTransitionDirection;
-    if (this._toggleTransitionDirection == false) {
+    this.pToggleTransitionDirection = toggleTransitionDirection;
+    if (this.pToggleTransitionDirection === false) {
       // In case the progess is 1, change the progress to 0
       const res = this.currentImage % 2;
-      if (res == 1) {
+      if (res === 1) {
         this.textures[0] = this.textures[1];
         this.material.uniforms.texture1.value = this.textures[0];
         this.updateTextureResolution(0);
@@ -64,62 +64,62 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  @Input() transitionDuration: number = 1000;
+  @Input() transitionDuration = 1000;
 
   @Input()
-  get transitionType(): string { return this._transitionType; };
+  get transitionType(): string { return this.pTransitionType; }
   set transitionType(transitionType: string) {
-    this._transitionType = transitionType;
+    this.pTransitionType = transitionType;
     if (this.material != null) {
       this.setShaderProperties();
     }
   }
 
   @Input()
-  get sizeX(): number { return this._scaleX; };
+  get sizeX(): number { return this.pScaleX; }
   set sizeX(sizeX: number) {
-    this._scaleX = sizeX;
+    this.pScaleX = sizeX;
     if (this.material != null) {
       this.setShaderProperties();
     }
   }
 
   @Input()
-  get sizeY(): number { return this._scaleY; };
+  get sizeY(): number { return this.pScaleY; }
   set sizeY(sizeY: number) {
-    this._scaleY = sizeY;
+    this.pScaleY = sizeY;
     if (this.material != null) {
       this.setShaderProperties();
     }
   }
 
   @Input()
-  get width(): number { return this._width; };
+  get width(): number { return this.pWidth; }
   set width(width: number) {
-    this._width = width;
+    this.pWidth = width;
     if (this.material != null) {
       this.setShaderProperties();
     }
   }
 
   @Input()
-  get intensity(): number { return this.intensity; };
+  get intensity(): number { return this.intensity; }
   set intensity(intensity: number) {
-    this._intensity = intensity;
+    this.pIntensity = intensity;
     if (this.material != null) {
       this.setShaderProperties();
     }
   }
 
-  private _autoPlay: boolean = false;
-  private _autoPlayInterval: number = 5000;
-  private _toggleTransitionDirection: boolean = true;
-  private _imageSize: string = 'cover';
-  private _transitionType: string = 'split';
-  private _intensity: number = 40.0;
-  private _scaleX: number = 50.0;
-  private _scaleY: number = 50.0;
-  private _width: number = 0.5
+  private pAutoPlay = false;
+  private pAutoPlayInterval = 5000;
+  private pToggleTransitionDirection = true;
+  private pImageSize = 'cover';
+  private pTransitionType = 'split';
+  private pIntensity = 40.0;
+  private pScaleX = 50.0;
+  private pScaleY = 50.0;
+  private pWidth = 0.5;
 
   private animationFrameId!: number;
   private renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -128,8 +128,8 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   private mesh!: THREE.Mesh;
   private material!: THREE.ShaderMaterial;
   private textures: THREE.Texture[] = new Array<THREE.Texture>();
-  private currentImage: number = 0;
-  private tranistionOngoing: boolean = false;
+  private currentImage = 0;
+  private tranistionOngoing = false;
   private shaders: ImageTransitionShaders = new ImageTransitionShaders();
   private autoPlay$: Observable<number> = new Observable<number>();
   private autoPlaySubscription: Subscription = new Subscription();
@@ -138,7 +138,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
 
   constructor() { }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     // Init camera
     this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.001, 1000);
     this.camera.position.set(0, 0, 2);
@@ -160,7 +160,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
     this.threejsContainer.nativeElement.appendChild(this.renderer.domElement);
 
     // Init autoPlay Observable
-    if (this._autoPlay == true) {
+    if (this.pAutoPlay === true) {
       this.setAutoPlayInterval();
     }
 
@@ -168,7 +168,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
     this.animate();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     // Cancel Animation
     cancelAnimationFrame(this.animationFrameId);
     // Stop autoplay animation
@@ -190,21 +190,19 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   /**
    * Initializes the mesh
    */
-  private initMesh() {
+  private initMesh(): void {
     // Create geometry
     const geometry = new THREE.PlaneBufferGeometry(1, 1, 2, 2);
 
     // Load texture of the first image
-    var promises: Promise<any>[] = new Array<Promise<any>>();
-    var promise1 = new Promise(resolve => {
-      var loader = new TextureLoader();
-      this.textures.push(loader.load(this.imageUrls[0], resolve));
+    const promises: Promise<any>[] = new Array<Promise<any>>();
+    const promise1 = new Promise(resolve => {
+      this.textures.push((new TextureLoader()).load(this.imageUrls[0], resolve));
     });
     promises.push(promise1);
     // Load texture of the second image
-    var promise2 = new Promise(resolve => {
-      var loader = new TextureLoader();
-      this.textures.push(loader.load(this.imageUrls[1], resolve));
+    const promise2 = new Promise(resolve => {
+      this.textures.push((new TextureLoader()).load(this.imageUrls[1], resolve));
     });
     promises.push(promise2);
 
@@ -228,7 +226,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
           resolution1: { value: new THREE.Vector4() },
           resolution2: { value: new THREE.Vector4() }
         },
-        //wireframe: true,
+        // wireframe: true,
         vertexShader: this.shaders.vertex
       });
 
@@ -244,50 +242,50 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   /**
    * Sets the autoPlay interval
    */
-  private setAutoPlayInterval() {
-    this.autoPlay$ = interval(this._autoPlayInterval);
-    this.autoPlaySubscription = this.autoPlay$.subscribe(x => {
-      this.showNextImage();
+  private setAutoPlayInterval(): void {
+    this.autoPlay$ = interval(this.pAutoPlayInterval);
+    this.autoPlaySubscription = this.autoPlay$.subscribe({
+      next: () => { this.showNextImage(); }
     });
   }
 
   /**
    * Resets the autoPlay interval
    */
-  private resetAutoPlayInterval() {
+  private resetAutoPlayInterval(): void {
     this.autoPlaySubscription.unsubscribe();
-    this.autoPlaySubscription = this.autoPlay$.subscribe(x => {
-      this.showNextImage();
+    this.autoPlaySubscription = this.autoPlay$.subscribe({
+      next: () => { this.showNextImage(); }
     });
   }
 
   /**
    * Stops the autoPlay interval
    */
-  private stopAutoPlayInterval() {
+  private stopAutoPlayInterval(): void {
     this.autoPlaySubscription.unsubscribe();
   }
 
   /**
    * Sets the shader properties depending on the transition type
    */
-  private setShaderProperties() {
+  private setShaderProperties(): void {
     switch (this.transitionType) {
       case 'split':
-        this.material.uniforms.intensity.value = this._intensity;
+        this.material.uniforms.intensity.value = this.pIntensity;
         this.material.fragmentShader = this.shaders.splitTransitionFrag;
         break;
       case 'fade':
         this.material.fragmentShader = this.shaders.fadeFrag;
         break;
       case 'noise':
-        this.material.uniforms.scaleX.value = this._scaleX;
-        this.material.uniforms.scaleY.value = this._scaleY;
-        this.material.uniforms.width.value = this._width;
+        this.material.uniforms.scaleX.value = this.pScaleX;
+        this.material.uniforms.scaleY.value = this.pScaleY;
+        this.material.uniforms.width.value = this.pWidth;
         this.material.fragmentShader = this.shaders.noiseFrag;
         break;
       case 'blur':
-        this.material.uniforms.intensity.value = this._intensity;
+        this.material.uniforms.intensity.value = this.pIntensity;
         this.material.fragmentShader = this.shaders.blurFrag;
         break;
       default:
@@ -331,7 +329,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
    * Updates the resulution of the texture for the shader depending on the image size type
    * @param textureNumber Number of the texture
    */
-  private updateTextureResolution(textureNumber: number) {
+  private updateTextureResolution(textureNumber: number): void {
     const texture = this.textures[textureNumber];
     const containerWidth = this.threejsContainer.nativeElement.offsetWidth;
     const containerHeight = this.threejsContainer.nativeElement.offsetHeight;
@@ -340,7 +338,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
     const imageAspect = texture.image.height / texture.image.width;
     const containerAspect = containerHeight / containerWidth;
     let a1; let a2;
-    if (this._imageSize === 'cover') {
+    if (this.pImageSize === 'cover') {
       if (containerAspect > imageAspect) {
         a1 = (containerWidth / containerHeight) * imageAspect;
         a2 = 1;
@@ -348,7 +346,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
         a1 = 1;
         a2 = (containerHeight / containerWidth) / imageAspect;
       }
-    } else if (this._imageSize === 'contain') {
+    } else if (this.pImageSize === 'contain') {
       if (containerAspect < imageAspect) {
         a1 = (containerWidth / containerHeight) * imageAspect;
         a2 = 1;
@@ -358,7 +356,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
       }
     }
 
-    if (textureNumber == 0) {
+    if (textureNumber === 0) {
       this.material.uniforms.resolution1.value.x = containerWidth;
       this.material.uniforms.resolution1.value.y = containerHeight;
       this.material.uniforms.resolution1.value.z = a1;
@@ -390,61 +388,67 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
       this.currentImage = 0;
     }
     // Define the next image
-    var nextImage: number = 0;
+    let nextImage = 0;
     if (this.currentImage < this.imageUrls.length - 1) {
       nextImage = this.currentImage + 1;
     }
-    if (this.toggleTransitionDirection == true) {
-      if (res == 0) {
-        RxjsTween.createTween(RxjsTween.linear, 0, 1, this.transitionDuration).subscribe(val => {
-          this.material.uniforms.progress.value = val;
-        }, null, () => {
-          this.tranistionOngoing = false;
-          new Promise(resolve => {
-            var loader = new TextureLoader();
-            this.textures[0] = loader.load(this.imageUrls[nextImage], resolve);
-          }).then(() => {
-            this.material.uniforms.texture1.value = this.textures[0];
-            this.updateTextureResolution(0);
-          });
+    if (this.toggleTransitionDirection === true) {
+      if (res === 0) {
+        RxjsTween.createTween(RxjsTween.linear, 0, 1, this.transitionDuration).subscribe({
+          next: val => {
+            this.material.uniforms.progress.value = val;
+          },
+          complete: () => {
+            this.tranistionOngoing = false;
+            new Promise(resolve => {
+              this.textures[0] = (new TextureLoader()).load(this.imageUrls[nextImage], resolve);
+            }).then(() => {
+              this.material.uniforms.texture1.value = this.textures[0];
+              this.updateTextureResolution(0);
+            });
+          }
         });
       } else {
-        RxjsTween.createTween(RxjsTween.linear, 1, 0, this.transitionDuration).subscribe(val => {
+        RxjsTween.createTween(RxjsTween.linear, 1, 0, this.transitionDuration).subscribe({
+          next: val => {
+            this.material.uniforms.progress.value = val;
+          },
+          complete: () => {
+            this.tranistionOngoing = false;
+            new Promise(resolve => {
+              this.textures[1] = (new TextureLoader()).load(this.imageUrls[nextImage], resolve);
+            }).then(() => {
+              this.material.uniforms.texture2.value = this.textures[1];
+              this.updateTextureResolution(1);
+            });
+          }
+        });
+      }
+    } else {
+      RxjsTween.createTween(RxjsTween.linear, 0, 1, this.transitionDuration).subscribe({
+        next: val => {
           this.material.uniforms.progress.value = val;
-        }, null, () => {
+        },
+        complete: () => {
           this.tranistionOngoing = false;
+          this.textures[0] = this.textures[1];
+          this.material.uniforms.texture1.value = this.textures[0];
+          this.updateTextureResolution(0);
+          this.material.uniforms.progress.value = 0;
           new Promise(resolve => {
-            var loader = new TextureLoader();
-            this.textures[1] = loader.load(this.imageUrls[nextImage], resolve);
+            this.textures[1] = (new TextureLoader()).load(this.imageUrls[nextImage], resolve);
           }).then(() => {
             this.material.uniforms.texture2.value = this.textures[1];
             this.updateTextureResolution(1);
           });
-        });
-      }
-    } else {
-      RxjsTween.createTween(RxjsTween.linear, 0, 1, this.transitionDuration).subscribe(val => {
-        this.material.uniforms.progress.value = val;
-      }, null, () => {
-        this.tranistionOngoing = false;
-        this.textures[0] = this.textures[1];
-        this.material.uniforms.texture1.value = this.textures[0];
-        this.updateTextureResolution(0);
-        this.material.uniforms.progress.value = 0;
-        new Promise(resolve => {
-          var loader = new TextureLoader();
-          this.textures[1] = loader.load(this.imageUrls[nextImage], resolve);
-        }).then(() => {
-          this.material.uniforms.texture2.value = this.textures[1];
-          this.updateTextureResolution(1);
-        });
+        }
       });
     }
   }
 
   //#region public methods
-  next() {
-    if (this._autoPlay == true) {
+  next(): void {
+    if (this.pAutoPlay === true) {
       this.resetAutoPlayInterval();
     }
     this.showNextImage();

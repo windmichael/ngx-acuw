@@ -15,32 +15,32 @@ export module RxjsTween {
      * @param d total duration of the tween in ms and 4th parameter of the easing function
      * @param s 5th parameter of the easing function (optional)
      */
-    export function createTween(easingFunction: (t: number, b: number, _c: number, d: number, s?: number) => number,
-        b: number[], c: number[], d: number, s?: number): Observable<number[]>;
-        export function createTween(easingFunction: (t: number, b: number, _c: number, d: number, s?: number) => number,
-        b: number, c: number, d: number, s?: number): Observable<number>;
-    export function createTween(easingFunction: (t: number, b: number, _c: number, d: number, s?: number) => number,
-        b: any, c: any, d: number, s?: number): Observable<any> {
+    export function createTween(easingFunction: (t: number, b: number, pc: number, d: number, s?: number) => number,
+                                b: number[], c: number[], d: number, s?: number): Observable<number[]>;
+    export function createTween(easingFunction: (t: number, b: number, pc: number, d: number, s?: number) => number,
+                                b: number, c: number, d: number, s?: number): Observable<number>;
+    export function createTween(easingFunction: (t: number, b: number, pc: number, d: number, s?: number) => number,
+                                b: any, c: any, d: number, s?: number): Observable<any> {
         return new Observable((observer: Observer<any>) => {
             let startTime: number;
-            let id = requestAnimationFrame(function sample(time) {
+            let id = requestAnimationFrame(function sample(time): void {
                 startTime = startTime || time;
                 const t = time - startTime;
                 if (t < d) {
-                    if(Array.isArray(b) && Array.isArray(c)){
-                        var tweenVals: number[] = new Array<number>();
-                        for(var idx = 0; idx < b.length; idx++){
-                            tweenVals.push(easingFunction(t, b[idx], c[idx], d, s))
+                    if (Array.isArray(b) && Array.isArray(c)) {
+                        const tweenVals: number[] = new Array<number>();
+                        for (let idx = 0; idx < b.length; idx++) {
+                            tweenVals.push(easingFunction(t, b[idx], c[idx], d, s));
                         }
                         observer.next(tweenVals);
-                    }else{
+                    }else {
                         observer.next(easingFunction(t, b, c, d, s));
                     }
                     id = requestAnimationFrame(sample);
                 } else {
-                    if(Array.isArray(b) && Array.isArray(c)){
-                        var tweenVals: number[] = new Array<number>();
-                        for(var idx = 0; idx < b.length; idx++){
+                    if (Array.isArray(b) && Array.isArray(c)) {
+                        const tweenVals: number[] = new Array<number>();
+                        for (let idx = 0; idx < b.length; idx++) {
                             tweenVals.push(c[idx]);
                         }
                         observer.next(tweenVals);
@@ -52,21 +52,16 @@ export module RxjsTween {
                     });
                 }
             });
-            return function () {
-                if (id) {
-                    cancelAnimationFrame(id);
-                }
-            };
         });
     }
 
-    export function linear(t: number, b: number, _c: number, d: number) {
-        var c = _c - b;
+    export function linear(t: number, b: number, pc: number, d: number): number {
+        const c = pc - b;
         return c * t / d + b;
     }
 
-    export function easeInOutQuad(t: number, b: number, _c: number, d: number) {
-        var c = _c - b;
+    export function easeInOutQuad(t: number, b: number, pc: number, d: number): number {
+        const c = pc - b;
         if ((t /= d / 2) < 1) {
             return c / 2 * t * t + b;
         } else {

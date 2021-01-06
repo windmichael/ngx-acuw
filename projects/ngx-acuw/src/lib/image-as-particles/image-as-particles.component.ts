@@ -75,34 +75,34 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
   private texture: THREE.Texture = new Texture();
   private mesh!: THREE.Mesh;
   private hitArea!: THREE.Mesh;
-  private width: number = 0;
-  private height: number = 0;
+  private width = 0;
+  private height = 0;
   private touch: TouchTexture = new TouchTexture();
   private mouse: THREE.Vector2 = new THREE.Vector2();
   private raycaster: THREE.Raycaster = new THREE.Raycaster();
-  private stopAnimation: boolean = false;
-  private _imageUrl: string = '';
-  private _imageChanging: boolean = false;
-  showTouchGestureInfo: boolean = false;
+  private stopAnimation = false;
+  private pImageUrl = '';
+  private pImageChanging = false;
   private gestureInfo$: Observable<number> = interval(2000);
   private gestureInfoSubscription: Subscription = new Subscription();
-  justifyContent: string = 'center';
-  alignItems: string = 'center';
+  showTouchGestureInfo = false;
+  justifyContent = 'center';
+  alignItems = 'center';
 
   // Inputs
   @Input()
   set imageUrl(imageUrl: string) {
-    this._imageUrl = imageUrl;
-    if (this._imageChanging == true) return;
+    this.pImageUrl = imageUrl;
+    if (this.pImageChanging === true) { return; }
     if (this.mesh != null) {
-      this._imageChanging = true;
+      this.pImageChanging = true;
       this.triggerImageChange();
     }
   }
-  get imageUrl(): string { return this._imageUrl; }
-  @Input() backgroundColor: string = '#000000';
-  @Input() imageWidth: string = '100%';
-  @Input() imageHeight: string = '100%';
+  get imageUrl(): string { return this.pImageUrl; }
+  @Input() backgroundColor = '#000000';
+  @Input() imageWidth = '100%';
+  @Input() imageHeight = '100%';
   @Input()
   set horizontalAlignment(horizontalAlignment: string) {
     switch (horizontalAlignment) {
@@ -146,7 +146,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    if (this._imageUrl === '') { return; }
+    if (this.pImageUrl === '') { return; }
 
     const canvasWidth = this.canvasRef.nativeElement.clientWidth;
     const canvasHeight = this.canvasRef.nativeElement.clientHeight;
@@ -154,7 +154,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
     this.camera = new THREE.PerspectiveCamera(50, canvasWidth / canvasHeight, 1, 10000);
     this.camera.position.z = 300;
     // Init particles
-    this.initParticles(this._imageUrl);
+    this.initParticles(this.pImageUrl);
     // Init renderer
     this.renderer.setSize(canvasWidth - 1, canvasHeight);
     this.canvasRef.nativeElement.appendChild(this.renderer.domElement);
@@ -165,7 +165,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
     this.animate();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.scene.clear();
     this.renderer.clear();
     this.texture.dispose();
@@ -202,12 +202,12 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    * Initializes the points
    * @param discard discard pixels darker than threshold #22
    */
-  private initPoints(discard: boolean) {
+  private initPoints(discard: boolean): void {
     const numPoints: number = this.width * this.height;
 
-    var numVisible = numPoints;
-    var threshold = 0;
-    var originalColors = new Float32Array();
+    let numVisible = numPoints;
+    let threshold = 0;
+    let originalColors = new Float32Array();
 
     if (discard) {
       // discard pixels darker than threshold #22
@@ -295,7 +295,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
     geometry.setAttribute('angle', new THREE.InstancedBufferAttribute(angles, 1, false));
 
     this.mesh = new THREE.Mesh(geometry, material);
-    var object3d = new Object3D();
+    const object3d = new Object3D();
     object3d.add(this.mesh);
     this.scene.add(object3d);
   }
@@ -310,7 +310,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
   /**
    * Initializes the hit area
    */
-  private initHitArea() {
+  private initHitArea(): void {
     const geometry = new THREE.PlaneGeometry(this.width, this.height, 1, 1);
     const material = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, wireframe: true, depthTest: false });
     material.visible = false;
@@ -329,7 +329,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
       (this.mesh.material as RawShaderMaterial).uniforms.uRandom.value = val[1];
       (this.mesh.material as RawShaderMaterial).uniforms.uDepth.value = val[2];
     }, () => { }, () => {
-      this._imageChanging = false;
+      this.pImageChanging = false;
     });
   }
 
@@ -348,25 +348,25 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
       (this.mesh.material as RawShaderMaterial).uniforms.uDepth.value = val[2];
     }, () => { }, () => {
       if (this.mesh != null) {
-        if (this.mesh.parent != null) this.mesh.parent.remove(this.mesh);
+        if (this.mesh.parent != null) { this.mesh.parent.remove(this.mesh); }
         this.mesh.geometry.dispose();
         (this.mesh.material as RawShaderMaterial).dispose();
       }
 
       if (this.hitArea != null) {
-        if (this.hitArea.parent != null) this.hitArea.parent.remove(this.hitArea);
+        if (this.hitArea.parent != null) { this.hitArea.parent.remove(this.hitArea); }
         this.hitArea.geometry.dispose();
         (this.hitArea.material as RawShaderMaterial).dispose();
       }
-      this.initParticles(this._imageUrl);
-      this._imageChanging = false;
+      this.initParticles(this.pImageUrl);
+      this.pImageChanging = false;
     });
   }
 
   /**
    * Method for triggering the animation
    */
-  private animate() {
+  private animate(): void {
     window.requestAnimationFrame(() => this.animate());
     if (this.stopAnimation !== true) {
       const delta = this.clock.getDelta();
@@ -380,32 +380,31 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
 
   /**
    * Handle mouse move event
-   * @param event 
+   * @param event mouse event
    */
   private onMouseMove(event: MouseEvent): void {
     // getBoundingClientRect retruns the distance in pixels of the top left corner of the element
     // to the top left corner of the viewport
     const domRect = (this.canvasRef.nativeElement as HTMLElement).getBoundingClientRect();
-    // get the offset distance between the canvas, which contains the particles, to the outer container element 
-    const offsetInCanvasTop = this.canvasRef.nativeElement.children[0].offsetTop;
-    const offsetInCanvasLeft = this.canvasRef.nativeElement.children[0].offsetLeft;
+    // get the offset distance between the canvas, which contains the particles, to the outer container element
+    const canvasEl: HTMLElement = (this.canvasRef.nativeElement.children[0] as HTMLElement);
     // Calculate the relative mouse position
-    this.mouse.x = (event.clientX - domRect.left - offsetInCanvasLeft) / this.canvasRef.nativeElement.children[0].clientWidth * 2 - 1;
-    this.mouse.y = - (event.clientY - domRect.top - offsetInCanvasTop) / this.canvasRef.nativeElement.children[0].clientHeight * 2 + 1;
+    this.mouse.x = (event.clientX - domRect.left - canvasEl.offsetLeft) / canvasEl.clientWidth * 2 - 1;
+    this.mouse.y = - (event.clientY - domRect.top - canvasEl.offsetTop) / canvasEl.clientHeight * 2 + 1;
     // console.info('raw: x= ' + event.clientX + ' , y= ' + event.clientY);
     // console.info('normalized: x= ' + this.mouse.x + ' , y= ' + this.mouse.y);
     this.raycaster.setFromCamera(this.mouse, this.camera);
 
     if (this.hitArea === undefined) { return; }
     const intersects = this.raycaster.intersectObject(this.hitArea);
-    if (intersects != undefined && intersects.length > 0 && this.touch && intersects[0].uv != undefined) {
+    if (intersects !== undefined && intersects.length > 0 && this.touch && intersects[0].uv !== undefined) {
       this.touch.addTouch(intersects[0].uv.x, intersects[0].uv.y);
     }
   }
 
   /**
    * Handle touch move envent
-   * @param event 
+   * @param event mouse event
    */
   private onTouchMove(event: TouchEvent): void {
     if (event.touches.length < 2) {
@@ -423,16 +422,15 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
     // getBoundingClientRect retruns the distance in pixels of the top left corner of the element
     // to the top left corner of the viewport
     const domRect = (this.canvasRef.nativeElement as HTMLElement).getBoundingClientRect();
-    // get the offset distance between the canvas, which contains the particles, to the outer container element 
-    const offsetInCanvasTop = this.canvasRef.nativeElement.children[0].offsetTop;
-    const offsetInCanvasLeft = this.canvasRef.nativeElement.children[0].offsetLeft;
+    // get the offset distance between the canvas, which contains the particles, to the outer container element
+    const canvasEl: HTMLElement = (this.canvasRef.nativeElement.children[0] as HTMLElement);
     // Calculate the relative mouse position
-    this.mouse.x = (event.touches[0].clientX - domRect.left - offsetInCanvasLeft) / this.canvasRef.nativeElement.children[0].clientWidth * 2 - 1;
-    this.mouse.y = - (event.touches[0].clientY - domRect.top - offsetInCanvasTop) / this.canvasRef.nativeElement.children[0].clientHeight * 2 + 1;
+    this.mouse.x = (event.touches[0].clientX - domRect.left - canvasEl.offsetLeft) / canvasEl.clientWidth * 2 - 1;
+    this.mouse.y = - (event.touches[0].clientY - domRect.top - canvasEl.offsetTop) / canvasEl.clientHeight * 2 + 1;
     this.raycaster.setFromCamera(this.mouse, this.camera);
 
     const intersects = this.raycaster.intersectObject(this.hitArea);
-    if (intersects != undefined && intersects.length > 0 && this.touch && intersects[0].uv != undefined) {
+    if (intersects !== undefined && intersects.length > 0 && this.touch && intersects[0].uv !== undefined) {
       this.touch.addTouch(intersects[0].uv.x, intersects[0].uv.y);
     }
   }

@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './image-as-particles.component.html',
   styleUrls: ['./image-as-particles.component.css'],
   animations: [
-    trigger('settingsContainer',[
+    trigger('settingsContainer', [
       transition(':enter', [
         style({transform: 'translateX(100%)'}),
         animate('300ms ease-in', style({transform: 'translateX(0%)'}))
@@ -20,38 +20,38 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ImageAsParticlesComponent implements OnInit {
 
-  settingsOpen: boolean = false;
+  settingsOpen = false;
   imageUrls: string[] = [
-    'assets/dog.png', 
-    'assets/pexels-photo.png', 
-    'assets/tiger.png', 
+    'assets/dog.png',
+    'assets/pexels-photo.png',
+    'assets/tiger.png',
     'assets/blue-parakeet-sits-on-eggs.png'];
-  selectedUrl: string = '';
-  backgroundColor: string = '#222222';
-  importModule: string = `import { ImageAsParticlesModule } from 'ngx-acuw';
+  selectedUrl = '';
+  backgroundColor = '#222222';
+  importModule = `import { ImageAsParticlesModule } from 'ngx-acuw';
 
 @NgModule({
   declarations: [AppComponent, ...],
-  imports: [ImageAsParticlesModule],  
+  imports: [ImageAsParticlesModule],
   bootstrap: [AppComponent]
 })
 export class AppModule {
 }`;
-  directiveExample: string = `<lib-image-as-particles 
+  directiveExample = `<lib-image-as-particles
   [imageUrl]="selectedUrl">
 </lib-image-as-particles>`;
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.selectedUrl = this.imageUrls[0];
   }
 
-  selectImage(selectedImageUrl: string) {
+  selectImage(selectedImageUrl: string): void {
     this.selectedUrl = selectedImageUrl;
   }
 
-  toggleSettingsDialog() {
-    this.settingsOpen = this.settingsOpen == true ? false : true;
+  toggleSettingsDialog(): void {
+    this.settingsOpen = this.settingsOpen === true ? false : true;
   }
 }

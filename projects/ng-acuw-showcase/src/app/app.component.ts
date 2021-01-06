@@ -14,13 +14,13 @@ export class AppComponent {
   ];
   activeRoute = '';
 
-  constructor(private router: Router) { 
+  constructor(private router: Router) {
     this.router.events.subscribe(ev => {
       if (ev instanceof NavigationEnd){
         const url = ev.url;
         // Highlit navigation element of active route
         const idx = this.navItems.findIndex(n => url.includes(n.routeLink));
-        this.activeRoute = idx != -1 ? this.navItems[idx].routeLink : '';
+        this.activeRoute = idx !== -1 ? this.navItems[idx].routeLink : '';
       }
     });
   }
@@ -29,4 +29,4 @@ export class AppComponent {
 export interface NavItem {
       name: string;
       routeLink: string;
-    }
+}

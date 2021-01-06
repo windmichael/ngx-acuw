@@ -23,7 +23,7 @@ export class TouchTexture {
   /**
    * Initializes the texture for the touch area
    */
-  initTexture() {
+  initTexture(): void {
     this.canvas = document.createElement('canvas');
     this.canvas.width = this.canvas.height = this.size;
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -39,7 +39,7 @@ export class TouchTexture {
   /**
    * Updates the trail
    */
-  update() {
+  update(): void {
     this.clear();
 
     // age points
@@ -58,24 +58,24 @@ export class TouchTexture {
     this.texture.needsUpdate = true;
   }
 
-  clear() {
+  clear(): void {
     this.ctx.fillStyle = 'black';
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  addTouch(_x: number, _y: number) {
+  addTouch(px: number, py: number): void {
     let force = 0;
     const last = this.trail[this.trail.length - 1];
     if (last) {
-      const dx = last.x - _x;
-      const dy = last.y - _y;
+      const dx = last.x - px;
+      const dy = last.y - py;
       const dd = dx * dx + dy * dy;
       force = Math.min(dd * 10000, 1);
     }
-    this.trail.push({ x: _x, y: _y, age: 0, force });
+    this.trail.push({ x: px, y: py, age: 0, force });
   }
 
-  drawTouch(point: Trail) {
+  drawTouch(point: Trail): void {
     const pos = {
       x: point.x * this.size,
       y: (1 - point.y) * this.size

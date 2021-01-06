@@ -1,6 +1,6 @@
 export class ImageTransitionShaders{
-    vertex: string = `varying vec2 vUv;void main() {vUv = uv;gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );}`;
-    splitTransitionFrag: string = `
+    vertex = `varying vec2 vUv;void main() {vUv = uv;gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );}`;
+    splitTransitionFrag = `
             uniform float progress;
             uniform float intensity;
             uniform sampler2D texture1;
@@ -38,7 +38,7 @@ export class ImageTransitionShaders{
               gl_FragColor = mix(t1wb, t2wb, progress);
             }
     `;
-    fadeFrag: string = `
+    fadeFrag = `
             uniform float progress;
             uniform sampler2D texture1;
             uniform sampler2D texture2;
@@ -73,7 +73,7 @@ export class ImageTransitionShaders{
               gl_FragColor = mix(t1wb, t2wb, progress);
             }
     `;
-    noiseFrag: string = `
+    noiseFrag = `
 		uniform float time;
 		uniform float progress;
 		uniform float width;
@@ -86,7 +86,7 @@ export class ImageTransitionShaders{
 		uniform vec4 resolution2;
 		varying vec2 vUv;
 		varying vec4 vPosition;
-		//	Classic Perlin 3D Noise 
+		//	Classic Perlin 3D Noise
 		//	by Stefan Gustavson
 		//
 		vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
@@ -247,56 +247,56 @@ export class ImageTransitionShaders{
 			gl_FragColor = mix(t1wb,t2wb,final);
 		}
 	`;
-	blurFrag: string = `
-	// author: gre
-	// license: MIT
-	uniform float progress;
-	uniform float intensity;
-	uniform float ratio;
-	uniform sampler2D texture1;
-	uniform sampler2D texture2;
-	uniform vec4 resolution1;
-	uniform vec4 resolution2;
-	varying vec2 vUv;
-	const int passes = 6;
+    blurFrag = `
+		// author: gre
+		// license: MIT
+		uniform float progress;
+		uniform float intensity;
+		uniform float ratio;
+		uniform sampler2D texture1;
+		uniform sampler2D texture2;
+		uniform vec4 resolution1;
+		uniform vec4 resolution2;
+		varying vec2 vUv;
+		const int passes = 6;
 
-	void main() {
-		vec2 newUV1 = (vUv - vec2(0.5,0.5))*resolution1.zw + vec2(0.5,0.5);
-		vec2 newUV2 = (vUv - vec2(0.5,0.5))*resolution2.zw + vec2(0.5,0.5);
+		void main() {
+			vec2 newUV1 = (vUv - vec2(0.5,0.5))*resolution1.zw + vec2(0.5,0.5);
+			vec2 newUV2 = (vUv - vec2(0.5,0.5))*resolution2.zw + vec2(0.5,0.5);
 
-		vec4 t1 = vec4(0.0);
-		vec4 t2 = vec4(0.0);
-		float disp = intensity/100.0*(0.5-distance(0.5, progress));
-		for (int xi=0; xi<passes; xi++)
-		{
-			float x = float(xi) / float(passes) - 0.5;
-			for (int yi=0; yi<passes; yi++)
+			vec4 t1 = vec4(0.0);
+			vec4 t2 = vec4(0.0);
+			float disp = intensity/100.0*(0.5-distance(0.5, progress));
+			for (int xi=0; xi<passes; xi++)
 			{
-				float y = float(yi) / float(passes) - 0.5;
-				vec2 v = vec2(x,y);
-				float d = disp;
-				t1 += texture2D(texture1,newUV1 + d*v);
-				t2 += texture2D(texture2,newUV2 + d*v);
+				float x = float(xi) / float(passes) - 0.5;
+				for (int yi=0; yi<passes; yi++)
+				{
+					float y = float(yi) / float(passes) - 0.5;
+					vec2 v = vec2(x,y);
+					float d = disp;
+					t1 += texture2D(texture1,newUV1 + d*v);
+					t2 += texture2D(texture2,newUV2 + d*v);
+				}
 			}
-		}
-		
-		t1 /= float(passes*passes);
-		t2 /= float(passes*passes);
 
-		// Use black background color
-		// Top right
-		vec2 tr1 = step(newUV1, vec2(1.0, 1.0));
-		vec2 tr2 = step(newUV2, vec2(1.0, 1.0));
-		float pct1 = tr1.x * tr1.y;
-		float pct2 = tr2.x * tr2.y;
-		// Bottom left
-		vec2 bl1 = step(vec2(0.0, 0.0), newUV1);
-		vec2 bl2 = step(vec2(0.0, 0.0), newUV2);
-		pct1 *= bl1.x * bl1.y;
-		pct2 *= bl2.x * bl2.y;
-		vec4 t1wb = t1 * vec4(pct1,pct1,pct1,1.0);
-		vec4 t2wb = t2 * vec4(pct2,pct2,pct2,1.0);
-		gl_FragColor = mix(t1wb, t2wb, progress);
-	}
+			t1 /= float(passes*passes);
+			t2 /= float(passes*passes);
+
+			// Use black background color
+			// Top right
+			vec2 tr1 = step(newUV1, vec2(1.0, 1.0));
+			vec2 tr2 = step(newUV2, vec2(1.0, 1.0));
+			float pct1 = tr1.x * tr1.y;
+			float pct2 = tr2.x * tr2.y;
+			// Bottom left
+			vec2 bl1 = step(vec2(0.0, 0.0), newUV1);
+			vec2 bl2 = step(vec2(0.0, 0.0), newUV2);
+			pct1 *= bl1.x * bl1.y;
+			pct2 *= bl2.x * bl2.y;
+			vec4 t1wb = t1 * vec4(pct1,pct1,pct1,1.0);
+			vec4 t2wb = t2 * vec4(pct2,pct2,pct2,1.0);
+			gl_FragColor = mix(t1wb, t2wb, progress);
+		}
 	`;
 }
