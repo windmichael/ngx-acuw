@@ -286,6 +286,10 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
         this.material.uniforms.width.value = this._width;
         this.material.fragmentShader = this.shaders.noiseFrag;
         break;
+      case 'blur':
+        this.material.uniforms.intensity.value = this._intensity;
+        this.material.fragmentShader = this.shaders.blurFrag;
+        break;
       default:
         break;
     }

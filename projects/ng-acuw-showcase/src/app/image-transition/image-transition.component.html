@@ -35,15 +35,16 @@
                             <mat-option value="split">split</mat-option>
                             <mat-option value="fade">fade</mat-option>
                             <mat-option value="noise">noise</mat-option>
+                            <mat-option value="blur">blur</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <ng-container [ngSwitch]="selectedTransitionType">
-                        <ng-container *ngSwitchCase="'split'">
+                    <ng-container>
+                        <ng-container *ngIf="selectedTransitionType=='split' || selectedTransitionType=='blur'">
                             <span>Intensity</span>
                             <mat-slider thumbLabel tickInterval="1" min="0" max="100" [(ngModel)]="selectedIntensity">
                             </mat-slider>
                         </ng-container>
-                        <ng-container *ngSwitchCase="'noise'">
+                        <ng-container *ngIf="selectedTransitionType=='noise'">
                             <div class="slider">
                                 <span>SizeX</span>
                                 <mat-slider thumbLabel tickInterval="1" min="1" max="100" [(ngModel)]="selectedSizeX">
