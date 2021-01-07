@@ -20,3 +20,15 @@ npm install three
 ```
 npm install ngx-acuw
 ```
+
+## Components
+<table>
+  <tr>
+    <th>Image As Particles</th>
+    <th>Image Transition</th>
+  </tr>
+  <tr>
+    <td><img src="./projects/ng-acuw-showcase/src/assets/image-as-particles/imageAsParticles.gif" width="150"/></td>
+    <td><img src="./projects/ng-acuw-showcase/src/assets/image-transition/imageTransition.gif" width="150"/></td>
+  </tr>
+</table>
