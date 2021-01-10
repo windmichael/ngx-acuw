@@ -15,11 +15,13 @@
                 </div>
                 <p>Background color:</p>
                 <input type="color" [(ngModel)]="backgroundColor">
+                <mat-slide-toggle class="slide-toggle" [(ngModel)]="animationEnabled">Animation enabled
+                </mat-slide-toggle>
             </div>
 
             <div class="container">
                 <lib-image-as-particles [imageUrl]="selectedUrl" touchAction="none" imageWidth="100%" imageHeight="100%"
-                    [backgroundColor]="backgroundColor" horizontalAlignment="center" verticalAlignment="center">
+                    [backgroundColor]="backgroundColor" horizontalAlignment="center" verticalAlignment="center" [animationEnabled]="animationEnabled">
                 </lib-image-as-particles>
             </div>
         </ng-template>
@@ -107,6 +109,13 @@
                             <td>@Input() verticalAlignment: string</td>
                             <td>center</td>
                             <td>Possible values: "top", "center", "bottom"</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() animationEnabled: boolean</td>
+                            <td>true</td>
+                            <td>
+                                The animation can be stopped by setting the property to "false", e.g. if the element is not in viewport anymore.
+                            </td>
                         </tr>
                     </table>
                 </div>

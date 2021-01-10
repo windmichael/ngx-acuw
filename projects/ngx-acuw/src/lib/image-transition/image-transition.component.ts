@@ -111,6 +111,8 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  @Input() animationEnabled = true;
+
   private pAutoPlay = false;
   private pAutoPlayInterval = 5000;
   private pToggleTransitionDirection = true;
@@ -299,7 +301,9 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
    * Animation
    */
   private animate(): void {
-    this.renderer.render(this.scene, this.camera);
+    if(this.animationEnabled === true){
+      this.renderer.render(this.scene, this.camera);
+    }
     this.animationFrameId = window.requestAnimationFrame(() => this.animate());
   }
 

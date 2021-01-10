@@ -62,5 +62,6 @@
 
 .table-container{
   width: 100vw;
+  max-width: inherit;
   overflow: auto;
 }

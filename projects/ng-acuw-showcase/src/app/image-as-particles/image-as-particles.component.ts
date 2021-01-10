@@ -28,6 +28,7 @@ export class ImageAsParticlesComponent implements OnInit {
     'assets/blue-parakeet-sits-on-eggs.png'];
   selectedUrl = '';
   backgroundColor = '#222222';
+  animationEnabled = true;
   importModule = `import { ImageAsParticlesModule } from 'ngx-acuw';
 
 @NgModule({

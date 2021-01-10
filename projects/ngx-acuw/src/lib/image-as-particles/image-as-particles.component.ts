@@ -80,7 +80,6 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
   private touch: TouchTexture = new TouchTexture();
   private mouse: THREE.Vector2 = new THREE.Vector2();
   private raycaster: THREE.Raycaster = new THREE.Raycaster();
-  private stopAnimation = false;
   private pImageUrl = '';
   private pImageChanging = false;
   private gestureInfo$: Observable<number> = interval(2000);
@@ -139,6 +138,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
     }
   }
   get verticalAlignment(): string { return this.alignItems; }
+  @Input() animationEnabled = true;
 
   @ViewChild('container') canvasRef!: ElementRef;
 
@@ -368,7 +368,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    */
   private animate(): void {
     window.requestAnimationFrame(() => this.animate());
-    if (this.stopAnimation !== true) {
+    if (this.animationEnabled === true) {
       const delta = this.clock.getDelta();
       if (this.mesh != null) {
         if (this.touch) { this.touch.update(); }
@@ -450,15 +450,6 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
           this.distanceAsNumber(this.imageHeight, this.canvasRef.nativeElement.clientHeight);
         this.renderer.setSize(width, height);
       }
-    }
-  }
-
-  @HostListener('window:scroll') onScroll(): void {
-    if ((window.pageYOffset + window.innerHeight) < this.canvasRef.nativeElement.offsetTop ||
-      window.pageYOffset > (this.canvasRef.nativeElement.clientHeight + this.canvasRef.nativeElement.offsetTop)) {
-      this.stopAnimation = true;
-    } else {
-      this.stopAnimation = false;
     }
   }
 

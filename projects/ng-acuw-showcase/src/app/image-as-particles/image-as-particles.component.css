@@ -72,6 +72,10 @@
     box-shadow: 0 0px 10px 5px rgba(0, 0, 0, 0.8);
 }
 
+.slide-toggle{
+    margin: 15px 0 15px 0;
+  }
+
 .description-container {
     width: 100%;
     display: flex;
@@ -86,5 +90,6 @@
 
 .table-container{
     width: 100vw;
+    max-width: inherit;
     overflow: auto;
   }
