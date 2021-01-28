@@ -10,7 +10,8 @@
     "e2e": "ng e2e",
     "buildGitPage": "ng build --prod --project ng-acuw-showcase --output-path docs --base-href https://windmichael.github.io/ngx-acuw/ && npm run copyIndexHtml",
     "copyIndexHtml": "cpy './docs/index.html' './docs/' --rename='404.html'",
-    "buildLibrary": "ng build --prod --project ngx-acuw"
+    "buildLibrary": "ng build --prod --project ngx-acuw",
+    "publishLibrary": "npm publish ./dist/ngx-acuw"
   },
   "private": true,
   "dependencies": {
