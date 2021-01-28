@@ -4,6 +4,9 @@ ngx-acuw is a collection of components for Angular made with the 3D library thre
 
 <img src="./projects/ng-acuw-showcase/src/assets/acuw.svg" width="200"/>
 
+<a href="https://github.com/windmichael/ngx-acuw/blob/master/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/windmichael/ngx-acuw?style=for-the-badge"></a>
+<a href="https://www.npmjs.com/package/ngx-acuw"><img alt="npm package" src="https://img.shields.io/npm/v/ngx-acuw.svg?style=for-the-badge"></a>
+
 ## Showcase and Description
 [ngx-acuw](https://windmichael.github.io/ngx-acuw/)
 
