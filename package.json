@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "githubPublish": "ng build --prod --project ng-acuw-showcase --output-path docs --base-href https://windmichael.github.io/ngx-acuw/",
+    "buildGitPage": "ng build --prod --project ng-acuw-showcase --output-path docs --base-href https://windmichael.github.io/ngx-acuw/ && npm run copyIndexHtml",
+    "copyIndexHtml": "cpy './docs/index.html' './docs/' --rename='404.html'",
     "buildLibrary": "ng build --prod --project ngx-acuw"
   },
   "private": true,
@@ -35,6 +36,7 @@
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
+    "cpy-cli": "^3.1.1",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~5.1.0",
