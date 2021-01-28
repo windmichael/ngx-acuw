@@ -13,8 +13,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
     <div #container class="threejs-container" [style.background-color]="backgroundColor"
                       [style.justify-content]="justifyContent"
                       [style.align-items]="alignItems"
-                      (mousemove)="onMouseMove($event)" (touchmove)="onTouchMove($event)"
-                      (resize)=""></div>
+                      (mousemove)="onMouseMove($event)" (touchmove)="onTouchMove($event)"></div>
     <div *ngIf="showTouchGestureInfo==true" class="touch-gesture-info" [@showHideGestureInformation]>
       <div>
         <span>Use two fingers for touch animation</span>
