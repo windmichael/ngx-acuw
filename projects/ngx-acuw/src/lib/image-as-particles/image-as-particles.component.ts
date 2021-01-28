@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy, HostListener } from '@angular/core';
 import * as THREE from 'three';
 import { Object3D, RawShaderMaterial, Texture } from 'three';
 import { TouchTexture } from './scripts/touch-texture';
@@ -12,7 +12,9 @@ import { animate, style, transition, trigger } from '@angular/animations';
   template: `
     <div #container class="threejs-container" [style.background-color]="backgroundColor"
                       [style.justify-content]="justifyContent"
-                      [style.align-items]="alignItems"></div>
+                      [style.align-items]="alignItems"
+                      (mousemove)="onMouseMove($event)" (touchmove)="onTouchMove($event)"
+                      (resize)=""></div>
     <div *ngIf="showTouchGestureInfo==true" class="touch-gesture-info" [@showHideGestureInformation]>
       <div>
         <span>Use two fingers for touch animation</span>
@@ -158,10 +160,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
     // Init renderer
     this.renderer.setSize(canvasWidth - 1, canvasHeight);
     this.canvasRef.nativeElement.appendChild(this.renderer.domElement);
-    // Add event listeners
-    this.canvasRef.nativeElement.children[0].addEventListener('mousemove', (ev: MouseEvent) => { this.onMouseMove(ev); }, false);
-    this.canvasRef.nativeElement.children[0].addEventListener('touchmove', (ev: TouchEvent) => { this.onTouchMove(ev); }, false);
-
+    // Start animation
     this.animate();
   }
 
@@ -170,9 +169,6 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
     this.renderer.clear();
     this.texture.dispose();
     this.renderer.dispose();
-    // remove event listeners
-    this.canvasRef.nativeElement.removeEventListener('mousemove', (ev: MouseEvent) => { this.onMouseMove(ev); }, false);
-    this.canvasRef.nativeElement.removeEventListener('touchmove', (ev: TouchEvent) => { this.onTouchMove(ev); }, false);
   }
 
   /**
@@ -382,7 +378,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    * Handle mouse move event
    * @param event mouse event
    */
-  private onMouseMove(event: MouseEvent): void {
+  onMouseMove(event: MouseEvent): void {
     // getBoundingClientRect retruns the distance in pixels of the top left corner of the element
     // to the top left corner of the viewport
     const domRect = (this.canvasRef.nativeElement as HTMLElement).getBoundingClientRect();
@@ -406,7 +402,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    * Handle touch move envent
    * @param event mouse event
    */
-  private onTouchMove(event: TouchEvent): void {
+  onTouchMove(event: TouchEvent): void {
     if (event.touches.length < 2) {
       this.showTouchGestureInfo = true;
       this.gestureInfoSubscription.unsubscribe();
