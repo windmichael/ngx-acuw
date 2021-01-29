@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild } from '@angular/core';
 import { interval, Observable, Subscription } from 'rxjs';
 import * as THREE from 'three';
-import { TextureLoader } from 'three';
+import { Texture, TextureLoader } from 'three';
 import { RxjsTween } from '../tween/rxjs-tween';
 import { ImageTransitionShaders } from './shaders/imageTransitionShaders';
 
@@ -52,16 +52,18 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   get toggleTransitionDirection(): boolean { return this.pToggleTransitionDirection; }
   set toggleTransitionDirection(toggleTransitionDirection: boolean) {
     this.pToggleTransitionDirection = toggleTransitionDirection;
+    /*
     if (this.pToggleTransitionDirection === false) {
       // In case the progess is 1, change the progress to 0
       const res = this.currentImage % 2;
       if (res === 1) {
         this.textures[0] = this.textures[1];
         this.material.uniforms.texture1.value = this.textures[0];
-        this.updateTextureResolution(0);
+        this.updateTextureResolution(0, 1);
         this.material.uniforms.progress.value = 0;
       }
     }
+    */
   }
 
   @Input() transitionDuration = 1000;
@@ -130,7 +132,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   private mesh!: THREE.Mesh;
   private material!: THREE.ShaderMaterial;
   private textures: THREE.Texture[] = new Array<THREE.Texture>();
-  private currentImage = 0;
+  private nextImageIndex = 0;
   private tranistionOngoing = false;
   private shaders: ImageTransitionShaders = new ImageTransitionShaders();
   private autoPlay$: Observable<number> = new Observable<number>();
@@ -196,17 +198,17 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
     // Create geometry
     const geometry = new THREE.PlaneBufferGeometry(1, 1, 2, 2);
 
-    // Load texture of the first image
     const promises: Promise<any>[] = new Array<Promise<any>>();
-    const promise1 = new Promise(resolve => {
-      this.textures.push((new TextureLoader()).load(this.imageUrls[0], resolve));
-    });
-    promises.push(promise1);
-    // Load texture of the second image
-    const promise2 = new Promise(resolve => {
-      this.textures.push((new TextureLoader()).load(this.imageUrls[1], resolve));
-    });
-    promises.push(promise2);
+
+    // Load 1st, 2nd and last textures
+    this.textures = new Array<THREE.Texture>(this.imageUrls.length);
+    for (let idx = 0; idx < this.imageUrls.length; idx++) {
+      if (idx === 0 || idx === 1 || idx === (this.imageUrls.length - 1)) {
+        promises.push(new Promise(resolve => {
+          this.textures[idx] = (new TextureLoader()).load(this.imageUrls[idx], resolve);
+        }));
+      }
+    }
 
     Promise.all(promises).then(() => {
 
@@ -247,7 +249,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   private setAutoPlayInterval(): void {
     this.autoPlay$ = interval(this.pAutoPlayInterval);
     this.autoPlaySubscription = this.autoPlay$.subscribe({
-      next: () => { this.showNextImage(); }
+      next: () => { this.transitionToNextTexture(); }
     });
   }
 
@@ -257,7 +259,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   private resetAutoPlayInterval(): void {
     this.autoPlaySubscription.unsubscribe();
     this.autoPlaySubscription = this.autoPlay$.subscribe({
-      next: () => { this.showNextImage(); }
+      next: () => { this.transitionToNextTexture(); }
     });
   }
 
@@ -301,7 +303,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
    * Animation
    */
   private animate(): void {
-    if(this.animationEnabled === true){
+    if (this.animationEnabled === true) {
       this.renderer.render(this.scene, this.camera);
     }
     this.animationFrameId = window.requestAnimationFrame(() => this.animate());
@@ -316,8 +318,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
     this.renderer.setSize(containerWidth, containerHeight);
     this.camera.aspect = containerWidth / containerHeight;
 
-    this.updateTextureResolution(0);
-    this.updateTextureResolution(1);
+    this.updateTextureResolution(this.nextImageIndex, 1);
 
     const dist = this.camera.position.z;
     const height = 1;
@@ -333,7 +334,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
    * Updates the resulution of the texture for the shader depending on the image size type
    * @param textureNumber Number of the texture
    */
-  private updateTextureResolution(textureNumber: number): void {
+  private updateTextureResolution(textureNumber: number, targetGlslTexture: 1 | 2): void {
     const texture = this.textures[textureNumber];
     const containerWidth = this.threejsContainer.nativeElement.offsetWidth;
     const containerHeight = this.threejsContainer.nativeElement.offsetHeight;
@@ -360,12 +361,12 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
       }
     }
 
-    if (textureNumber === 0) {
+    if (targetGlslTexture === 1) {
       this.material.uniforms.resolution1.value.x = containerWidth;
       this.material.uniforms.resolution1.value.y = containerHeight;
       this.material.uniforms.resolution1.value.z = a1;
       this.material.uniforms.resolution1.value.w = a2;
-    } else {
+    } else if (targetGlslTexture === 2) {
       this.material.uniforms.resolution2.value.x = containerWidth;
       this.material.uniforms.resolution2.value.y = containerHeight;
       this.material.uniforms.resolution2.value.z = a1;
@@ -377,74 +378,52 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
    * Starts the transition effect to the next image
    * @param posDirection indicator, if the next or previous image should be loaded
    */
-  private showNextImage(): void {
-    if (this.tranistionOngoing) {
-      return;
-    }
-
+  private transitionToNextTexture(backw = false): void {
+    // Set the flag to indicate that the transition animation is ongoing
     this.tranistionOngoing = true;
-    // Decide if progress should go from "0 to 1" or "1 to 0"
-    const res = this.currentImage % 2;
-    // Update the number of the current shown image
-    if (this.currentImage < this.imageUrls.length - 1) {
-      this.currentImage = this.currentImage + 1;
+
+    if (backw === true) {
+      this.material.uniforms.texture2.value = this.material.uniforms.texture1.value;
+      this.material.uniforms.resolution2.value.x = this.material.uniforms.resolution1.value.x;
+      this.material.uniforms.resolution2.value.y = this.material.uniforms.resolution1.value.y;
+      this.material.uniforms.resolution2.value.z = this.material.uniforms.resolution1.value.z;
+      this.material.uniforms.resolution2.value.w = this.material.uniforms.resolution1.value.w;
+      this.material.uniforms.progress.value = 1;
+      // Set the next image to texture1 and update the resolution
+      this.material.uniforms.texture1.value = this.textures[this.nextImageIndex];
+      this.updateTextureResolution(this.nextImageIndex, 1);
+
+      // Start the tween for doing the transition
+      RxjsTween.createTween(RxjsTween.linear, 1, 0, this.transitionDuration).subscribe({
+        next: val => {
+          this.material.uniforms.progress.value = val;
+        },
+        complete: () => {
+          // Set the transition flag to false to indicate that the transition animation is finished
+          this.tranistionOngoing = false;
+          // Reset progress to 1, thus the texture from texture 2 needs to be set to texture 1
+          this.material.uniforms.texture2.value = this.textures[this.nextImageIndex];
+          this.updateTextureResolution(this.nextImageIndex, 2);
+          this.material.uniforms.progress.value = 0;
+        }
+      });
     } else {
-      this.currentImage = 0;
-    }
-    // Define the next image
-    let nextImage = 0;
-    if (this.currentImage < this.imageUrls.length - 1) {
-      nextImage = this.currentImage + 1;
-    }
-    if (this.toggleTransitionDirection === true) {
-      if (res === 0) {
-        RxjsTween.createTween(RxjsTween.linear, 0, 1, this.transitionDuration).subscribe({
-          next: val => {
-            this.material.uniforms.progress.value = val;
-          },
-          complete: () => {
-            this.tranistionOngoing = false;
-            new Promise(resolve => {
-              this.textures[0] = (new TextureLoader()).load(this.imageUrls[nextImage], resolve);
-            }).then(() => {
-              this.material.uniforms.texture1.value = this.textures[0];
-              this.updateTextureResolution(0);
-            });
-          }
-        });
-      } else {
-        RxjsTween.createTween(RxjsTween.linear, 1, 0, this.transitionDuration).subscribe({
-          next: val => {
-            this.material.uniforms.progress.value = val;
-          },
-          complete: () => {
-            this.tranistionOngoing = false;
-            new Promise(resolve => {
-              this.textures[1] = (new TextureLoader()).load(this.imageUrls[nextImage], resolve);
-            }).then(() => {
-              this.material.uniforms.texture2.value = this.textures[1];
-              this.updateTextureResolution(1);
-            });
-          }
-        });
-      }
-    } else {
+      // Set the next image to texture2 and update the resolution
+      this.material.uniforms.texture2.value = this.textures[this.nextImageIndex];
+      this.updateTextureResolution(this.nextImageIndex, 2);
+
+      // Start the tween for doing the transition
       RxjsTween.createTween(RxjsTween.linear, 0, 1, this.transitionDuration).subscribe({
         next: val => {
           this.material.uniforms.progress.value = val;
         },
         complete: () => {
+          // Set the transition flag to false to indicate that the transition animation is finished
           this.tranistionOngoing = false;
-          this.textures[0] = this.textures[1];
-          this.material.uniforms.texture1.value = this.textures[0];
-          this.updateTextureResolution(0);
+          // Reset progress to 0, thus the texture from texture 2 needs to be set to texture 1
+          this.material.uniforms.texture1.value = this.textures[this.nextImageIndex];
+          this.updateTextureResolution(this.nextImageIndex, 1);
           this.material.uniforms.progress.value = 0;
-          new Promise(resolve => {
-            this.textures[1] = (new TextureLoader()).load(this.imageUrls[nextImage], resolve);
-          }).then(() => {
-            this.material.uniforms.texture2.value = this.textures[1];
-            this.updateTextureResolution(1);
-          });
         }
       });
     }
@@ -452,10 +431,33 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
 
   //#region public methods
   next(): void {
-    if (this.pAutoPlay === true) {
-      this.resetAutoPlayInterval();
+    if (this.tranistionOngoing) { return; }
+
+    if (this.pAutoPlay === true) { this.resetAutoPlayInterval(); }
+
+    // Set the next index
+    this.nextImageIndex = (this.nextImageIndex < this.imageUrls.length - 1) ? this.nextImageIndex + 1 : 0;
+    // Check if another texture needs to be loaded
+    const nextButOne = this.nextImageIndex + 1 > this.imageUrls.length - 1 ? 0 : this.nextImageIndex + 1;
+    if (this.textures[nextButOne] === undefined) {
+      this.textures[nextButOne] = (new TextureLoader).load(this.imageUrls[nextButOne]);
     }
-    this.showNextImage();
+    this.transitionToNextTexture();
+  }
+
+  back(): void {
+    if (this.tranistionOngoing) { return; }
+
+    if (this.pAutoPlay === true) { this.resetAutoPlayInterval(); }
+
+    // Update the number of the current shown image
+    this.nextImageIndex = (this.nextImageIndex > 0) ? this.nextImageIndex - 1 : this.imageUrls.length - 1;
+    // Check if another texture needs to be loaded
+    const nextButOne = this.nextImageIndex - 1 < 0 ? this.imageUrls.length - 1 : this.nextImageIndex - 1;
+    if (this.textures[nextButOne] === undefined) {
+      this.textures[nextButOne] = (new TextureLoader).load(this.imageUrls[nextButOne]);
+    }
+    this.transitionToNextTexture(true);
   }
   //#endregion
 }

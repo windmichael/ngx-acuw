@@ -30,8 +30,8 @@ export class ImageTransitionComponent implements OnInit {
   selectedTransitionType = 'noise';
   selectedImageSize = 'cover';
   selectedTransitionDuration = 1000;
-  selectedToggleTransitionDirection = true;
-  selectedAutoPlayEnabled = true;
+  selectedToggleTransitionDirection = false;
+  selectedAutoPlayEnabled = false;
   selectedAutoPlayInterval = 5000;
   selectedIntensity = 50.0;
   selectedSizeX = 40.0;
