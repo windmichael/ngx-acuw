@@ -7,7 +7,9 @@ import { ImageTransitionComponent } from './image-transition/image-transition.co
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'image-as-particles', component: ImageAsParticlesComponent },
+  { path: 'image-as-particles/:tab', component: ImageAsParticlesComponent },
   { path: 'image-transition', component: ImageTransitionComponent },
+  { path: 'image-transition/:tab', component: ImageTransitionComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 

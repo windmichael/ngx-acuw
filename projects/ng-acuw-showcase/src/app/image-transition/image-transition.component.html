@@ -1,4 +1,5 @@
-<mat-tab-group mat-align-tabs="center" backgroundColor="primary" animationDuration="0ms">
+<mat-tab-group mat-align-tabs="center" backgroundColor="primary" animationDuration="0ms" [selectedIndex]="selectedTabIndex"
+    (selectedIndexChange)="selctedTabChanged($event)">
     <mat-tab label="Demo">
         <ng-template matTabContent>
             <button class="settings-button" mat-mini-fab color="accent" aria-label="settings button"
@@ -20,9 +21,6 @@
                         <mat-label>Transition duration (ms)</mat-label>
                         <input matInput type="number" [(ngModel)]="selectedTransitionDuration">
                     </mat-form-field>
-                    <mat-slide-toggle class="slide-toggle" [(ngModel)]="selectedToggleTransitionDirection">Toggle
-                        transition
-                        direction</mat-slide-toggle>
                     <mat-slide-toggle class="slide-toggle" [(ngModel)]="selectedAutoPlayEnabled">Auto play
                     </mat-slide-toggle>
                     <mat-form-field *ngIf="selectedAutoPlayEnabled==true" appearance="fill">
@@ -62,15 +60,12 @@
                             </div>
                         </ng-container>
                     </ng-container>
-                    <button mat-button (click)="imageTransition.back()">Back</button>
-                    <button mat-button (click)="imageTransition.next()">Next</button>
                 </div>
             </div>
 
             <div class="container" (click)="imageTransition.next()">
                 <lib-image-transition #imageTransition [imageUrls]="imageUrls" [transitionType]="selectedTransitionType"
-                    [imageSize]="selectedImageSize" [transitionDuration]="selectedTransitionDuration"
-                    [toggleTransitionDirection]="selectedToggleTransitionDirection" [autoPlay]="selectedAutoPlayEnabled"
+                    [imageSize]="selectedImageSize" [transitionDuration]="selectedTransitionDuration" [autoPlay]="selectedAutoPlayEnabled"
                     [autoPlayInterval]="selectedAutoPlayInterval" [intensity]="selectedIntensity"
                     [sizeX]="selectedSizeX" [sizeY]="selectedSizeY" [width]="selectedWidth"></lib-image-transition>
             </div>
@@ -147,7 +142,7 @@
                             <td>5000</td>
                             <td>AutoPlay interval in ms, if autoPlay is activated</td>
                         </tr>
-                        <tr>
+                        <tr class="depreciated">
                             <td>@Input() toggleTransitionDirection: boolean</td>
                             <td>true</td>
                             <td>true: animation effect is toggled from left to right. false: animation effect only in
@@ -203,6 +198,10 @@
                         <tr>
                             <td>next()</td>
                             <td>Loads the next image from the imageUrls array</td>
+                        </tr>
+                        <tr>
+                            <td>prev()</td>
+                            <td>Loads the previous image from the imageUrls array</td>
                         </tr>
                     </table>
                 </div>

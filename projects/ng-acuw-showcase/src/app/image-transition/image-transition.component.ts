@@ -1,5 +1,7 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UtilityService } from '../services/utility.service';
 
 @Component({
   selector: 'app-image-transition',
@@ -8,18 +10,19 @@ import { Component, OnInit } from '@angular/core';
   animations: [
     trigger('settingsContainer', [
       transition(':enter', [
-        style({transform: 'translateX(100%)'}),
-        animate('300ms ease-in', style({transform: 'translateX(0%)'}))
+        style({ transform: 'translateX(100%)' }),
+        animate('300ms ease-in', style({ transform: 'translateX(0%)' }))
       ]),
       transition(':leave', [
-        style({transform: 'translateX(0%)'}),
-        animate('300ms ease-in', style({transform: 'translateX(100%)'}))
+        style({ transform: 'translateX(0%)' }),
+        animate('300ms ease-in', style({ transform: 'translateX(100%)' }))
       ])
     ])
   ]
 })
 export class ImageTransitionComponent implements OnInit {
 
+  selectedTabIndex = 0;
   imageUrls: string[] = [
     'assets/image-transition/img1.jpg',
     'assets/image-transition/img2.jpg',
@@ -30,8 +33,7 @@ export class ImageTransitionComponent implements OnInit {
   selectedTransitionType = 'noise';
   selectedImageSize = 'cover';
   selectedTransitionDuration = 1000;
-  selectedToggleTransitionDirection = false;
-  selectedAutoPlayEnabled = false;
+  selectedAutoPlayEnabled = true;
   selectedAutoPlayInterval = 5000;
   selectedIntensity = 50.0;
   selectedSizeX = 40.0;
@@ -53,9 +55,12 @@ export class AppModule {
     [transitionDuration]="1000">
   </lib-image-transition>`;
 
-  constructor() { }
+  constructor(private route: ActivatedRoute, 
+    private router: Router, private utility: UtilityService) { }
 
   ngOnInit(): void {
+    const activeTab = this.route.snapshot.paramMap.get('tab');
+    this.selectedTabIndex = this.utility.getTabIndexFromParam(activeTab);
   }
 
   toggleSettingsDialog(): void {
@@ -66,7 +71,16 @@ export class AppModule {
     if (value >= 1000) {
       return Math.round(value / 1000) + 'k';
     }
-
     return value.toString();
+  }
+
+  selctedTabChanged(index: number){
+    const param = this.utility.getParamFromTabIndex(index);
+    const activeTab = this.route.snapshot.paramMap.get('tab');
+    if(activeTab === null){
+      this.router.navigate([param], {relativeTo: this.route});
+    }else{
+      this.router.navigate(['../' + param], {relativeTo: this.route});
+    }
   }
 }

@@ -77,19 +77,15 @@
   }
 
 .description-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    margin: 0 10px 0 10px;
 }
 
 .description-container .description-content {
     max-width: 800px;
-    margin: 0 10px 30px 10px;
+    margin: 0 auto 30px auto;
 }
 
 .table-container{
-    width: 100vw;
     max-width: inherit;
     overflow: auto;
   }

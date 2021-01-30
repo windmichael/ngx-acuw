@@ -1,5 +1,7 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UtilityService } from '../services/utility.service';
 
 @Component({
   selector: 'app-image-as-particles',
@@ -20,6 +22,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ImageAsParticlesComponent implements OnInit {
 
+  selectedTabIndex = 0;
   settingsOpen = false;
   imageUrls: string[] = [
     'assets/dog.png',
@@ -42,10 +45,13 @@ export class AppModule {
   [imageUrl]="selectedUrl">
 </lib-image-as-particles>`;
 
-  constructor() { }
+  constructor(private route: ActivatedRoute, 
+    private router: Router, private utility: UtilityService) { }
 
   ngOnInit(): void {
     this.selectedUrl = this.imageUrls[0];
+    const activeTab = this.route.snapshot.paramMap.get('tab');
+    this.selectedTabIndex = this.utility.getTabIndexFromParam(activeTab);
   }
 
   selectImage(selectedImageUrl: string): void {
@@ -54,5 +60,15 @@ export class AppModule {
 
   toggleSettingsDialog(): void {
     this.settingsOpen = this.settingsOpen === true ? false : true;
+  }
+
+  selctedTabChanged(index: number){
+    const param = this.utility.getParamFromTabIndex(index);
+    const activeTab = this.route.snapshot.paramMap.get('tab');
+    if(activeTab === null){
+      this.router.navigate([param], {relativeTo: this.route});
+    }else{
+      this.router.navigate(['../' + param], {relativeTo: this.route});
+    }
   }
 }

@@ -48,24 +48,6 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  @Input()
-  get toggleTransitionDirection(): boolean { return this.pToggleTransitionDirection; }
-  set toggleTransitionDirection(toggleTransitionDirection: boolean) {
-    this.pToggleTransitionDirection = toggleTransitionDirection;
-    /*
-    if (this.pToggleTransitionDirection === false) {
-      // In case the progess is 1, change the progress to 0
-      const res = this.currentImage % 2;
-      if (res === 1) {
-        this.textures[0] = this.textures[1];
-        this.material.uniforms.texture1.value = this.textures[0];
-        this.updateTextureResolution(0, 1);
-        this.material.uniforms.progress.value = 0;
-      }
-    }
-    */
-  }
-
   @Input() transitionDuration = 1000;
 
   @Input()
@@ -445,7 +427,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
     this.transitionToNextTexture();
   }
 
-  back(): void {
+  prev(): void {
     if (this.tranistionOngoing) { return; }
 
     if (this.pAutoPlay === true) { this.resetAutoPlayInterval(); }

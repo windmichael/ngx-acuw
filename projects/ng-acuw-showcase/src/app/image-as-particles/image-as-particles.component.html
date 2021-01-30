@@ -1,4 +1,5 @@
-<mat-tab-group mat-align-tabs="center" backgroundColor="primary" animationDuration="0ms">
+<mat-tab-group mat-align-tabs="center" backgroundColor="primary" animationDuration="0ms" [selectedIndex]="selectedTabIndex"
+(selectedIndexChange)="selctedTabChanged($event)">
     <mat-tab label="Demo">
         <ng-template matTabContent>
             <button class="settings-button" mat-mini-fab color="accent" aria-label="settings button"
