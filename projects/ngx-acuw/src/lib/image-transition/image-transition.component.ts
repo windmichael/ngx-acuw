@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { interval, Observable, Subscription } from 'rxjs';
 import * as THREE from 'three';
-import { Texture, TextureLoader } from 'three';
+import { TextureLoader } from 'three';
 import { RxjsTween } from '../tween/rxjs-tween';
 import { ImageTransitionShaders } from './shaders/imageTransitionShaders';
 
@@ -97,9 +97,12 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
 
   @Input() animationEnabled = true;
 
+  @Input() startIndex = 0;
+
+  @Output() imageIndexChange = new EventEmitter<number>();
+
   private pAutoPlay = false;
   private pAutoPlayInterval = 5000;
-  private pToggleTransitionDirection = true;
   private pImageSize = 'cover';
   private pTransitionType = 'split';
   private pIntensity = 40.0;
@@ -150,7 +153,6 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
       this.setAutoPlayInterval();
     }
 
-
     this.animate();
   }
 
@@ -182,15 +184,21 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
 
     const promises: Promise<any>[] = new Array<Promise<any>>();
 
-    // Load 1st, 2nd and last textures
+    // Load pev, current and next textures
     this.textures = new Array<THREE.Texture>(this.imageUrls.length);
+    const prevImg = this.startIndex === 0 ? (this.imageUrls.length - 1) : (this.startIndex - 1);
+    const nextImg = this.startIndex === (this.imageUrls.length - 1) ? 0 : (this.startIndex + 1);
     for (let idx = 0; idx < this.imageUrls.length; idx++) {
-      if (idx === 0 || idx === 1 || idx === (this.imageUrls.length - 1)) {
+      if (idx === this.startIndex || idx === nextImg || idx === prevImg) {
         promises.push(new Promise(resolve => {
           this.textures[idx] = (new TextureLoader()).load(this.imageUrls[idx], resolve);
         }));
       }
     }
+
+    this.nextImageIndex = this.startIndex;
+    // Emit event to set current image index
+    this.imageIndexChange.emit(this.nextImageIndex);
 
     Promise.all(promises).then(() => {
 
@@ -207,8 +215,8 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
           swipe: { value: 0 },
           width: { value: 0.5 },
           radius: { value: 0 },
-          texture1: { value: this.textures[0] },
-          texture2: { value: this.textures[1] },
+          texture1: { value: this.textures[this.startIndex] },
+          texture2: { value: this.textures[nextImg] },
           resolution1: { value: new THREE.Vector4() },
           resolution2: { value: new THREE.Vector4() }
         },
@@ -231,7 +239,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   private setAutoPlayInterval(): void {
     this.autoPlay$ = interval(this.pAutoPlayInterval);
     this.autoPlaySubscription = this.autoPlay$.subscribe({
-      next: () => { this.transitionToNextTexture(); }
+      next: () => { this.prepAndLoadNextImg(false, true); }
     });
   }
 
@@ -241,7 +249,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   private resetAutoPlayInterval(): void {
     this.autoPlaySubscription.unsubscribe();
     this.autoPlaySubscription = this.autoPlay$.subscribe({
-      next: () => { this.transitionToNextTexture(); }
+      next: () => { this.prepAndLoadNextImg(false, true); }
     });
   }
 
@@ -363,6 +371,8 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   private transitionToNextTexture(backw = false): void {
     // Set the flag to indicate that the transition animation is ongoing
     this.tranistionOngoing = true;
+    // EventEmitter
+    this.imageIndexChange.emit(this.nextImageIndex);
 
     if (backw === true) {
       this.material.uniforms.texture2.value = this.material.uniforms.texture1.value;
@@ -411,35 +421,39 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  //#region public methods
-  next(): void {
+  private prepAndLoadNextImg(prev: boolean, autoPlayTriggered: boolean) {
     if (this.tranistionOngoing) { return; }
 
-    if (this.pAutoPlay === true) { this.resetAutoPlayInterval(); }
+    if (this.pAutoPlay === true && autoPlayTriggered === false) { this.resetAutoPlayInterval(); }
 
-    // Set the next index
-    this.nextImageIndex = (this.nextImageIndex < this.imageUrls.length - 1) ? this.nextImageIndex + 1 : 0;
-    // Check if another texture needs to be loaded
-    const nextButOne = this.nextImageIndex + 1 > this.imageUrls.length - 1 ? 0 : this.nextImageIndex + 1;
-    if (this.textures[nextButOne] === undefined) {
-      this.textures[nextButOne] = (new TextureLoader).load(this.imageUrls[nextButOne]);
+    if (prev === false) {
+      // Set the next index
+      this.nextImageIndex = (this.nextImageIndex < this.imageUrls.length - 1) ? this.nextImageIndex + 1 : 0;
+      // Check if another texture needs to be loaded
+      const nextButOne = this.nextImageIndex + 1 > this.imageUrls.length - 1 ? 0 : this.nextImageIndex + 1;
+      if (this.textures[nextButOne] === undefined) {
+        this.textures[nextButOne] = (new TextureLoader).load(this.imageUrls[nextButOne]);
+      }
+    } else {
+      // Update the number of the current shown image
+      this.nextImageIndex = (this.nextImageIndex > 0) ? this.nextImageIndex - 1 : this.imageUrls.length - 1;
+      // Check if another texture needs to be loaded
+      const nextButOne = this.nextImageIndex - 1 < 0 ? this.imageUrls.length - 1 : this.nextImageIndex - 1;
+      if (this.textures[nextButOne] === undefined) {
+        this.textures[nextButOne] = (new TextureLoader).load(this.imageUrls[nextButOne]);
+      }
     }
+
     this.transitionToNextTexture();
   }
 
+  //#region public methods
+  next(): void {
+    this.prepAndLoadNextImg(false, false);
+  }
+
   prev(): void {
-    if (this.tranistionOngoing) { return; }
-
-    if (this.pAutoPlay === true) { this.resetAutoPlayInterval(); }
-
-    // Update the number of the current shown image
-    this.nextImageIndex = (this.nextImageIndex > 0) ? this.nextImageIndex - 1 : this.imageUrls.length - 1;
-    // Check if another texture needs to be loaded
-    const nextButOne = this.nextImageIndex - 1 < 0 ? this.imageUrls.length - 1 : this.nextImageIndex - 1;
-    if (this.textures[nextButOne] === undefined) {
-      this.textures[nextButOne] = (new TextureLoader).load(this.imageUrls[nextButOne]);
-    }
-    this.transitionToNextTexture(true);
+    this.prepAndLoadNextImg(true, false);
   }
   //#endregion
 }

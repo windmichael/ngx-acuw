@@ -96,8 +96,8 @@
                 <h2>Installation</h2>
                 <mat-divider></mat-divider>
 
-                <h4>1. Install three.js via npm:</h4>
-                <pre><code>npm install three</code></pre>
+                <h4>1. Install three.js and @angular/cdk via npm:</h4>
+                <pre><code>npm install three @angular/cdk</code></pre>
 
                 <h4>2. Install ACUW Library</h4>
                 <pre><code>npm install ngx-acuw</code></pre>
@@ -124,7 +124,7 @@
                         </tr>
                         <tr>
                             <td>@Input() imageUrls: string[]</td>
-                            <td></td>
+                            <td>[]</td>
                             <td>Urls to the images</td>
                         </tr>
                         <tr>
@@ -184,6 +184,20 @@
                             <td>true</td>
                             <td>
                                 The animation can be stopped by setting the property to "false", e.g. if the element is not in viewport anymore.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>@Input() startIndex: number</td>
+                            <td>0</td>
+                            <td>
+                                Defines with which image should be shown first when the component is created.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>@Output() imageIndexChange: EventEmitter&lt;number&gt;</td>
+                            <td>-</td>
+                            <td>
+                                Event emitted when the shown image has changed.
                             </td>
                         </tr>
                     </table>

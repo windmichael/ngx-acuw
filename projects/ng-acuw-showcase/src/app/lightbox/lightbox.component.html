@@ -1,0 +1,223 @@
+<mat-tab-group mat-align-tabs="center" backgroundColor="primary" animationDuration="0ms"
+    [selectedIndex]="selectedTabIndex" (selectedIndexChange)="selctedTabChanged($event)">
+    <mat-tab label="Demo">
+        <ng-template matTabContent>
+            <button class="settings-button" mat-mini-fab color="accent" aria-label="settings button"
+                (click)="toggleSettingsDialog()">
+                <mat-icon>{{settingsOpen == false ? 'settings' : 'close'}}</mat-icon>
+            </button>
+
+            <div *ngIf="settingsOpen==true" class="settings-container mat-elevation-z6" [@settingsContainer]>
+                <h4>Settings</h4>
+                <div class="inner-settings-container">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Image size</mat-label>
+                        <mat-select [(value)]="selectedImageSize">
+                            <mat-option value="cover">cover</mat-option>
+                            <mat-option value="contain">contain</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Transition duration (ms)</mat-label>
+                        <input matInput type="number" [(ngModel)]="selectedTransitionDuration">
+                    </mat-form-field>
+                    <mat-slide-toggle class="slide-toggle" [(ngModel)]="selectedAutoPlayEnabled">Auto play
+                    </mat-slide-toggle>
+                    <mat-form-field *ngIf="selectedAutoPlayEnabled==true" appearance="fill">
+                        <mat-label>Auto play interval (ms)</mat-label>
+                        <input matInput type="number" [(ngModel)]="selectedAutoPlayInterval">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Transition type</mat-label>
+                        <mat-select [(value)]="selectedTransitionType">
+                            <mat-option value="split">split</mat-option>
+                            <mat-option value="fade">fade</mat-option>
+                            <mat-option value="noise">noise</mat-option>
+                            <mat-option value="blur">blur</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <ng-container>
+                        <ng-container *ngIf="selectedTransitionType=='split' || selectedTransitionType=='blur'">
+                            <span>Intensity</span>
+                            <mat-slider thumbLabel tickInterval="1" min="0" max="100" [(ngModel)]="selectedIntensity">
+                            </mat-slider>
+                        </ng-container>
+                        <ng-container *ngIf="selectedTransitionType=='noise'">
+                            <div class="slider">
+                                <span>SizeX</span>
+                                <mat-slider thumbLabel tickInterval="1" min="1" max="100" [(ngModel)]="selectedSizeX">
+                                </mat-slider>
+                            </div>
+                            <div class="slider">
+                                <span>SizeY</span>
+                                <mat-slider thumbLabel tickInterval="1" min="1" max="100" [(ngModel)]="selectedSizeY">
+                                </mat-slider>
+                            </div>
+                            <div class="slider">
+                                <span>Width</span>
+                                <mat-slider thumbLabel step="0.01" tickInterval="0.01" min="0.01" max="1"
+                                    [(ngModel)]="selectedWidth"></mat-slider>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </div>
+
+            <div class="container">
+                <h2 class="centered-text">Lightbox Demo</h2>
+                <h4 class="centered-text">Click on an image to open the lightbox...</h4>
+                <div class="gallery">
+                    <img *ngFor="let imgUrl of imageUrls; let idx = index" [src]="imgUrl" (click)="lightbox.open(idx)" loading="lazy">
+                </div>
+                <p class="centered-text">
+                    Photos by
+                    <a class="external-link" href="https://unsplash.com/@davidclode?" target="_blank">David Clode</a>
+                    on
+                    <a class="external-link" href="https://unsplash.com/" target="_blank">Unsplash</a>
+                </p>
+            </div>
+            <lib-lightbox #lightbox [imageUrls]="imageUrls" [transitionType]="selectedTransitionType"
+                    [imageSize]="selectedImageSize" [transitionDuration]="selectedTransitionDuration" [autoPlay]="selectedAutoPlayEnabled"
+                    [autoPlayInterval]="selectedAutoPlayInterval" [intensity]="selectedIntensity"
+                    [sizeX]="selectedSizeX" [sizeY]="selectedSizeY" [width]="selectedWidth"></lib-lightbox>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Description">
+        <div class="description-container">
+            <div class="description-content">
+                <h2>Information</h2>
+                <mat-divider></mat-divider>
+                <p>
+                    The lighbox component uses the image transition component and wraps it into a lightbox gallery. 
+                    In the lightbox all the image transition effects of the image transition component can be used. 
+                    This lightbox with the amazing transition effects can be easily integrated in every Angular website. 
+                </p>
+                <p>
+                    Photos by
+                    <a class="external-link" href="https://unsplash.com/@davidclode?" target="_blank">David Clode</a>
+                    on
+                    <a class="external-link" href="https://unsplash.com/" target="_blank">Unsplash</a>
+                </p>
+
+                <h2>Installation</h2>
+                <mat-divider></mat-divider>
+
+                <h4>1. Install three.js and @angular/cdk via npm:</h4>
+                <pre><code>npm install three @angular/cdk</code></pre>
+
+                <h4>2. Install ACUW Library</h4>
+                <pre><code>npm install ngx-acuw</code></pre>
+
+                <h2>Usage</h2>
+                <mat-divider></mat-divider>
+
+                <h3>Styles</h3>
+                <p>If you're using Angular Material, these styles have been included together with the theme, 
+                    otherwise if you're using the CDK on its own, you'll have to include the styles yourself. 
+                    You can do so by importing the prebuilt styles in your global stylesheet:</p>
+                <code>@import '~@angular/cdk/overlay-prebuilt.css';</code>
+
+                <h3>Import Module</h3>
+                <pre><code>import &#123; LightboxModule &#125; from 'ngx-acuw';
+
+@NgModule(&#123; 
+  declarations: [AppComponent, ...],
+  imports: [LightboxModule],
+  bootstrap: [AppComponent]
+&#125;)
+export class AppModule &#123; 
+&#125;</code></pre>
+
+                <h3>Directive Example</h3>
+                <pre>
+                    <code>
+&lt;div class="gallery"&gt;
+  &lt;img *ngFor="let imgUrl of imageUrls; let idx = index" [src]="imgUrl" (click)="lightbox.open(idx)" loading="lazy"&gt;
+&lt;/div&gt;
+
+&lt;lib-lightbox #lightbox [imageUrls]="imageUrls" transitionType="split" imageSize="cover" transitionDuration="500"&gt;&lt;/lib-lightbox&gt;</code>
+                </pre>
+
+                <h2>Lightbox API</h2>
+                <mat-divider></mat-divider>
+                <h3>Properties</h3>
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Default value</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>@Input() imageUrls: string[]</td>
+                            <td>[]</td>
+                            <td>Urls to the images</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() imageSize: string</td>
+                            <td>cover</td>
+                            <td>Size of the image ("cover", "contain")</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() autoPlay: boolean</td>
+                            <td>false</td>
+                            <td>Switch through the images automatically (true, false)</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() autoPlayInterval: number</td>
+                            <td>5000</td>
+                            <td>AutoPlay interval in ms, if autoPlay is activated</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() transitionDuration: number</td>
+                            <td>1000</td>
+                            <td>Duration of the transition effenct in ms</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() transitionType: string</td>
+                            <td>split</td>
+                            <td>Type of the transition (split, fade, noise, blur)</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() sizeX: string</td>
+                            <td>50.0</td>
+                            <td>Size at x-axis of the transition effect (applicable for type: 'noise')</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() sizeY: string</td>
+                            <td>50.0</td>
+                            <td>Size at y-axis of the transition effect (applicable for type: 'noise')</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() width: string</td>
+                            <td>0.5</td>
+                            <td>Width of the transition effect (applicable for type: 'noise')</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() intensity: string</td>
+                            <td>40.0</td>
+                            <td>Intensity of the transition effect (applicable for type: 'split', 'blur'</td>
+                        </tr>
+                    </table>
+                </div>
+                <h3>Methods</h3>
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>open(index?: number)</td>
+                            <td>Opens the lightbox and shows the image of the specified index (index = 0, if not specified)</td>
+                        </tr>
+                        <tr>
+                            <td>close()</td>
+                            <td>Closes the lightbox</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>

@@ -25,10 +25,10 @@ export class ImageAsParticlesComponent implements OnInit {
   selectedTabIndex = 0;
   settingsOpen = false;
   imageUrls: string[] = [
-    'assets/dog.png',
-    'assets/pexels-photo.png',
-    'assets/tiger.png',
-    'assets/blue-parakeet-sits-on-eggs.png'];
+    'assets/image-as-particles/dog.png',
+    'assets/image-as-particles/pexels-photo.png',
+    'assets/image-as-particles/tiger.png',
+    'assets/image-as-particles/blue-parakeet-sits-on-eggs.png'];
   selectedUrl = '';
   backgroundColor = '#222222';
   animationEnabled = true;

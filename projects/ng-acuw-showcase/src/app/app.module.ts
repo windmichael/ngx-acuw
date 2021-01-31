@@ -19,13 +19,16 @@ import { ImageAsParticlesModule, ImageTransitionModule } from 'projects/ngx-acuw
 import { ImageAsParticlesComponent } from './image-as-particles/image-as-particles.component';
 import { ImageTransitionComponent } from './image-transition/image-transition.component';
 import { HomeComponent } from './home/home.component';
+import { LightboxComponent } from './lightbox/lightbox.component';
+import { LightboxModule } from 'projects/ngx-acuw/src/lib/lightbox/lightbox.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     ImageAsParticlesComponent,
     ImageTransitionComponent,
-    HomeComponent
+    HomeComponent,
+    LightboxComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +47,8 @@ import { HomeComponent } from './home/home.component';
     MatTabsModule,
     MatSliderModule,
     ImageAsParticlesModule,
-    ImageTransitionModule
+    ImageTransitionModule,
+    LightboxModule
   ],
   providers: [
   ],

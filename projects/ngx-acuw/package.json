@@ -1,6 +1,6 @@
 {
   "name": "ngx-acuw",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Angular components using WEBGL (threejs)",
   "author": "Michael Wind",
   "repository": {
@@ -20,11 +20,14 @@
     "image as particles",
     "particle effect",
     "image transition",
-    "WEBGL"
+    "WEBGL",
+    "lightbox",
+    "gallery"
   ],
   "peerDependencies": {
     "@angular/common": "^11.0.3",
     "@angular/core": "^11.0.3",
+    "@angular/cdk": "^11.0.3",
     "three": "^0.124.0"
   },
   "dependencies": {
