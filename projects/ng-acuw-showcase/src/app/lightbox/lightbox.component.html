@@ -1,0 +1,109 @@
+<mat-tab-group mat-align-tabs="center" backgroundColor="primary" animationDuration="0ms" [selectedIndex]="selectedTabIndex"
+(selectedIndexChange)="selctedTabChanged($event)">
+    <mat-tab label="Demo">
+        <ng-template matTabContent>
+            <div class="container">
+                <div class="gallery">
+                    <img *ngFor="let imgUrl of imageUrls" [src]="imgUrl" (click)="lightbox.open()">
+                </div>
+            </div>
+            <lib-lightbox #lightbox [imageUrls]="imageUrls"></lib-lightbox>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Description">
+        <div class="description-container">
+            <div class="description-content">
+                <h2>Information</h2>
+                <mat-divider></mat-divider>
+                <p>
+                    The image-as-particles component is based on the great work and code of 
+                    <a class="external-link" href="https://github.com/brunoimbrizi/"
+                        target="_blank">Bruno Imbrizi</a>
+                    and brought to Angular.
+                    A description and a tutorial how the effect can be created can be found on 
+                    <a class="external-link" href="https://tympanus.net/codrops/2019/01/17/interactive-particles-with-three-js/"
+                        target="_blank">tympanus</a>.
+                </p>
+                <p>
+                    By the way. Do dog on the photo is my dog. 🐕
+                    If you want to see more pictures him, let's have a look on the Instagram account 
+                    (<a class="external-link" href="https://www.instagram.com/lenny_the_samoyed/"
+                        target="_blank">lenny_the_samoyed</a>).
+                </p>
+
+                <h2>Installation</h2>
+                <mat-divider></mat-divider>
+
+                <h4>1. Install three.js via npm:</h4>
+                <pre><code>npm install three</code></pre>
+
+                <h4>2. Install ACUW Library</h4>
+                <pre><code>npm install ngx-acuw</code></pre>
+
+                <h2>Usage</h2>
+                <mat-divider></mat-divider>
+
+                <h3>Import Module</h3>
+                <pre><code>{{importModule}}</code></pre>
+
+                <h3>Directive Example</h3>
+                <code>{{directiveExample}}</code>
+
+                <h2>Particle-As-Images API</h2>
+                <mat-divider></mat-divider>
+                <h3>Properties</h3>
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Default value</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>@Input() imageUrls: string</td>
+                            <td>null</td>
+                            <td>URL to the image</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() backgroundColor: string</td>
+                            <td>#222222</td>
+                            <td>The background-color CSS property sets the background color of an element.</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() imageWidth: string</td>
+                            <td>100%</td>
+                            <td>Width of the generated image in "px" or "%"</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() imageHeight: string</td>
+                            <td>100%</td>
+                            <td>Height of the generated image in "px" or "%"</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() transitionDuration: number</td>
+                            <td>1000</td>
+                            <td>Duration of the transition effenct in ms</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() horizontalAlignment: string</td>
+                            <td>center</td>
+                            <td>Possible values: "start", "center", "end"</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() verticalAlignment: string</td>
+                            <td>center</td>
+                            <td>Possible values: "top", "center", "bottom"</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() animationEnabled: boolean</td>
+                            <td>true</td>
+                            <td>
+                                The animation can be stopped by setting the property to "false", e.g. if the element is not in viewport anymore.
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>

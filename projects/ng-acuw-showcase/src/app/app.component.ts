@@ -10,7 +10,8 @@ export class AppComponent {
   title = 'ng-acuw-showcase';
   navItems: NavItem[] = [
     { name: 'Image As Particles', routeLink: 'image-as-particles' },
-    { name: 'Image Transition', routeLink: 'image-transition' }
+    { name: 'Image Transition', routeLink: 'image-transition' },
+    { name: 'Lightbox', routeLink: 'lightbox' }
   ];
   activeRoute = '';
 
