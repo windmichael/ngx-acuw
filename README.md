@@ -29,10 +29,12 @@ npm install ngx-acuw
   <tr>
     <th>Image As Particles</th>
     <th>Image Transition</th>
+    <th>Lightbox</th>
   </tr>
   <tr>
     <td><img src="./projects/ng-acuw-showcase/src/assets/image-as-particles/imageAsParticles.gif" width="150"/></td>
     <td><img src="./projects/ng-acuw-showcase/src/assets/image-transition/imageTransition.gif" width="150"/></td>
+    <td><img src="./projects/ng-acuw-showcase/src/assets/lightbox/lightbox.jpg" width="150"/></td>
   </tr>
   <tr>
     <td></td>
