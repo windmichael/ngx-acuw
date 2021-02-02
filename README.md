@@ -39,5 +39,6 @@ npm install ngx-acuw
   <tr>
     <td></td>
     <td><a href="https://stackblitz.com/edit/ngx-acuw-image-transition">stackblitz<a/></td>
+    <td></td>
   </tr>
 </table>
