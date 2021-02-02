@@ -1,5 +1,6 @@
 import { OverlayRef } from '@angular/cdk/overlay';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ImageTransitionComponent } from '../image-transition/image-transition.component';
 
 @Component({
   selector: 'lib-lightbox-overlay',
@@ -7,6 +8,8 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
   styleUrls: ['./lightbox-overlay.component.css']
 })
 export class LightboxOverlayComponent implements OnInit {
+
+  @ViewChild(ImageTransitionComponent) imageTransition!: ImageTransitionComponent;
 
   overlayRef?: OverlayRef;
   imageUrls = new Array<string>();
@@ -21,19 +24,59 @@ export class LightboxOverlayComponent implements OnInit {
   intensity = 40.0;
   startIndex = 0;
   currentImageIndex = 1;
-  
-  constructor(private changeRef: ChangeDetectorRef){
+
+  swipeCoord = new Array<number>();
+  swipeTime = 0;
+
+  constructor(private changeRef: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
   }
 
-  close(){
+  /**
+   * Close the lightbox
+   */
+  close() {
     this.overlayRef?.detach();
   }
 
-  imageIndexChange(index: number){
+  /**
+   * method to set the index counter
+   * @param index index of the image
+   */
+  imageIndexChange(index: number) {
     this.currentImageIndex = index + 1;
     this.changeRef.detectChanges();
+  }
+
+  /**
+   * Listen to touche events for gestures (mobile)
+   * @param e touch event
+   * @param when indicator if 'start' or 'end'
+   */
+  swipe(e: TouchEvent, when: string): void {
+
+    const coord: [number, number] = [e.changedTouches[0].clientX, e.changedTouches[0].clientY];
+    const time = new Date().getTime();
+
+    if (when === 'start') {
+      this.swipeCoord = coord;
+      this.swipeTime = time;
+    } else if (when === 'end') {
+      const direction = [coord[0] - this.swipeCoord[0], coord[1] - this.swipeCoord[1]];
+      const duration = time - this.swipeTime;
+
+      if (duration < 1000 && Math.abs(direction[0]) > 30 // Long enough
+        && Math.abs(direction[0]) > Math.abs(direction[1] * 3)) { // Horizontal enough
+        const swipe = direction[0] < 0 ? 'next' : 'previous';
+
+        if (swipe === 'next') {
+          this.imageTransition.next();
+        } else if (swipe === 'previous') {
+          this.imageTransition.prev();
+        }
+      }
+    }
   }
 }
