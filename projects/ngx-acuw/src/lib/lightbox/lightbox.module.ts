@@ -12,6 +12,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     ImageTransitionModule,
     OverlayModule
   ],
-  exports: [ LightboxComponent ]
+  exports: [ LightboxComponent ],
+  entryComponents: [ LightboxOverlayComponent ]
 })
 export class LightboxModule { }
