@@ -1,15 +1,3 @@
-.container {
-    width: 100%;
-    height: calc(100vh - 104px);
-}
-
-@media (min-width: 600px) {
-    .container {
-        width: 100%;
-        height: calc(100vh - 112px);
-    }
-}
-
 .gallery{
     display: flex;
     flex-direction: row;
@@ -31,6 +19,22 @@
     opacity: 0.5;
 }
 
+.centered-text{
+    text-align: center;
+}
+
+.container {
+    width: 100%;
+    height: calc(100vh - 104px);
+}
+
+@media (min-width: 600px) {
+    .container {
+        width: 100%;
+        height: calc(100vh - 112px);
+    }
+}
+
 .settings-button {
     position: fixed;
     top: 120px;
@@ -45,21 +49,19 @@
     display: flex;
     flex-direction: column;
     padding: 0 10px 10px 10px;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 5px;
     min-width: 150px;
-    max-width: calc(100% - 20px);
-    max-width: calc(100% - 20px);
     z-index: 1;
-    max-height: calc(100vh - 80px);
+    max-height: calc(100vh - 150px);
 }
 
-.inner-settings-container{
+.inner-settings-container {
     display: flex;
     flex-direction: column;
     height: 100%;
     overflow-y: auto;
-  }
+}
 
 .slide-toggle {
     margin: 15px 0 15px 0;
@@ -77,8 +79,4 @@
 .table-container {
     max-width: inherit;
     overflow: auto;
-}
-
-.centered-text{
-    text-align: center;
 }

@@ -10,6 +10,10 @@
             <div *ngIf="settingsOpen==true" class="settings-container mat-elevation-z6" [@settingsContainer]>
                 <h4>Settings</h4>
                 <div class="inner-settings-container">
+                    <mat-slide-toggle class="slide-toggle" [(ngModel)]="selectForceFullscreen">Force fullscreen
+                    </mat-slide-toggle>
+                    <mat-slide-toggle class="slide-toggle" [(ngModel)]="selectedforceShowNavButtons">Force show nav-buttons
+                    </mat-slide-toggle>
                     <mat-form-field appearance="fill">
                         <mat-label>Image size</mat-label>
                         <mat-select [(value)]="selectedImageSize">
@@ -76,8 +80,9 @@
                     <a class="external-link" href="https://unsplash.com/" target="_blank">Unsplash</a>
                 </p>
             </div>
-            <lib-lightbox #lightbox [imageUrls]="imageUrls" [transitionType]="selectedTransitionType"
-                    [imageSize]="selectedImageSize" [transitionDuration]="selectedTransitionDuration" [autoPlay]="selectedAutoPlayEnabled"
+            <lib-lightbox #lightbox [imageUrls]="imageUrls" [forceFullscreen]="selectForceFullscreen" [forceShowNavButtons]="selectedforceShowNavButtons" 
+                    [transitionType]="selectedTransitionType" [imageSize]="selectedImageSize" 
+                    [transitionDuration]="selectedTransitionDuration" [autoPlay]="selectedAutoPlayEnabled"
                     [autoPlayInterval]="selectedAutoPlayInterval" [intensity]="selectedIntensity"
                     [sizeX]="selectedSizeX" [sizeY]="selectedSizeY" [width]="selectedWidth"></lib-lightbox>
         </ng-template>
@@ -152,6 +157,16 @@ export class AppModule &#123;
                             <td>@Input() imageUrls: string[]</td>
                             <td>[]</td>
                             <td>Urls to the images</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() forceFullscreen: boolean</td>
+                            <td>false</td>
+                            <td>Set to true, to always show the lightbox in fullscreen mode</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() forceShowNavButtons: boolean</td>
+                            <td>false</td>
+                            <td>Set to true, to always show the navigation buttons</td>
                         </tr>
                         <tr>
                             <td>@Input() imageSize: string</td>

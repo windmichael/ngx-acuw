@@ -13,6 +13,8 @@ export class LightboxOverlayComponent implements OnInit {
 
   overlayRef?: OverlayRef;
   imageUrls = new Array<string>();
+  forceFullscreen = false;
+  forceShowNavButtons = false;
   imageSize = 'cover';
   autoPlay = false;
   autoPlayInterval = 5000;

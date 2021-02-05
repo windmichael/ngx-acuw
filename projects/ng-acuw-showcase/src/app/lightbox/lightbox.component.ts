@@ -36,6 +36,8 @@ export class LightboxComponent implements OnInit {
     'assets/image-transition/img10.jpg'
   ];
   settingsOpen = false;
+  selectForceFullscreen = false;
+  selectedforceShowNavButtons = false;
   selectedTransitionType = 'split';
   selectedImageSize = 'cover';
   selectedTransitionDuration = 1000;
