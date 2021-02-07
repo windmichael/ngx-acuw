@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy, HostListener } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy, HostListener, NgZone, DoCheck } from '@angular/core';
 import * as THREE from 'three';
 import { Object3D, RawShaderMaterial, Texture } from 'three';
 import { TouchTexture } from './scripts/touch-texture';
@@ -143,7 +143,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('container') canvasRef!: ElementRef;
 
-  constructor() {
+  constructor(private ngZone: NgZone) {
   }
 
   ngAfterViewInit(): void {
@@ -319,12 +319,14 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    */
   private show(time: number = 1000): void {
     // Tween in
-    RxjsTween.createTween(RxjsTween.easeInOutQuad, [0.5, 0.0, 70.0], [1.5, 2.0, 4.0], time).subscribe(val => {
-      (this.mesh.material as RawShaderMaterial).uniforms.uSize.value = val[0];
-      (this.mesh.material as RawShaderMaterial).uniforms.uRandom.value = val[1];
-      (this.mesh.material as RawShaderMaterial).uniforms.uDepth.value = val[2];
-    }, () => { }, () => {
-      this.pImageChanging = false;
+    this.ngZone.runOutsideAngular(() => {
+      RxjsTween.createTween(RxjsTween.easeInOutQuad, [0.5, 0.0, 70.0], [1.5, 2.0, 4.0], time).subscribe(val => {
+        (this.mesh.material as RawShaderMaterial).uniforms.uSize.value = val[0];
+        (this.mesh.material as RawShaderMaterial).uniforms.uRandom.value = val[1];
+        (this.mesh.material as RawShaderMaterial).uniforms.uDepth.value = val[2];
+      }, () => { }, () => {
+        this.pImageChanging = false;
+      });
     });
   }
 
@@ -336,25 +338,27 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
     const uSizeStart = (this.mesh.material as RawShaderMaterial).uniforms.uSize.value;
     const uRandomStart = (this.mesh.material as RawShaderMaterial).uniforms.uRandom.value;
     const uDepth = (this.mesh.material as RawShaderMaterial).uniforms.uDepth.value;
-    // Tween out
-    RxjsTween.createTween(RxjsTween.easeInOutQuad, [uSizeStart, uRandomStart, uDepth], [0.0, 5.0, -20.0], time).subscribe(val => {
-      (this.mesh.material as RawShaderMaterial).uniforms.uSize.value = val[0];
-      (this.mesh.material as RawShaderMaterial).uniforms.uRandom.value = val[1];
-      (this.mesh.material as RawShaderMaterial).uniforms.uDepth.value = val[2];
-    }, () => { }, () => {
-      if (this.mesh != null) {
-        if (this.mesh.parent != null) { this.mesh.parent.remove(this.mesh); }
-        this.mesh.geometry.dispose();
-        (this.mesh.material as RawShaderMaterial).dispose();
-      }
+    this.ngZone.runOutsideAngular(() => {
+      // Tween out
+      RxjsTween.createTween(RxjsTween.easeInOutQuad, [uSizeStart, uRandomStart, uDepth], [0.0, 5.0, -20.0], time).subscribe(val => {
+        (this.mesh.material as RawShaderMaterial).uniforms.uSize.value = val[0];
+        (this.mesh.material as RawShaderMaterial).uniforms.uRandom.value = val[1];
+        (this.mesh.material as RawShaderMaterial).uniforms.uDepth.value = val[2];
+      }, () => { }, () => {
+        if (this.mesh != null) {
+          if (this.mesh.parent != null) { this.mesh.parent.remove(this.mesh); }
+          this.mesh.geometry.dispose();
+          (this.mesh.material as RawShaderMaterial).dispose();
+        }
 
-      if (this.hitArea != null) {
-        if (this.hitArea.parent != null) { this.hitArea.parent.remove(this.hitArea); }
-        this.hitArea.geometry.dispose();
-        (this.hitArea.material as RawShaderMaterial).dispose();
-      }
-      this.initParticles(this.pImageUrl);
-      this.pImageChanging = false;
+        if (this.hitArea != null) {
+          if (this.hitArea.parent != null) { this.hitArea.parent.remove(this.hitArea); }
+          this.hitArea.geometry.dispose();
+          (this.hitArea.material as RawShaderMaterial).dispose();
+        }
+        this.initParticles(this.pImageUrl);
+        this.pImageChanging = false;
+      });
     });
   }
 
@@ -362,15 +366,17 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    * Method for triggering the animation
    */
   private animate(): void {
-    window.requestAnimationFrame(() => this.animate());
-    if (this.animationEnabled === true) {
-      const delta = this.clock.getDelta();
-      if (this.mesh != null) {
-        if (this.touch) { this.touch.update(); }
-        (this.mesh.material as RawShaderMaterial).uniforms.uTime.value += delta;
+    this.ngZone.runOutsideAngular(() => {
+      window.requestAnimationFrame(() => this.animate());
+      if (this.animationEnabled === true) {
+        const delta = this.clock.getDelta();
+        if (this.mesh != null) {
+          if (this.touch) { this.touch.update(); }
+          (this.mesh.material as RawShaderMaterial).uniforms.uTime.value += delta;
+        }
+        this.renderer.render(this.scene, this.camera);
       }
-      this.renderer.render(this.scene, this.camera);
-    }
+    });
   }
 
   /**

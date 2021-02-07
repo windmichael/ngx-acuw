@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, NgZone, OnDestroy, Output, ViewChild } from '@angular/core';
 import { interval, Observable, Subscription } from 'rxjs';
 import * as THREE from 'three';
 import { TextureLoader } from 'three';
@@ -125,7 +125,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('threejsContainer') threejsContainer!: ElementRef;
 
-  constructor() { }
+  constructor(private ngZone: NgZone) { }
 
   ngAfterViewInit(): void {
     // Init camera
@@ -296,7 +296,9 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
     if (this.animationEnabled === true) {
       this.renderer.render(this.scene, this.camera);
     }
-    this.animationFrameId = window.requestAnimationFrame(() => this.animate());
+    this.ngZone.runOutsideAngular(() => {
+      this.animationFrameId = window.requestAnimationFrame(() => this.animate());
+    });
   }
 
   /**
@@ -374,51 +376,53 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
     // EventEmitter
     this.imageIndexChange.emit(this.nextImageIndex);
 
-    if (backw === true) {
-      this.material.uniforms.texture2.value = this.material.uniforms.texture1.value;
-      this.material.uniforms.resolution2.value.x = this.material.uniforms.resolution1.value.x;
-      this.material.uniforms.resolution2.value.y = this.material.uniforms.resolution1.value.y;
-      this.material.uniforms.resolution2.value.z = this.material.uniforms.resolution1.value.z;
-      this.material.uniforms.resolution2.value.w = this.material.uniforms.resolution1.value.w;
-      this.material.uniforms.progress.value = 1;
-      // Set the next image to texture1 and update the resolution
-      this.material.uniforms.texture1.value = this.textures[this.nextImageIndex];
-      this.updateTextureResolution(this.nextImageIndex, 1);
-
-      // Start the tween for doing the transition
-      RxjsTween.createTween(RxjsTween.linear, 1, 0, this.transitionDuration).subscribe({
-        next: val => {
-          this.material.uniforms.progress.value = val;
-        },
-        complete: () => {
-          // Set the transition flag to false to indicate that the transition animation is finished
-          this.tranistionOngoing = false;
-          // Reset progress to 1, thus the texture from texture 2 needs to be set to texture 1
-          this.material.uniforms.texture2.value = this.textures[this.nextImageIndex];
-          this.updateTextureResolution(this.nextImageIndex, 2);
-          this.material.uniforms.progress.value = 0;
-        }
-      });
-    } else {
-      // Set the next image to texture2 and update the resolution
-      this.material.uniforms.texture2.value = this.textures[this.nextImageIndex];
-      this.updateTextureResolution(this.nextImageIndex, 2);
-
-      // Start the tween for doing the transition
-      RxjsTween.createTween(RxjsTween.linear, 0, 1, this.transitionDuration).subscribe({
-        next: val => {
-          this.material.uniforms.progress.value = val;
-        },
-        complete: () => {
-          // Set the transition flag to false to indicate that the transition animation is finished
-          this.tranistionOngoing = false;
-          // Reset progress to 0, thus the texture from texture 2 needs to be set to texture 1
-          this.material.uniforms.texture1.value = this.textures[this.nextImageIndex];
-          this.updateTextureResolution(this.nextImageIndex, 1);
-          this.material.uniforms.progress.value = 0;
-        }
-      });
-    }
+    this.ngZone.runOutsideAngular(() => {
+      if (backw === true) {
+        this.material.uniforms.texture2.value = this.material.uniforms.texture1.value;
+        this.material.uniforms.resolution2.value.x = this.material.uniforms.resolution1.value.x;
+        this.material.uniforms.resolution2.value.y = this.material.uniforms.resolution1.value.y;
+        this.material.uniforms.resolution2.value.z = this.material.uniforms.resolution1.value.z;
+        this.material.uniforms.resolution2.value.w = this.material.uniforms.resolution1.value.w;
+        this.material.uniforms.progress.value = 1;
+        // Set the next image to texture1 and update the resolution
+        this.material.uniforms.texture1.value = this.textures[this.nextImageIndex];
+        this.updateTextureResolution(this.nextImageIndex, 1);
+  
+        // Start the tween for doing the transition
+        RxjsTween.createTween(RxjsTween.linear, 1, 0, this.transitionDuration).subscribe({
+          next: val => {
+            this.material.uniforms.progress.value = val;
+          },
+          complete: () => {
+            // Set the transition flag to false to indicate that the transition animation is finished
+            this.tranistionOngoing = false;
+            // Reset progress to 1, thus the texture from texture 2 needs to be set to texture 1
+            this.material.uniforms.texture2.value = this.textures[this.nextImageIndex];
+            this.updateTextureResolution(this.nextImageIndex, 2);
+            this.material.uniforms.progress.value = 0;
+          }
+        });
+      } else {
+        // Set the next image to texture2 and update the resolution
+        this.material.uniforms.texture2.value = this.textures[this.nextImageIndex];
+        this.updateTextureResolution(this.nextImageIndex, 2);
+  
+        // Start the tween for doing the transition
+        RxjsTween.createTween(RxjsTween.linear, 0, 1, this.transitionDuration).subscribe({
+          next: val => {
+            this.material.uniforms.progress.value = val;
+          },
+          complete: () => {
+            // Set the transition flag to false to indicate that the transition animation is finished
+            this.tranistionOngoing = false;
+            // Reset progress to 0, thus the texture from texture 2 needs to be set to texture 1
+            this.material.uniforms.texture1.value = this.textures[this.nextImageIndex];
+            this.updateTextureResolution(this.nextImageIndex, 1);
+            this.material.uniforms.progress.value = 0;
+          }
+        });
+      }
+    });
   }
 
   private prepAndLoadNextImg(prev: boolean, autoPlayTriggered: boolean) {
