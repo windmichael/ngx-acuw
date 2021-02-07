@@ -1,5 +1,5 @@
 import { OverlayRef } from '@angular/cdk/overlay';
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ImageTransitionComponent } from '../image-transition/image-transition.component';
 
 @Component({
@@ -34,6 +34,19 @@ export class LightboxOverlayComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.key === 'ArrowRight') {
+      this.imageTransition.next();
+    }
+    if (event.key === 'ArrowLeft'){
+      this.imageTransition.prev();
+    }
+    if (event.key === 'Escape'){
+      this.close();
+    }
   }
 
   /**
