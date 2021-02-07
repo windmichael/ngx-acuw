@@ -69,3 +69,7 @@
     visibility: collapse;
   }
 }
+
+lib-image-transition{
+  touch-action: none;
+}
