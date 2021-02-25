@@ -11,7 +11,8 @@ export class AppComponent {
   navItems: NavItem[] = [
     { name: 'Image As Particles', routeLink: 'image-as-particles' },
     { name: 'Image Transition', routeLink: 'image-transition' },
-    { name: 'Lightbox', routeLink: 'lightbox' }
+    { name: 'Lightbox', routeLink: 'lightbox' },
+    { name: 'Object Editor', routeLink: 'object-editor' }
   ];
   activeRoute = '';
 

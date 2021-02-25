@@ -4,6 +4,7 @@ import { HomeComponent } from './home/home.component';
 import { ImageAsParticlesComponent } from './image-as-particles/image-as-particles.component';
 import { ImageTransitionComponent } from './image-transition/image-transition.component';
 import { LightboxComponent } from './lightbox/lightbox.component';
+import { ObjectEditorComponent } from './object-editor/object-editor.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -13,6 +14,8 @@ const routes: Routes = [
   { path: 'image-transition/:tab', component: ImageTransitionComponent },
   { path: 'lightbox', component: LightboxComponent },
   { path: 'lightbox/:tab', component: LightboxComponent },
+  { path: 'object-editor', component: ObjectEditorComponent },
+  { path: 'object-editor/:tab', component: ObjectEditorComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 

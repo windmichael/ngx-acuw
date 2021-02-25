@@ -1,0 +1,25 @@
+.container {
+    width: 100%;
+    height: calc(100vh - 104px);
+}
+
+@media (min-width: 600px) {
+    .container {
+        width: 100%;
+        height: calc(100vh - 112px);
+    }
+}
+
+.description-container {
+    margin: 0 10px 0 10px;
+}
+
+.description-container .description-content {
+    max-width: 800px;
+    margin: 0 auto 30px auto;
+}
+
+.table-container {
+    max-width: inherit;
+    overflow: auto;
+}

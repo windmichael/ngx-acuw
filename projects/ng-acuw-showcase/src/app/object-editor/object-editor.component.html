@@ -1,0 +1,42 @@
+<mat-tab-group mat-align-tabs="center" backgroundColor="primary" animationDuration="0ms" [selectedIndex]="selectedTabIndex"
+(selectedIndexChange)="selctedTabChanged($event)">
+    <mat-tab label="Demo">
+        <ng-template matTabContent>
+
+            <div class="container">
+                <lib-object-editor></lib-object-editor>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Description">
+        <div class="description-container">
+            <div class="description-content">
+                <h2>Information</h2>
+                <mat-divider></mat-divider>
+                <p>
+                    todo
+                </p>
+
+                <h2>Installation</h2>
+                <mat-divider></mat-divider>
+
+                <h4>1. Install three.js and @angular/cdk via npm:</h4>
+                <pre><code>npm install three @angular/cdk</code></pre>
+
+                <h4>2. Install ACUW Library</h4>
+                <pre><code>npm install ngx-acuw</code></pre>
+
+                <h2>Usage</h2>
+                <mat-divider></mat-divider>
+
+                <h3>Import Module</h3>
+
+                <h2>Object-Editor API</h2>
+                <mat-divider></mat-divider>
+                <h3>Properties</h3>
+                <div class="table-container">
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>
