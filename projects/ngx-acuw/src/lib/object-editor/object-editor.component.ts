@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { TransformControls } from  'three/examples/jsm/controls/TransformControls';
 
 @Component({
   selector: 'lib-object-editor',
@@ -12,6 +13,8 @@ export class ObjectEditorComponent implements AfterViewInit, OnDestroy {
   private renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   private scene: THREE.Scene = new THREE.Scene();
   private camera!: THREE.PerspectiveCamera;
+  private controls!: OrbitControls;
+  private transformControls!: TransformControls;
 
   @ViewChild('container') canvasRef!: ElementRef;
 
@@ -22,18 +25,30 @@ export class ObjectEditorComponent implements AfterViewInit, OnDestroy {
     const canvasHeight = this.canvasRef.nativeElement.clientHeight;
     // Set camera
     this.camera = new THREE.PerspectiveCamera(20, canvasWidth / canvasHeight, 1, 10000);
+    this.camera.position.set(100, 50, 100);
     this.scene.add(this.camera);
     this.scene.background = new THREE.Color('black');
     // Grid helper
     const gridHelper = new THREE.GridHelper( 100, 10 );
     this.scene.add( gridHelper );
     // Orbit controls
-    const controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    // Transform controls
+    this.transformControls = new TransformControls(this.camera, this.renderer.domElement);
+    this.transformControls.addEventListener('dragging-changed', event => { 
+      this.controls.enabled = !event.value 
+    });
+    this.scene.add(this.transformControls);
+    // Axis helper
+    //const axesHelper = new THREE.AxesHelper( 5 );
+    //this.scene.add( axesHelper );
     // Init renderer
     this.renderer.setSize(canvasWidth - 1, canvasHeight);
     this.canvasRef.nativeElement.appendChild(this.renderer.domElement);
     // Start animation
     this.animate();
+
+    this.addBox();
   }
 
   ngOnDestroy(): void {
@@ -48,8 +63,19 @@ export class ObjectEditorComponent implements AfterViewInit, OnDestroy {
   private animate(): void {
     this.ngZone.runOutsideAngular(() => {
       window.requestAnimationFrame(() => this.animate());
+      this.controls.update();
       this.renderer.render(this.scene, this.camera);
     });
+  }
+
+  private addBox(){
+    const geometry = new THREE.BoxGeometry( 10, 10, 10 );
+    const material = new THREE.MeshBasicMaterial();
+    const mesh = new THREE.Mesh(geometry, material);
+
+    this.transformControls.attach(mesh);
+
+    this.scene.add(mesh);
   }
 
   @HostListener('window:resize') resize(): void {
