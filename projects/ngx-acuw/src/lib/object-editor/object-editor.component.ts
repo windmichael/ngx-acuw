@@ -15,6 +15,9 @@ export class ObjectEditorComponent implements AfterViewInit, OnDestroy {
   private camera!: THREE.PerspectiveCamera;
   private controls!: OrbitControls;
   private transformControls!: TransformControls;
+  private tcDraggingChange = (event: THREE.Event) => {
+    this.controls.enabled = !event.value;
+  }
 
   @ViewChild('container') canvasRef!: ElementRef;
 
@@ -35,9 +38,7 @@ export class ObjectEditorComponent implements AfterViewInit, OnDestroy {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     // Transform controls
     this.transformControls = new TransformControls(this.camera, this.renderer.domElement);
-    this.transformControls.addEventListener('dragging-changed', event => { 
-      this.controls.enabled = !event.value 
-    });
+    this.transformControls.addEventListener('dragging-changed', this.tcDraggingChange);
     this.scene.add(this.transformControls);
     // Axis helper
     //const axesHelper = new THREE.AxesHelper( 5 );
@@ -52,6 +53,7 @@ export class ObjectEditorComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.transformControls.removeEventListener('dragging-changed', this.tcDraggingChange);
     this.scene.clear();
     this.renderer.clear();
     this.renderer.dispose();
