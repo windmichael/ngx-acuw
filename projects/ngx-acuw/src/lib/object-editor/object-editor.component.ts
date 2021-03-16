@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { TransformControls } from  'three/examples/jsm/controls/TransformControls';
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls';
 
 @Component({
   selector: 'lib-object-editor',
@@ -18,6 +18,7 @@ export class ObjectEditorComponent implements AfterViewInit, OnDestroy {
   private tcDraggingChange = (event: THREE.Event) => {
     this.controls.enabled = !event.value;
   }
+  addObjectMenueOpen = false;
 
   @ViewChild('container') canvasRef!: ElementRef;
 
@@ -32,8 +33,8 @@ export class ObjectEditorComponent implements AfterViewInit, OnDestroy {
     this.scene.add(this.camera);
     this.scene.background = new THREE.Color('black');
     // Grid helper
-    const gridHelper = new THREE.GridHelper( 100, 10 );
-    this.scene.add( gridHelper );
+    const gridHelper = new THREE.GridHelper(100, 10);
+    this.scene.add(gridHelper);
     // Orbit controls
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     // Transform controls
@@ -70,14 +71,42 @@ export class ObjectEditorComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  private addBox(){
-    const geometry = new THREE.BoxGeometry( 10, 10, 10 );
+  private addBox() {
+    const geometry = new THREE.BoxGeometry(10, 10, 10);
     const material = new THREE.MeshBasicMaterial();
     const mesh = new THREE.Mesh(geometry, material);
 
     this.transformControls.attach(mesh);
 
     this.scene.add(mesh);
+  }
+
+  addObject(object: string) {
+    let geometry;
+    let material;
+    
+    switch (object) {
+      case 'box':
+        geometry = new THREE.BoxGeometry(10, 10, 10);
+        material = new THREE.MeshBasicMaterial();
+        break;
+      case 'circle':
+        geometry = new THREE.CircleGeometry(10);
+        material = new THREE.MeshBasicMaterial();
+        break;
+      case 'cone':
+        geometry = new THREE.ConeGeometry(10, 10);
+        material = new THREE.MeshBasicMaterial();
+        break;
+      default:
+        break;
+    }
+
+    if(geometry && material){
+      const mesh = new THREE.Mesh(geometry, material);
+      this.transformControls.attach(mesh);
+      this.scene.add(mesh);
+    }
   }
 
   @HostListener('window:resize') resize(): void {

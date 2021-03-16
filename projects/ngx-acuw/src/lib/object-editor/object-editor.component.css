@@ -14,3 +14,28 @@
   width: 250px;
   height: 100%;
 }
+
+.overlay-menue-list {
+  width: 200px;
+  border: solid 1px #ccc;
+  border-radius: 5px;
+  background: #fff;
+  text-align: center;
+  padding: 10px;
+  margin: 0;
+}
+
+.overlay-menue-list > li {
+  list-style-type: none;
+  border-bottom: solid 1px #8b8b8b;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.overlay-menue-list > li:last-child {
+  border-bottom: none;
+}
+
+.overlay-menue-list > li:hover{
+  background: rgb(192, 192, 192);
+}

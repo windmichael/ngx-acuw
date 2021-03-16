@@ -2,5 +2,15 @@
     <div #container class="threejs-container"></div>
     <div class="controls-container">
         <h3>Objects</h3>
+        <button (click)="addObjectMenueOpen = !addObjectMenueOpen" type="button" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+            Add object
+        </button>
+        <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="addObjectMenueOpen">
+            <ul class="overlay-menue-list">
+                <li (click)="addObject('box')">Box</li>
+                <li (click)="addObject('circle')">Circle</li>
+                <li (click)="addObject('cone')">Cone</li>
+            </ul>
+        </ng-template>
     </div>
 </div>
