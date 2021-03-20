@@ -1,5 +1,5 @@
 <div class="editor">
-    <div #container class="threejs-container"></div>
+    <div #container class="threejs-container" (click)="mouseClick($event)"></div>
     <div class="controls-container">
         <h3>Objects</h3>
         <button (click)="addObjectMenueOpen = !addObjectMenueOpen" type="button" cdkOverlayOrigin #trigger="cdkOverlayOrigin">

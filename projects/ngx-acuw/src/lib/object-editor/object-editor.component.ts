@@ -50,7 +50,7 @@ export class ObjectEditorComponent implements AfterViewInit, OnDestroy {
     // Start animation
     this.animate();
 
-    this.addBox();
+    this.addObject('box');
   }
 
   ngOnDestroy(): void {
@@ -71,17 +71,37 @@ export class ObjectEditorComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  private addBox() {
-    const geometry = new THREE.BoxGeometry(10, 10, 10);
-    const material = new THREE.MeshBasicMaterial();
-    const mesh = new THREE.Mesh(geometry, material);
-
-    this.transformControls.attach(mesh);
-
-    this.scene.add(mesh);
+  /**
+   * Handle mouse click event
+   * @param event event of the mouse click
+   */
+  mouseClick(event: MouseEvent){
+    // getBoundingClientRect retruns the distance in pixels of the top left corner of the element
+    // to the top left corner of the viewport
+    const domRect = (this.canvasRef.nativeElement as HTMLElement).getBoundingClientRect();
+    // get the offset distance between the canvas, which contains the particles, to the outer container element
+    const canvasEl: HTMLElement = (this.canvasRef.nativeElement.children[0] as HTMLElement);
+    // Calculate the relative mouse position
+    let mousePoint = new THREE.Vector2();
+    mousePoint.x = (event.clientX - domRect.left - canvasEl.offsetLeft) / canvasEl.clientWidth * 2 - 1;
+    mousePoint.y = - (event.clientY - domRect.top - canvasEl.offsetTop) / canvasEl.clientHeight * 2 + 1;
+    // console.info('raw: x= ' + event.clientX + ' , y= ' + event.clientY);
+    // console.info('normalized: x= ' + this.mouse.x + ' , y= ' + this.mouse.y);
+    let raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(mousePoint, this.camera);
+    // calculate objects intersecting the picking ray
+	  const intersects = raycaster.intersectObjects(this.scene.children.filter(x => x.type != 'GridHelper'));
+    if(intersects && intersects.length > 0){
+      // Show the transform controls at the first intersecting element
+      this.transformControls.attach(intersects[0].object);
+    }
   }
 
-  addObject(object: string) {
+  /**
+   * Add a new object to the scene
+   * @param object name of the object
+   */
+  addObject(object: 'box'|'circle'|'cone') {
     let geometry;
     let material;
     
@@ -104,7 +124,6 @@ export class ObjectEditorComponent implements AfterViewInit, OnDestroy {
 
     if(geometry && material){
       const mesh = new THREE.Mesh(geometry, material);
-      this.transformControls.attach(mesh);
       this.scene.add(mesh);
     }
   }
