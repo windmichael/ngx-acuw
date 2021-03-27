@@ -24,7 +24,14 @@ export class CarouselItem {
 
 @Component({
   selector: 'acuw-carousel',
-  templateUrl: './carousel.component.html',
+  template: `
+    <div #threejsContainer class="threejs-container"></div>
+    <!-- dots -->
+    <div *ngIf="showDots==true && userMove==false" class="dots" [@dotsAnimation]>
+        <span *ngFor="let carouselTemplate of carouselItemTemplates; index as i" 
+            [ngClass]="{'active': activeCarouselElement==i}"></span>
+    </div>
+  `,
   styleUrls: ['./carousel.component.css'],
   styles: [`
   `
@@ -61,7 +68,6 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input() cameraDistance = 600;
 
   @ViewChild('threejsContainer') threejsContainer!: ElementRef;
-  @ViewChild('touchOverlay') touchOverlay!: ElementRef;
 
   @ContentChildren(CarouselItem) carouselItemTemplates!: QueryList<CarouselItem>;
 
@@ -99,12 +105,14 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
     this.initCarouselObjects();
 
     // Object-Controls
-    this.objectControls = new ObjectControls(this.css3dRenderer.domElement, this.carouselGroup, this.touchOverlay.nativeElement);
-    this.objectControls.userInteracted$.subscribe({ next: val => { 
-      this.userMove = val;
-      // Cancel the rotation, if running
-      this.rotationSubscription.unsubscribe(); 
-    } });
+    this.objectControls = new ObjectControls(this.css3dRenderer.domElement, this.carouselGroup, this.threejsContainer.nativeElement);
+    this.objectControls.userInteracted$.subscribe({
+      next: val => {
+        this.userMove = val;
+        // Cancel the rotation, if running
+        this.rotationSubscription.unsubscribe();
+      }
+    });
 
     // Animate
     this.animate();
@@ -116,16 +124,16 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
       this.rotateTo(change.currentValue);
     }
     change = changes['radius'];
-    if (change && !change.firstChange && this.carouselGroup){
+    if (change && !change.firstChange && this.carouselGroup) {
       this.updateRadius();
     }
     change = changes['cameraFov'];
-    if (change && !change.firstChange && this.camera){
+    if (change && !change.firstChange && this.camera) {
       this.camera.fov = this.cameraFov;
       this.camera.updateProjectionMatrix();
     }
     change = changes['cameraDistance'];
-    if (change && !change.firstChange && this.camera){
+    if (change && !change.firstChange && this.camera) {
       this.camera.position.set(0, 0, this.cameraDistance);
       this.camera.updateProjectionMatrix();
     }
@@ -175,6 +183,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
       let copiedElement = (this.carouselItemTemplates.get(idx)?.htmlElement);
       if (copiedElement) {
         var object = new CSS3DObject(copiedElement);
+        object.element.style.pointerEvents = 'none';
         // Add element to global variable
         this.carouselElements.push(object);
         // Create subscription for tween animation
@@ -211,7 +220,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
         obj.position.x = Math.random() * 2000 - 1000;
         obj.position.y = Math.random() * 500;
         obj.position.z = Math.random() * 500;
-        
+
         // Add the objects to the portfolio group
         this.carouselGroup.add(obj);
 
@@ -315,8 +324,8 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
   /**
    * Updates the radius of the carousel items
    */
-  private updateRadius(){
-    for(let idx = 0; idx < this.carouselGroup.children.length; idx++){
+  private updateRadius() {
+    for (let idx = 0; idx < this.carouselGroup.children.length; idx++) {
       let theta = idx * 2 * (Math.PI / this.carouselGroup.children.length);
       this.carouselGroup.children[idx].position.setFromCylindricalCoords(this.radius, theta, this.yPosition);
     }

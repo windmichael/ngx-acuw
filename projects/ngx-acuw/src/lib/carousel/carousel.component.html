@@ -1,8 +1,0 @@
-<div #threejsContainer class="threejs-container"></div>
-<div #touchOverlay class="touch-overlay"></div>
-
-<!-- dots -->
-<div *ngIf="showDots==true && userMove==false" class="dots" [@dotsAnimation]>
-    <span *ngFor="let carouselTemplate of carouselItemTemplates; index as i" 
-        [ngClass]="{'active': activeCarouselElement==i}"></span>
-</div>
