@@ -1,8 +1,9 @@
-.home-container{
+.home-container {
     width: 100%;
+    min-height: calc(100% - 64px);
 }
 
-.main-header{
+.main-header {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -13,21 +14,21 @@
     padding: 0 0 30px 0;
 }
 
-.main-header .header-text-container{
+.main-header .header-text-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.main-header h1,h2,h4{
+.main-header h1, h2, h4 {
     text-align: center;
 }
 
-.logo{
+.logo {
     height: 300px;
 }
 
-.description-container{
+.description-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -35,13 +36,13 @@
     margin: 10px 0 10px 0;
 }
 
-.description-container .description{
+.description-container .description {
     max-width: 300px;
     padding: 10px;
     margin: 10px;
 }
 
-.components-list{
+.components-list {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -49,25 +50,40 @@
     margin: 10px 0 10px 0;
 }
 
-.components-list .component{
+.components-list .component {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-content: center;
     width: 200px;
     padding: 10px;
     margin: 10px;
+    overflow: hidden;
 }
 
-.components-list .component h3{
+.components-list .component h3 {
     text-align: center;
     color: black;
 }
 
-.components-list .component img{
+.components-list .component img {
     height: 150px;
     object-fit: contain;
 }
 
-.components-list .component:hover{
+.components-list .component:hover {
     background-color: rgba(0, 0, 0, 0.05);
+}
+
+.new-badge {
+    position: absolute;
+    right: 26px;
+    top: 40px;
+    background-color: var(--primary);
+    color: white;
+    transform: rotate(45deg);
+    text-align: center;
+    width: 110px;
+    padding: 5px 0px 5px 0px;
+    margin: -26px -55px 0 0px;
 }

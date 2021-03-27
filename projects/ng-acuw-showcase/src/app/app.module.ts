@@ -15,12 +15,12 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ImageAsParticlesModule, ImageTransitionModule } from 'projects/ngx-acuw/src/public-api';
 import { ImageAsParticlesComponent } from './image-as-particles/image-as-particles.component';
 import { ImageTransitionComponent } from './image-transition/image-transition.component';
 import { HomeComponent } from './home/home.component';
 import { LightboxComponent } from './lightbox/lightbox.component';
-import { LightboxModule } from 'projects/ngx-acuw/src/lib/lightbox/lightbox.module';
+import { CarouselDemoComponent } from './carousel/carousel-demo.component';
+import { ImageAsParticlesModule, ImageTransitionModule, LightboxModule, CarouselModule } from 'projects/ngx-acuw/src/public-api';
 
 @NgModule({
   declarations: [
@@ -28,7 +28,8 @@ import { LightboxModule } from 'projects/ngx-acuw/src/lib/lightbox/lightbox.modu
     ImageAsParticlesComponent,
     ImageTransitionComponent,
     HomeComponent,
-    LightboxComponent
+    LightboxComponent,
+    CarouselDemoComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +49,8 @@ import { LightboxModule } from 'projects/ngx-acuw/src/lib/lightbox/lightbox.modu
     MatSliderModule,
     ImageAsParticlesModule,
     ImageTransitionModule,
-    LightboxModule
+    LightboxModule,
+    CarouselModule
   ],
   providers: [
   ],

@@ -8,3 +8,5 @@ export * from './lib/image-transition/image-transition.component';
 export * from './lib/image-transition/image-transition.module';
 export * from './lib/lightbox/lightbox.component';
 export * from './lib/lightbox/lightbox.module';
+export * from './lib/carousel/carousel.component';
+export * from './lib/carousel/carousel.module';

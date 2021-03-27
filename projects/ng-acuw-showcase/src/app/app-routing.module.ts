@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { CarouselDemoComponent } from './carousel/carousel-demo.component';
 import { HomeComponent } from './home/home.component';
 import { ImageAsParticlesComponent } from './image-as-particles/image-as-particles.component';
 import { ImageTransitionComponent } from './image-transition/image-transition.component';
@@ -13,6 +14,8 @@ const routes: Routes = [
   { path: 'image-transition/:tab', component: ImageTransitionComponent },
   { path: 'lightbox', component: LightboxComponent },
   { path: 'lightbox/:tab', component: LightboxComponent },
+  { path: 'carousel', component: CarouselDemoComponent },
+  { path: 'carousel/:tab', component: CarouselDemoComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 

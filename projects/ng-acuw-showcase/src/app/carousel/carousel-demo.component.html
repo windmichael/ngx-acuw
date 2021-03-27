@@ -1,0 +1,194 @@
+<mat-tab-group mat-align-tabs="center" backgroundColor="primary" animationDuration="0ms"
+    [selectedIndex]="selectedTabIndex" (selectedIndexChange)="selctedTabChanged($event)">
+    <mat-tab label="Demo">
+        <ng-template matTabContent>
+            <button class="settings-button" mat-mini-fab color="accent" aria-label="settings button"
+                (click)="toggleSettingsDialog()">
+                <mat-icon>{{settingsOpen == false ? 'settings' : 'close'}}</mat-icon>
+            </button>
+
+            <div *ngIf="settingsOpen==true" class="settings-container mat-elevation-z6" [@settingsContainer]>
+                <h4>Settings</h4>
+                <div class="inner-settings-container">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Number of carousel items</mat-label>
+                        <input matInput type="number" min="1" max="10" [(ngModel)]="numberOfCarouselItems"
+                            (ngModelChange)="numberOfItemsChanged($event)">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Active carousel Item</mat-label>
+                        <input matInput type="number" min="0" [max]="numberOfCarouselItems-1" [(ngModel)]="activeCarouselItem">
+                    </mat-form-field>
+                    <span>Radius</span>
+                    <mat-slider thumbLabel tickInterval="1" min="50" max="500" [(ngModel)]="selectedRadius">
+                    </mat-slider>
+                    <span>Camera distance</span>
+                    <mat-slider thumbLabel tickInterval="1" min="400" max="1200" [(ngModel)]="selectedCameraDistance">
+                    </mat-slider>
+                </div>
+            </div>
+
+            <div class="container">
+                <acuw-carousel #carousel class="carousel" [(activeCarouselElement)]="activeCarouselItem"
+                    [radius]="selectedRadius" [cameraDistance]="selectedCameraDistance">
+                    <acuw-carousel-item *ngFor="let item of carouselItems;index as i" class="carousel-item">
+                        <h2>Item {{ i+1 }}</h2>
+                        <img [src]="item" loading="lazy">
+                        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+                            invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+                    </acuw-carousel-item>
+                </acuw-carousel>
+
+                <!-- Rotate buttons -->
+                <div class="roate-button-container">
+                    <button mat-icon-button color="primary" aria-label="privious button" (click)="carousel.previous()">
+                        <mat-icon>chevron_left</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" aria-label="next button" (click)="carousel.next()">
+                        <mat-icon>chevron_right</mat-icon>
+                    </button>
+                </div>
+
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Description">
+        <div class="description-container">
+            <div class="description-content">
+                <h2>Information</h2>
+                <p>
+                    The carousel component provides the possibility to show custom templates ordered in a cylindrical form. 
+                    The user can rotate the carousel and therefore navigate through all items. The rotation can be either 
+                    by using buttons to rotate to the next or previous item, 
+                    or via dragging the mouse. In addition, this component shows the active carousel element via indicator dots. 
+                </p>
+                <p>
+                    Photos by
+                    <a class="external-link" href="https://unsplash.com/@davidclode?" target="_blank">David Clode</a>
+                    on
+                    <a class="external-link" href="https://unsplash.com/" target="_blank">Unsplash</a>
+                </p>
+                <mat-divider></mat-divider>
+
+                <h2>Installation</h2>
+                <mat-divider></mat-divider>
+
+                <h4>1. Install three.js and @angular/cdk via npm:</h4>
+                <pre><code>npm install three @angular/cdk</code></pre>
+
+                <h4>2. Install ACUW Library</h4>
+                <pre><code>npm install ngx-acuw</code></pre>
+
+                <h2>Usage</h2>
+                <mat-divider></mat-divider>
+                <h3>Import Module</h3>
+                <pre><code>import &#123; CarouselModule &#125; from 'ngx-acuw';
+
+@NgModule(&#123; 
+  declarations: [AppComponent, ...],
+  imports: [CarouselModule],
+  bootstrap: [AppComponent]
+&#125;)
+export class AppModule &#123; 
+&#125;</code></pre>
+
+                <h3>Directive Example</h3>
+                <pre>
+                    <code>
+&lt;acuw-carousel #carousel class="carousel" [(activeCarouselElement)]="activeCarouselItem" radius="350" cameraDistance="740"&gt;
+    &lt;acuw-carousel-item class="carousel-item"&gt;
+        &lt;h2>Item 1&lt;/h2&gt;
+        &lt;p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.&lt;/p&gt;
+    &lt;/acuw-carousel-item&gt;
+    &lt;acuw-carousel-item class="carousel-item"&gt;
+        &lt;h2>Item 2&lt;/h2&gt;
+        &lt;p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.&lt;/p&gt;
+    &lt;/acuw-carousel-item&gt;
+    &lt;acuw-carousel-item class="carousel-item"&gt;
+        &lt;h2>Item 3&lt;/h2&gt;
+        &lt;p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.&lt;/p&gt;
+    &lt;/acuw-carousel-item&gt;
+&lt;/acuw-carousel&gt;</code>
+                </pre>
+
+                <h2>Carousel API</h2>
+                <mat-divider></mat-divider>
+                <h3>Properties</h3>
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Default value</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>@Input() showDots: boolean</td>
+                            <td>true</td>
+                            <td>Show or hide the dots, which indicate which item is active.</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() activeCarouselElement: number</td>
+                            <td>0</td>
+                            <td>Number of the active carousel element/item.</td>
+                        </tr>
+                        <tr>
+                            <td>@Output() activeCarouselElementChange: EventEmitter&lt;number&gt;</td>
+                            <td>-</td>
+                            <td>Event emitted when the active carousel item/element changes.</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() initAnimation: boolean</td>
+                            <td>true</td>
+                            <td>Indicates, if fade in animation should be done, when component is created.</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() radius: number</td>
+                            <td>200</td>
+                            <td>Radius of the carousel cylinder.</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() yPosition: number</td>
+                            <td>0</td>
+                            <td>Y position of the carousel cylinder.</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() cameraFov: number</td>
+                            <td>65</td>
+                            <td>Camera frustum vertical field of view.</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() cameraDistance: number</td>
+                            <td>600</td>
+                            <td>Distance of the camera.</td>
+                        </tr>
+                    </table>
+                </div>
+                <h3>Methods</h3>
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>next()</td>
+                            <td>Rotate to next carousel item.</td>
+                        </tr>
+                        <tr>
+                            <td>previous()</td>
+                            <td>Rotate to previous carousel item.</td>
+                        </tr>
+                        <tr>
+                            <td>rotateTo(targetIndex: number)</td>
+                            <td>Rotates to a sepcific carousel item.</td>
+                        </tr>
+                        <tr>
+                            <td>updateCarouselItems()</td>
+                            <td>Updates and re-initializes the carousel items.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>
