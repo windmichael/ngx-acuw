@@ -25,12 +25,15 @@ export class CarouselItem {
 @Component({
   selector: 'acuw-carousel',
   template: `
-    <div #threejsContainer class="threejs-container"></div>
-    <!-- dots -->
-    <div *ngIf="showDots==true && userMove==false" class="dots" [@dotsAnimation]>
-        <span *ngFor="let carouselTemplate of carouselItemTemplates; index as i" 
-            [ngClass]="{'active': activeCarouselElement==i}"></span>
+    <div class="carousel-container">
+      <div #threejsContainer class="threejs-container"></div>
+      <!-- dots -->
+      <div *ngIf="showDots==true && userMove==false" class="dots" [@dotsAnimation]>
+          <span *ngFor="let carouselTemplate of carouselItemTemplates; index as i" 
+              [ngClass]="{'active': activeCarouselElement==i}"></span>
+      </div>
     </div>
+    
   `,
   styleUrls: ['./carousel.component.css'],
   styles: [`

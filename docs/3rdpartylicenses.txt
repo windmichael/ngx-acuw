@@ -67,6 +67,7 @@ MIT
 MIT
 
 ngx-acuw
+MIT
 MIT License
 
 Copyright (c) 2021 Michael Wind
