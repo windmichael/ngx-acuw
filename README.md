@@ -43,6 +43,6 @@ npm install ngx-acuw
     <td></td>
     <td><a href="https://stackblitz.com/edit/ngx-acuw-image-transition">stackblitz<a/></td>
     <td><a href="https://stackblitz.com/edit/angular-ngx-acuw-lightbox">stackblitz<a/></td>
-    <td></td>
+    <td><a href="https://stackblitz.com/edit/ngx-acuw-carousel">stackblitz<a/></td>
   </tr>
 </table>
