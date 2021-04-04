@@ -42,19 +42,19 @@ export class CarouselItem {
   animations: [
     trigger('dotsAnimation', [
       transition(':enter', [
-        query('span', [
+        query('span' , [
           style({ opacity: 0, transform: 'translateY(200%)' }),
           stagger(100, [
             animate('300ms ease-in', style({ opacity: 1, transform: 'none' }))
           ])
-        ])
+        ], { optional: true })
       ]),
       transition(':leave', [
         query('span', [
           stagger(100, [
             animate('300ms ease-in', style({ opacity: 0, transform: 'translateY(200%)' }))
           ])
-        ])
+        ], { optional: true })
       ])
     ])
   ]

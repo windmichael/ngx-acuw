@@ -1,3 +1,4 @@
+import { Overlay } from '@angular/cdk/overlay';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LightboxComponent } from './lightbox.component';
@@ -5,10 +6,12 @@ import { LightboxComponent } from './lightbox.component';
 describe('LightboxComponent', () => {
   let component: LightboxComponent;
   let fixture: ComponentFixture<LightboxComponent>;
+  let overlay: Overlay; 
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LightboxComponent ]
+      declarations: [ LightboxComponent ],
+      providers: [ Overlay ]
     })
     .compileComponents();
   });

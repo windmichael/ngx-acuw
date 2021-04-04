@@ -168,11 +168,11 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
       t.dispose();
     });
     // Dispose material
-    this.material.dispose();
+    if(this.material) { this.material.dispose(); }
     // Clear scene
-    this.scene.clear();
+    if(this.scene) { this.scene.clear(); }
     // Dispose renderer
-    this.renderer.dispose();
+    if(this.renderer) { this.renderer.dispose(); }
   }
 
   /**
@@ -305,8 +305,12 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
    * Resizes the canvas and updates the texture resulution information of the images
    */
   @HostListener('window:resize') private resize(): void {
+    // Get the with and height of the container
     const containerWidth = this.threejsContainer.nativeElement.offsetWidth;
     const containerHeight = this.threejsContainer.nativeElement.offsetHeight;
+    // return the function, if eihter with or heigth is undefined
+    if(!containerHeight || !containerHeight) { return; }
+
     this.renderer.setSize(containerWidth, containerHeight);
     this.camera.aspect = containerWidth / containerHeight;
 
