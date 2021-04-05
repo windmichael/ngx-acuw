@@ -29,9 +29,9 @@ export class LightboxComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  open(index = 0){
+  open(index = 0) {
     // Define settings of the overlay
-    this.overlayRef = this.overlay.create({ 
+    this.overlayRef = this.overlay.create({
       hasBackdrop: true,
       positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically(),
       scrollStrategy: this.overlay.scrollStrategies.block()
@@ -62,7 +62,7 @@ export class LightboxComponent implements OnInit {
     lightboxOverlayRef.instance.startIndex = index;
   }
 
-  close(){
-   this.overlayRef?.detach();
+  close() {
+    this.overlayRef?.detach();
   }
 }
