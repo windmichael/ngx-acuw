@@ -3,7 +3,7 @@
     <mat-tab label="Demo">
         <ng-template matTabContent>
             <button class="settings-button" mat-mini-fab color="accent" aria-label="settings button"
-                (click)="toggleSettingsDialog()">
+                (click)="settingsOpen=!settingsOpen">
                 <mat-icon>{{settingsOpen == false ? 'settings' : 'close'}}</mat-icon>
             </button>
 
@@ -108,10 +108,10 @@
                 <mat-divider></mat-divider>
 
                 <h4>1. Install three.js and @angular/cdk via npm:</h4>
-                <pre><code>npm install three @types/three @angular/cdk</code></pre>
+                <app-code-block language="bash">npm install three @types/three @angular/cdk</app-code-block>
 
                 <h4>2. Install ACUW Library</h4>
-                <pre><code>npm install ngx-acuw</code></pre>
+                <app-code-block language="bash">npm install ngx-acuw</app-code-block>
 
                 <h2>Usage</h2>
                 <mat-divider></mat-divider>
@@ -120,28 +120,13 @@
                 <p>If you're using Angular Material, these styles have been included together with the theme, 
                     otherwise if you're using the CDK on its own, you'll have to include the styles yourself. 
                     You can do so by importing the prebuilt styles in your global stylesheet:</p>
-                <code>@import '~@angular/cdk/overlay-prebuilt.css';</code>
+                <app-code-block language="css">@import '~@angular/cdk/overlay-prebuilt.css';</app-code-block>
 
                 <h3>Import Module</h3>
-                <pre><code>import &#123; LightboxModule &#125; from 'ngx-acuw';
-
-@NgModule(&#123; 
-  declarations: [AppComponent, ...],
-  imports: [LightboxModule],
-  bootstrap: [AppComponent]
-&#125;)
-export class AppModule &#123; 
-&#125;</code></pre>
+                <app-code-block language="ts">{{code.importModule}}</app-code-block>
 
                 <h3>Directive Example</h3>
-                <pre>
-                    <code>
-&lt;div class="gallery"&gt;
-  &lt;img *ngFor="let imgUrl of imageUrls; let idx = index" [src]="imgUrl" (click)="lightbox.open(idx)" loading="lazy"&gt;
-&lt;/div&gt;
-
-&lt;lib-lightbox #lightbox [imageUrls]="imageUrls" transitionType="split" imageSize="cover" transitionDuration="500"&gt;&lt;/lib-lightbox&gt;</code>
-                </pre>
+                <app-code-block language="html">{{code.directiveExample}}</app-code-block>
 
                 <h2>Lightbox API</h2>
                 <mat-divider></mat-divider>

@@ -3,7 +3,7 @@
     <mat-tab label="Demo">
         <ng-template matTabContent>
             <button class="settings-button" mat-mini-fab color="accent" aria-label="settings button"
-                (click)="toggleSettingsDialog()">
+                (click)="settingsOpen=!settingsOpen">
                 <mat-icon>{{settingsOpen == false ? 'settings' : 'close'}}</mat-icon>
             </button>
 
@@ -74,42 +74,18 @@
                 <mat-divider></mat-divider>
 
                 <h4>1. Install three.js and @angular/cdk via npm:</h4>
-                <pre><code>npm install three @types/three @angular/cdk</code></pre>
+                <app-code-block language="bash">npm install three @types/three @angular/cdk</app-code-block>
 
                 <h4>2. Install ACUW Library</h4>
-                <pre><code>npm install ngx-acuw</code></pre>
+                <app-code-block language="bash">npm install ngx-acuw</app-code-block>
 
                 <h2>Usage</h2>
                 <mat-divider></mat-divider>
                 <h3>Import Module</h3>
-                <pre><code>import &#123; CarouselModule &#125; from 'ngx-acuw';
-
-@NgModule(&#123; 
-  declarations: [AppComponent, ...],
-  imports: [CarouselModule],
-  bootstrap: [AppComponent]
-&#125;)
-export class AppModule &#123; 
-&#125;</code></pre>
+                <app-code-block language="ts">{{code.importModule}}</app-code-block>
 
                 <h3>Directive Example</h3>
-                <pre>
-                    <code>
-&lt;acuw-carousel #carousel class="carousel" [(activeCarouselElement)]="activeCarouselItem" radius="350" cameraDistance="740"&gt;
-    &lt;acuw-carousel-item class="carousel-item"&gt;
-        &lt;h2>Item 1&lt;/h2&gt;
-        &lt;p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.&lt;/p&gt;
-    &lt;/acuw-carousel-item&gt;
-    &lt;acuw-carousel-item class="carousel-item"&gt;
-        &lt;h2>Item 2&lt;/h2&gt;
-        &lt;p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.&lt;/p&gt;
-    &lt;/acuw-carousel-item&gt;
-    &lt;acuw-carousel-item class="carousel-item"&gt;
-        &lt;h2>Item 3&lt;/h2&gt;
-        &lt;p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.&lt;/p&gt;
-    &lt;/acuw-carousel-item&gt;
-&lt;/acuw-carousel&gt;</code>
-                </pre>
+                <app-code-block language="html">{{code.directiveExample}}</app-code-block>
 
                 <h2>Carousel API</h2>
                 <mat-divider></mat-divider>

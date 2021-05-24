@@ -22,6 +22,7 @@ import { UtilityService } from '../services/utility.service';
 })
 export class ImageTransitionComponent implements OnInit {
 
+  /** Properties */
   selectedTabIndex = 0;
   imageUrls: string[] = [
     'assets/image-transition/img1.jpg',
@@ -39,7 +40,40 @@ export class ImageTransitionComponent implements OnInit {
   selectedSizeX = 40.0;
   selectedSizeY = 40.0;
   selectedWidth = 0.5;
-  importModule = `import { ImageTransitionModule } from 'ngx-acuw';
+  code: any;
+
+  /** Constructor */
+  constructor(private route: ActivatedRoute,
+    private router: Router, private utility: UtilityService) {
+    this.code = code;
+  }
+
+  /** Angular ngOnInit */
+  ngOnInit(): void {
+    const activeTab = this.route.snapshot.paramMap.get('tab');
+    this.selectedTabIndex = this.utility.getTabIndexFromParam(activeTab);
+  }
+
+  /**
+   * Change the route, when the tab is changed
+   * @param index index of the tab
+   */
+  selctedTabChanged(index: number) {
+    const param = this.utility.getParamFromTabIndex(index);
+    const activeTab = this.route.snapshot.paramMap.get('tab');
+    if (activeTab === null) {
+      this.router.navigate([param], { relativeTo: this.route });
+    } else {
+      this.router.navigate(['../' + param], { relativeTo: this.route });
+    }
+  }
+}
+
+/**
+ * constant, which contains code to be shown in a code-block
+ */
+const code = {
+  importModule: `import { ImageTransitionModule } from 'ngx-acuw';
 
 @NgModule({
   declarations: [AppComponent, ...],
@@ -47,40 +81,11 @@ export class ImageTransitionComponent implements OnInit {
   bootstrap: [AppComponent]
 })
 export class AppModule {
-}`;
-  directiveExample = `<lib-image-transition
-    [imageUrls]="imageUrls"
-    transitionType="split"
-    imageSize="cover"
-    [transitionDuration]="1000">
-  </lib-image-transition>`;
-
-  constructor(private route: ActivatedRoute, 
-    private router: Router, private utility: UtilityService) { }
-
-  ngOnInit(): void {
-    const activeTab = this.route.snapshot.paramMap.get('tab');
-    this.selectedTabIndex = this.utility.getTabIndexFromParam(activeTab);
-  }
-
-  toggleSettingsDialog(): void {
-    this.settingsOpen = this.settingsOpen === true ? false : true;
-  }
-
-  formatLabelNumber(value: number): string {
-    if (value >= 1000) {
-      return Math.round(value / 1000) + 'k';
-    }
-    return value.toString();
-  }
-
-  selctedTabChanged(index: number){
-    const param = this.utility.getParamFromTabIndex(index);
-    const activeTab = this.route.snapshot.paramMap.get('tab');
-    if(activeTab === null){
-      this.router.navigate([param], {relativeTo: this.route});
-    }else{
-      this.router.navigate(['../' + param], {relativeTo: this.route});
-    }
-  }
+}`,
+  directiveExample: `<lib-image-transition 
+  [imageUrls]="imageUrls" 
+  transitionType="split" 
+  imageSize="cover" 
+  [transitionDuration]="1000">
+  </lib-image-transition>`
 }

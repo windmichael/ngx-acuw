@@ -10,18 +10,21 @@ import { UtilityService } from '../services/utility.service';
   animations: [
     trigger('settingsContainer', [
       transition(':enter', [
-        style({transform: 'translateX(100%)'}),
-        animate('300ms ease-in', style({transform: 'translateX(0%)'}))
+        style({ transform: 'translateX(100%)' }),
+        animate('300ms ease-in', style({ transform: 'translateX(0%)' }))
       ]),
       transition(':leave', [
-        style({transform: 'translateX(0%)'}),
-        animate('300ms ease-in', style({transform: 'translateX(100%)'}))
+        style({ transform: 'translateX(0%)' }),
+        animate('300ms ease-in', style({ transform: 'translateX(100%)' }))
       ])
     ])
   ]
 })
 export class ImageAsParticlesComponent implements OnInit {
 
+  /**
+   * Properties
+   */
   selectedTabIndex = 0;
   settingsOpen = false;
   imageUrls: string[] = [
@@ -32,7 +35,45 @@ export class ImageAsParticlesComponent implements OnInit {
   selectedUrl = '';
   backgroundColor = '#222222';
   animationEnabled = true;
-  importModule = `import { ImageAsParticlesModule } from 'ngx-acuw';
+  code: any;
+
+  /**
+   * Constructor
+   */
+  constructor(private route: ActivatedRoute,
+    private router: Router, private utility: UtilityService) {
+    this.code = code;
+  }
+
+  /**
+   * Angular lifecycle -> ngOnInit
+   */
+  ngOnInit(): void {
+    this.selectedUrl = this.imageUrls[0];
+    const activeTab = this.route.snapshot.paramMap.get('tab');
+    this.selectedTabIndex = this.utility.getTabIndexFromParam(activeTab);
+  }
+
+  /**
+   * Change the route, when the tab is changed
+   * @param index index of the tab
+   */
+  selctedTabChanged(index: number) {
+    const param = this.utility.getParamFromTabIndex(index);
+    const activeTab = this.route.snapshot.paramMap.get('tab');
+    if (activeTab === null) {
+      this.router.navigate([param], { relativeTo: this.route });
+    } else {
+      this.router.navigate(['../' + param], { relativeTo: this.route });
+    }
+  }
+}
+
+/**
+ * constant, which contains code to be shown in a code-block
+ */
+const code = {
+  importModule: `import { ImageAsParticlesModule } from 'ngx-acuw';
 
 @NgModule({
   declarations: [AppComponent, ...],
@@ -40,35 +81,8 @@ export class ImageAsParticlesComponent implements OnInit {
   bootstrap: [AppComponent]
 })
 export class AppModule {
-}`;
-  directiveExample = `<lib-image-as-particles
+}`,
+  directiveExample: `<lib-image-as-particles
   [imageUrl]="selectedUrl">
-</lib-image-as-particles>`;
-
-  constructor(private route: ActivatedRoute, 
-    private router: Router, private utility: UtilityService) { }
-
-  ngOnInit(): void {
-    this.selectedUrl = this.imageUrls[0];
-    const activeTab = this.route.snapshot.paramMap.get('tab');
-    this.selectedTabIndex = this.utility.getTabIndexFromParam(activeTab);
-  }
-
-  selectImage(selectedImageUrl: string): void {
-    this.selectedUrl = selectedImageUrl;
-  }
-
-  toggleSettingsDialog(): void {
-    this.settingsOpen = this.settingsOpen === true ? false : true;
-  }
-
-  selctedTabChanged(index: number){
-    const param = this.utility.getParamFromTabIndex(index);
-    const activeTab = this.route.snapshot.paramMap.get('tab');
-    if(activeTab === null){
-      this.router.navigate([param], {relativeTo: this.route});
-    }else{
-      this.router.navigate(['../' + param], {relativeTo: this.route});
-    }
-  }
-}
+</lib-image-as-particles>`
+};

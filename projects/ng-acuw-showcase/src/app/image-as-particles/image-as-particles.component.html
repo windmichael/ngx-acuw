@@ -3,7 +3,7 @@
     <mat-tab label="Demo">
         <ng-template matTabContent>
             <button class="settings-button" mat-mini-fab color="accent" aria-label="settings button"
-                (click)="toggleSettingsDialog()">
+                (click)="settingsOpen=!settingsOpen">
                 <mat-icon>{{settingsOpen == false ? 'settings' : 'close'}}</mat-icon>
             </button>
 
@@ -12,7 +12,7 @@
                 <p>Selected image:</p>
                 <div class="image-selection-container">
                     <img class="image-selection" [ngClass]="{'image-active' : imageUrl === selectedUrl}"
-                        *ngFor="let imageUrl of imageUrls" [src]="imageUrl" (click)="selectImage(imageUrl)">
+                        *ngFor="let imageUrl of imageUrls" [src]="imageUrl" (click)="selectedUrl=imageUrl">
                 </div>
                 <p>Background color:</p>
                 <input type="color" [(ngModel)]="backgroundColor">
@@ -53,19 +53,19 @@
                 <mat-divider></mat-divider>
 
                 <h4>1. Install three.js and @angular/cdk via npm:</h4>
-                <pre><code>npm install three @types/three @angular/cdk</code></pre>
+                <app-code-block language="bash">npm install three @types/three @angular/cdk</app-code-block>
 
                 <h4>2. Install ACUW Library</h4>
-                <pre><code>npm install ngx-acuw</code></pre>
+                <app-code-block language="bash">npm install ngx-acuw</app-code-block>
 
                 <h2>Usage</h2>
                 <mat-divider></mat-divider>
 
                 <h3>Import Module</h3>
-                <pre><code>{{importModule}}</code></pre>
+                <app-code-block language="ts">{{ code.importModule }}</app-code-block>
 
                 <h3>Directive Example</h3>
-                <code>{{directiveExample}}</code>
+                <app-code-block language="html">{{ code.directiveExample }}</app-code-block>
 
                 <h2>Particle-As-Images API</h2>
                 <mat-divider></mat-divider>

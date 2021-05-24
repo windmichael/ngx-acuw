@@ -21,6 +21,7 @@ import { HomeComponent } from './home/home.component';
 import { LightboxComponent } from './lightbox/lightbox.component';
 import { CarouselDemoComponent } from './carousel/carousel-demo.component';
 import { ImageAsParticlesModule, ImageTransitionModule, LightboxModule, CarouselModule } from 'projects/ngx-acuw/src/public-api';
+import { CodeBlockComponent } from './common/code-block/code-block.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { ImageAsParticlesModule, ImageTransitionModule, LightboxModule, Carousel
     ImageTransitionComponent,
     HomeComponent,
     LightboxComponent,
-    CarouselDemoComponent
+    CarouselDemoComponent,
+    CodeBlockComponent
   ],
   imports: [
     BrowserModule,
