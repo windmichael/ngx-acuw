@@ -1,3 +1,5 @@
+@import '~prismjs/themes/prism.css';
+
 html {
     --primary: #3f51b5;
 }
@@ -17,18 +19,6 @@ a {
     content: "open_in_new";
     position: relative;
     vertical-align: top;
-}
-
-code {
-    background-color: rgb(230, 230, 230);
-    font-family: Roboto Mono, monospace;
-    padding: 3px;
-    line-height: 25px;
-}
-
-pre {
-    white-space: pre-wrap;
-    word-wrap: break-word;
 }
 
 table {
