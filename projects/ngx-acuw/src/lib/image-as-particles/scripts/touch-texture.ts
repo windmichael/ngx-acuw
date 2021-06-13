@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Texture } from 'three';
 import { Trail } from './trail';
 
 export class TouchTexture {
@@ -9,7 +9,7 @@ export class TouchTexture {
   private trail: Trail[];
   private canvas!: HTMLCanvasElement;
   private ctx!: CanvasRenderingContext2D;
-  public texture!: THREE.Texture;
+  public texture!: Texture;
 
   constructor() {
     this.size = 64;
@@ -30,7 +30,7 @@ export class TouchTexture {
     this.ctx.fillStyle = 'black';
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this.texture = new THREE.Texture(this.canvas);
+    this.texture = new Texture(this.canvas);
 
     this.canvas.id = 'touchTexture';
     this.canvas.style.width = this.canvas.style.height = `${this.canvas.width}px`;

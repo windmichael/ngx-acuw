@@ -1,7 +1,7 @@
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, Component, ContentChildren, Directive, ElementRef, EventEmitter, HostListener, Input, NgZone, OnChanges, OnDestroy, Output, QueryList, SimpleChanges, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import * as THREE from 'three';
+import { Euler, Group, Object3D, PerspectiveCamera, Quaternion, Scene } from 'three';
 import { Vector3 } from 'three';
 import { CSS3DObject, CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer';
 import { ObjectControls } from '../controls/object-controls';
@@ -76,11 +76,11 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   private animationFrameId!: number;
   private css3dRenderer = new CSS3DRenderer();
-  private scene = new THREE.Scene();
+  private scene = new Scene();
   private camera!: THREE.PerspectiveCamera;
   private objectControls!: ObjectControls;
   private carouselElements!: CSS3DObject[];
-  private carouselGroup = new THREE.Group();
+  private carouselGroup = new Group();
   private carouselObjSubsciptions: Subscription[] = new Array<Subscription>();
   private rotationSubscription: Subscription = new Subscription();
   private animation: boolean = true;
@@ -90,7 +90,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   ngAfterViewInit(): void {
     // Init camera
-    this.camera = new THREE.PerspectiveCamera(this.cameraFov, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.camera = new PerspectiveCamera(this.cameraFov, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.camera.position.set(0.0, 0.0, this.cameraDistance);
 
     // Get the with and heigth of the threejs renderer
@@ -207,7 +207,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
       this.carouselObjSubsciptions[index].unsubscribe();
 
       // Define final position
-      let tweenObj = new THREE.Object3D();
+      let tweenObj = new Object3D();
       let theta = index * 2 * (Math.PI / elementsCnt);
       tweenObj.position.setFromCylindricalCoords(this.radius, theta, this.yPosition);
       let vector = new Vector3(tweenObj.position.x * 2, tweenObj.position.y, tweenObj.position.z * 2);
@@ -293,7 +293,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
 
     // Calculate the orientation of the target item
     var yOrientation = -((targetIndex) * Math.PI * 2 / this.carouselElements.length);
-    var q = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, yOrientation, 0, 'XYZ'));
+    var q = new Quaternion().setFromEuler(new Euler(0, yOrientation, 0, 'XYZ'));
 
     this.rotationSubscription.unsubscribe();
     var endReached: boolean = false;

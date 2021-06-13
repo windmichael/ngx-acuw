@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, NgZone, OnDestroy, Output, ViewChild } from '@angular/core';
 import { interval, Observable, Subscription } from 'rxjs';
-import * as THREE from 'three';
+import { DoubleSide, Mesh, PerspectiveCamera, PlaneBufferGeometry, Scene, ShaderMaterial, Texture, Vector4, WebGLRenderer } from 'three';
 import { TextureLoader } from 'three';
 import { RxjsTween } from '../tween/rxjs-tween';
 import { ImageTransitionShaders } from './shaders/imageTransitionShaders';
@@ -111,12 +111,12 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   private pWidth = 0.5;
 
   private animationFrameId!: number;
-  private renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  private scene: THREE.Scene = new THREE.Scene();
-  private camera!: THREE.PerspectiveCamera;
-  private mesh!: THREE.Mesh;
-  private material!: THREE.ShaderMaterial;
-  private textures: THREE.Texture[] = new Array<THREE.Texture>();
+  private renderer: WebGLRenderer = new WebGLRenderer({ antialias: true, alpha: true });
+  private scene: Scene = new Scene();
+  private camera!: PerspectiveCamera;
+  private mesh!: Mesh;
+  private material!: ShaderMaterial;
+  private textures: Texture[] = new Array<Texture>();
   private nextImageIndex = 0;
   private tranistionOngoing = false;
   private shaders: ImageTransitionShaders = new ImageTransitionShaders();
@@ -129,11 +129,11 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     // Init camera
-    this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.001, 1000);
+    this.camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.001, 1000);
     this.camera.position.set(0, 0, 2);
 
     // Create scene
-    this.scene = new THREE.Scene();
+    this.scene = new Scene();
 
     // Init Mesh
     if (this.imageUrls.length < 2) {
@@ -180,12 +180,12 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
    */
   private initMesh(): void {
     // Create geometry
-    const geometry = new THREE.PlaneBufferGeometry(1, 1, 2, 2);
+    const geometry = new PlaneBufferGeometry(1, 1, 2, 2);
 
     const promises: Promise<any>[] = new Array<Promise<any>>();
 
     // Load pev, current and next textures
-    this.textures = new Array<THREE.Texture>(this.imageUrls.length);
+    this.textures = new Array<Texture>(this.imageUrls.length);
     const prevImg = this.startIndex === 0 ? (this.imageUrls.length - 1) : (this.startIndex - 1);
     const nextImg = this.startIndex === (this.imageUrls.length - 1) ? 0 : (this.startIndex + 1);
     for (let idx = 0; idx < this.imageUrls.length; idx++) {
@@ -202,8 +202,8 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
 
     Promise.all(promises).then(() => {
 
-      this.material = new THREE.ShaderMaterial({
-        side: THREE.DoubleSide,
+      this.material = new ShaderMaterial({
+        side: DoubleSide,
         uniforms: {
           time: { value: 0 },
           progress: { value: 0 },
@@ -217,15 +217,15 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
           radius: { value: 0 },
           texture1: { value: this.textures[this.startIndex] },
           texture2: { value: this.textures[nextImg] },
-          resolution1: { value: new THREE.Vector4() },
-          resolution2: { value: new THREE.Vector4() }
+          resolution1: { value: new Vector4() },
+          resolution2: { value: new Vector4() }
         },
         // wireframe: true,
         vertexShader: this.shaders.vertex
       });
 
       this.setShaderProperties();
-      this.mesh = new THREE.Mesh(geometry, this.material);
+      this.mesh = new Mesh(geometry, this.material);
 
       this.scene.add(this.mesh);
 

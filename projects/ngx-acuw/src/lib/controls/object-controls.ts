@@ -1,5 +1,5 @@
 import { Observable, Subject } from 'rxjs';
-import * as THREE from 'three';
+import { Euler, Quaternion } from 'three';
 import { Object3D, Vector2 } from 'three';
 import { RxjsTween } from '../tween/rxjs-tween';
 
@@ -50,7 +50,7 @@ export class ObjectControls {
         var rotationX = this.autoRotationX == true ? this.autoRotationSpeed : 0;
         var rorationZ = this.autoRotationZ == true ? this.autoRotationSpeed : 0;
 
-        var deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(
+        var deltaRotationQuaternion = new Quaternion().setFromEuler(new Euler(
             rotationX,
             rotationY,
             rorationZ,
@@ -142,7 +142,7 @@ export class ObjectControls {
             const rotationX = this.verticalRotation == true ? (deltaMove.x * Math.PI / 180 * this.rotationSpeed) : 0;
             const rotationY = this.horizontalRotation == true ? (deltaMove.y * Math.PI / 180 * this.rotationSpeed) : 0;
 
-            var deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(
+            var deltaRotationQuaternion = new Quaternion().setFromEuler(new Euler(
                 rotationY,
                 rotationX,
                 0,
@@ -204,7 +204,7 @@ export class ObjectControls {
             const rotationX = this.verticalRotation == true ? (deltaMove.x * Math.PI / 180 * this.rotationSpeed) : 0;
             const rotationY = this.horizontalRotation == true ? (deltaMove.y * Math.PI / 180 * this.rotationSpeed) : 0;
 
-            var deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(
+            var deltaRotationQuaternion = new Quaternion().setFromEuler(new Euler(
                 rotationY,
                 rotationX,
                 0,

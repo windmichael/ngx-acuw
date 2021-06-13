@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy, HostListener, NgZone, DoCheck } from '@angular/core';
-import * as THREE from 'three';
+import { BufferAttribute, Clock, InstancedBufferAttribute, InstancedBufferGeometry, LinearFilter, Mesh, MeshBasicMaterial, PerspectiveCamera, PlaneGeometry, Raycaster, RGBFormat, Scene, TextureLoader, Vector2, WebGLRenderer } from 'three';
 import { Object3D, RawShaderMaterial, Texture } from 'three';
 import { TouchTexture } from './scripts/touch-texture';
 import { Shaders } from './scripts/shaders';
@@ -69,18 +69,18 @@ import { animate, style, transition, trigger } from '@angular/animations';
 export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
 
   // Declare variables
-  private renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  private scene: THREE.Scene = new THREE.Scene();
-  private camera!: THREE.PerspectiveCamera;
-  private clock: THREE.Clock = new THREE.Clock(true);
-  private texture: THREE.Texture = new Texture();
-  private mesh!: THREE.Mesh;
-  private hitArea!: THREE.Mesh;
+  private renderer: WebGLRenderer = new WebGLRenderer({ antialias: true, alpha: true });
+  private scene: Scene = new Scene();
+  private camera!: PerspectiveCamera;
+  private clock: Clock = new Clock(true);
+  private texture: Texture = new Texture();
+  private mesh!: Mesh;
+  private hitArea!: Mesh;
   private width = 0;
   private height = 0;
   private touch: TouchTexture = new TouchTexture();
-  private mouse: THREE.Vector2 = new THREE.Vector2();
-  private raycaster: THREE.Raycaster = new THREE.Raycaster();
+  private mouse: Vector2 = new Vector2();
+  private raycaster: Raycaster = new Raycaster();
   private pImageUrl = '';
   private pImageChanging = false;
   private gestureInfo$: Observable<number> = interval(2000);
@@ -152,7 +152,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
     const canvasWidth = this.canvasRef.nativeElement.clientWidth;
     const canvasHeight = this.canvasRef.nativeElement.clientHeight;
     // Set camera
-    this.camera = new THREE.PerspectiveCamera(50, canvasWidth / canvasHeight, 1, 10000);
+    this.camera = new PerspectiveCamera(50, canvasWidth / canvasHeight, 1, 10000);
     this.camera.position.z = 300;
     // Init particles
     this.initParticles(this.pImageUrl);
@@ -175,12 +175,12 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    * @param url url of the image
    */
   private initParticles(url: string): void {
-    const loader = new THREE.TextureLoader();
+    const loader = new TextureLoader();
     loader.load(url, (texture) => {
       this.texture = texture;
-      this.texture.minFilter = THREE.LinearFilter;
-      this.texture.magFilter = THREE.LinearFilter;
-      this.texture.format = THREE.RGBFormat;
+      this.texture.minFilter = LinearFilter;
+      this.texture.magFilter = LinearFilter;
+      this.texture.format = RGBFormat;
 
       this.width = texture.image.width;
       this.height = texture.image.height;
@@ -232,13 +232,13 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
       uRandom: { value: 1.0 },
       uDepth: { value: 2.0 },
       uSize: { value: 0.0 },
-      uTextureSize: { value: new THREE.Vector2(this.width, this.height) },
+      uTextureSize: { value: new Vector2(this.width, this.height) },
       uTexture: { value: this.texture },
       uTouch: { value: null },
     };
 
     const shaders = new Shaders();
-    const material = new THREE.RawShaderMaterial({
+    const material = new RawShaderMaterial({
       uniforms,
       vertexShader: shaders.particleVertex,
       fragmentShader: shaders.particleFragment,
@@ -247,10 +247,10 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
       // blending: THREE.AdditiveBlending
     });
 
-    const geometry = new THREE.InstancedBufferGeometry();
+    const geometry = new InstancedBufferGeometry();
 
     // positions
-    const positions = new THREE.BufferAttribute(new Float32Array(4 * 3), 3);
+    const positions = new BufferAttribute(new Float32Array(4 * 3), 3);
     positions.setXYZ(0, -0.5, 0.5, 0.0);
     positions.setXYZ(1, 0.5, 0.5, 0.0);
     positions.setXYZ(2, -0.5, -0.5, 0.0);
@@ -258,7 +258,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
     geometry.setAttribute('position', positions);
 
     // uvs
-    const uvs = new THREE.BufferAttribute(new Float32Array(4 * 2), 2);
+    const uvs = new BufferAttribute(new Float32Array(4 * 2), 2);
     uvs.setXY(0, 0.0, 0.0);
     uvs.setXY(1, 1.0, 0.0);
     uvs.setXY(2, 0.0, 1.0);
@@ -266,7 +266,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
     geometry.setAttribute('uv', uvs);
 
     // index
-    geometry.setIndex(new THREE.BufferAttribute(new Uint16Array([0, 2, 1, 2, 3, 1]), 1));
+    geometry.setIndex(new BufferAttribute(new Uint16Array([0, 2, 1, 2, 3, 1]), 1));
 
     const indices = new Uint16Array(numVisible);
     const offsets = new Float32Array(numVisible * 3);
@@ -285,11 +285,11 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
       j++;
     }
 
-    geometry.setAttribute('pindex', new THREE.InstancedBufferAttribute(indices, 1, false));
-    geometry.setAttribute('offset', new THREE.InstancedBufferAttribute(offsets, 3, false));
-    geometry.setAttribute('angle', new THREE.InstancedBufferAttribute(angles, 1, false));
+    geometry.setAttribute('pindex', new InstancedBufferAttribute(indices, 1, false));
+    geometry.setAttribute('offset', new InstancedBufferAttribute(offsets, 3, false));
+    geometry.setAttribute('angle', new InstancedBufferAttribute(angles, 1, false));
 
-    this.mesh = new THREE.Mesh(geometry, material);
+    this.mesh = new Mesh(geometry, material);
     const object3d = new Object3D();
     object3d.add(this.mesh);
     this.scene.add(object3d);
@@ -306,10 +306,10 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    * Initializes the hit area
    */
   private initHitArea(): void {
-    const geometry = new THREE.PlaneGeometry(this.width, this.height, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, wireframe: true, depthTest: false });
+    const geometry = new PlaneGeometry(this.width, this.height, 1, 1);
+    const material = new MeshBasicMaterial({ color: 0xFFFFFF, wireframe: true, depthTest: false });
     material.visible = false;
-    this.hitArea = new THREE.Mesh(geometry, material);
+    this.hitArea = new Mesh(geometry, material);
     this.mesh.add(this.hitArea);
   }
 
