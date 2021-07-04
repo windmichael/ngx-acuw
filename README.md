@@ -17,14 +17,8 @@ ngx-acuw is a collection of components for Angular made with the 3D library thre
 * [@angular/cdk](https://material.angular.io/cdk/categories) (*requires* @angular/cdk )
 
 ## Installation
-#### 1. Install dependencies via npm:
 ```
-npm install three @types/three @angular/cdk
-```
-
-#### 2. Install `ngx-acuw` via npm:
-```
-npm install ngx-acuw
+npm install three @types/three @angular/cdk ngx-acuw
 ```
 
 ## Components

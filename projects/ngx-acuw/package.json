@@ -1,6 +1,6 @@
 {
   "name": "ngx-acuw",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Angular components using WEBGL (threejs)",
   "author": "Michael Wind",
   "repository": {
