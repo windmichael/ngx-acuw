@@ -26,14 +26,8 @@
   overflow: hidden;
 }
 
-.dots span {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background-color: white;
-  margin: 20px 8px 20px 8px;
-}
-
-.dots .active {
-  transform: scale(1.5);
+.dots svg {
+  width: 28px;
+  height: 28px;
+  margin: 0px 5px 24px 5px;
 }

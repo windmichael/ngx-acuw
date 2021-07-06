@@ -1,4 +1,4 @@
-import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
+import { animate, AnimationBuilder, AnimationPlayer, query, stagger, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, Component, ContentChildren, Directive, ElementRef, EventEmitter, HostListener, Input, NgZone, OnChanges, OnDestroy, Output, QueryList, SimpleChanges, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Euler, Group, Object3D, PerspectiveCamera, Quaternion, Scene } from 'three';
@@ -28,9 +28,13 @@ export class CarouselItem {
     <div class="carousel-container">
       <div #threejsContainer class="threejs-container"></div>
       <!-- dots -->
-      <div *ngIf="showDots==true && userMove==false" class="dots" [@dotsAnimation]>
-          <span *ngFor="let carouselTemplate of carouselItemTemplates; index as i" 
-              [ngClass]="{'active': activeCarouselElement==i}"></span>
+      <div #indicationDots class="dots">
+      <svg *ngFor="let carouselTemplate of carouselItemTemplates; index as i" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" [ngStyle]="{'fill': activeCarouselElement===i ? activeDotColor : dotColor}"/>
+          <path id="{{i}}" fill="none" stroke-linecap="round" stroke-width="20" 
+          [ngStyle]="{'stroke': dotAnimationCircleColor, 'visibility': activeCarouselElement===i && autoPlay ? 'visible' : 'hidden'}"
+                d="M50 10 a 40 40 0 0 1 0 80 a 40 40 0 0 1 0 -80"/>
+        </svg>
       </div>
     </div>
     
@@ -42,7 +46,7 @@ export class CarouselItem {
   animations: [
     trigger('dotsAnimation', [
       transition(':enter', [
-        query('span' , [
+        query('svg' , [
           style({ opacity: 0, transform: 'translateY(200%)' }),
           stagger(100, [
             animate('300ms ease-in', style({ opacity: 1, transform: 'none' }))
@@ -50,18 +54,26 @@ export class CarouselItem {
         ], { optional: true })
       ]),
       transition(':leave', [
-        query('span', [
+        query('svg', [
           stagger(100, [
             animate('300ms ease-in', style({ opacity: 0, transform: 'translateY(200%)' }))
           ])
         ], { optional: true })
       ])
+    ]),
+    trigger('autoPlayAnimation', [
+      state('false', style({ strokeDasharray: '0,250.2' })),
+      state('true', style({ strokeDasharray: '250.2,250.2' })),
+      transition('false => true', animate(5000))
     ])
   ]
 })
 export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   @Input() showDots = true;
+  @Input() dotColor = '#fff';
+  @Input() activeDotColor = '#3f51b5';
+  @Input() dotAnimationCircleColor = '#fff';
   @Input() activeCarouselElement: number = 0;
   @Output() activeCarouselElementChange = new EventEmitter<number>();
   @Input() initAnimation = true;
@@ -69,8 +81,11 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input() yPosition = 0;
   @Input() cameraFov = 65;
   @Input() cameraDistance = 600;
+  @Input() autoPlay = false;
+  @Input() autoPlayInterval = 5000;
 
   @ViewChild('threejsContainer') threejsContainer!: ElementRef;
+  @ViewChild('indicationDots') dots!: ElementRef;
 
   @ContentChildren(CarouselItem) carouselItemTemplates!: QueryList<CarouselItem>;
 
@@ -85,8 +100,9 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
   private rotationSubscription: Subscription = new Subscription();
   private animation: boolean = true;
   userMove: boolean = false;
+  private dotAnimationPlayer!: AnimationPlayer | null;
 
-  constructor(private ngZone: NgZone) { }
+  constructor(private ngZone: NgZone, private animationBuilder: AnimationBuilder) { }
 
   ngAfterViewInit(): void {
     // Init camera
@@ -117,6 +133,11 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
       }
     });
 
+    // Initialize the animation of the inidcation dots
+    if(this.autoPlay){
+      this.startDotAnimation(this.activeCarouselElement);
+    }
+
     // Animate
     this.animate();
   }
@@ -124,7 +145,12 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     let change = changes['activeCarouselElement'];
     if (change && !change.firstChange && this.carouselGroup) {
-      this.rotateTo(change.currentValue);
+      //console.log(`activeCarouselElement change | previousValue=${change.previousValue} | newValue=${change.currentValue} |
+      //activeCarouselElement=${this.activeCarouselElement}`);
+      if(change.currentValue !== this.activeCarouselElement){
+        //console.log('rotate to ' + change.currentValue);
+        this.rotateTo(change.currentValue);
+      }
     }
     change = changes['radius'];
     if (change && !change.firstChange && this.carouselGroup) {
@@ -140,11 +166,21 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
       this.camera.position.set(0, 0, this.cameraDistance);
       this.camera.updateProjectionMatrix();
     }
+    change = changes['autoPlay'];
+    if (change && this.carouselGroup){
+      if (change.currentValue === true) {
+        this.startDotAnimation(this.activeCarouselElement);
+      } else {
+        this.resetDotAnimation();
+      }
+    }
   }
 
   ngOnDestroy(): void {
     // Cancel Animation
     cancelAnimationFrame(this.animationFrameId);
+    // Unsubscribe Subscriptions
+    this.rotationSubscription.unsubscribe();
     // Remove threejs container from DOM
     (this.threejsContainer.nativeElement as HTMLCanvasElement).removeChild(this.css3dRenderer.domElement);
     // Clear scene
@@ -175,6 +211,43 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
     this.ngZone.runOutsideAngular(() => {
       this.animationFrameId = window.requestAnimationFrame(() => this.animate());
     });
+  }
+
+  /**
+   * starts the animation of the indication dots
+   * @param index index number for which dot the animation should be started
+   * @returns 
+   */
+  startDotAnimation(index: number): void {
+    if(this.dotAnimationPlayer || !this.dots){
+      // Animation is already ongoing
+      return;
+    }
+    // Define the animation
+    const autoPlayAnimation = this.animationBuilder.build([
+      style({ strokeDasharray: '0,250.2', visibility: 'visible' }),
+      animate(this.autoPlayInterval, style({ strokeDasharray: '250.2,250.2' }))
+    ]);
+    // Get the element for, which the animation should be applied
+    const path = (this.dots.nativeElement as HTMLElement).children[index].getElementsByTagName('path')[0];
+    this.dotAnimationPlayer = autoPlayAnimation.create(path);
+    // Start the animation
+    this.dotAnimationPlayer.play();
+    // Switch to the next carousel, as soon as the animation is finished
+    this.dotAnimationPlayer.onDone(() => {
+      this.dotAnimationPlayer = null;
+      this.next();
+    });
+  }
+
+  /**
+   * Resets the dot animation
+   */
+  resetDotAnimation(): void {
+    if(this.dotAnimationPlayer && this.dotAnimationPlayer.hasStarted()){
+      this.dotAnimationPlayer.reset();
+      this.dotAnimationPlayer = null;
+    }
   }
 
   /**
@@ -257,6 +330,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
    */
   next(): void {
     let nextElement = this.activeCarouselElement >= this.carouselElements.length - 1 ? 0 : this.activeCarouselElement + 1;
+    this.resetDotAnimation();
     this.rotateTo(nextElement);
   }
 
@@ -265,6 +339,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
    */
   previous(): void {
     let nextElement = this.activeCarouselElement == 0 ? this.carouselElements.length - 1 : this.activeCarouselElement - 1;
+    this.resetDotAnimation();
     this.rotateTo(nextElement);
   }
 
@@ -310,8 +385,15 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
               this.activeCarouselElement = targetIndex;
               this.activeCarouselElementChange.emit(this.activeCarouselElement);
               this.objectControls.resetUserInteractionFlag();
+              if(this.autoPlay) {
+                this.startDotAnimation(this.activeCarouselElement);
+              }
+              this.rotationSubscription.unsubscribe();
             });
           }
+        },
+        complete: () => {
+          //console.log('rotations observable completed ' + this.activeCarouselElement);
         }
       });
     });

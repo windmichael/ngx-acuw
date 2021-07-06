@@ -25,12 +25,19 @@
                     <span>Camera distance</span>
                     <mat-slider thumbLabel tickInterval="1" min="400" max="1200" [(ngModel)]="selectedCameraDistance">
                     </mat-slider>
+                    <mat-slide-toggle class="slide-toggle" [(ngModel)]="selectedAutoPlayEnabled">Auto play
+                    </mat-slide-toggle>
+                    <mat-form-field *ngIf="selectedAutoPlayEnabled==true" appearance="fill">
+                        <mat-label>Auto play interval (ms)</mat-label>
+                        <input matInput type="number" [(ngModel)]="selectedAutoPlayInterval">
+                    </mat-form-field>
                 </div>
             </div>
 
             <div class="container">
                 <acuw-carousel #carousel class="carousel" [(activeCarouselElement)]="activeCarouselItem"
-                    [radius]="selectedRadius" [cameraDistance]="selectedCameraDistance">
+                    [radius]="selectedRadius" [cameraDistance]="selectedCameraDistance" [autoPlay]="selectedAutoPlayEnabled"
+                    [autoPlayInterval]="selectedAutoPlayInterval">
                     <acuw-carousel-item *ngFor="let item of carouselItems;index as i" class="carousel-item">
                         <h2>Item {{ i+1 }}</h2>
                         <img [src]="item" loading="lazy">
@@ -56,6 +63,7 @@
         <div class="description-container">
             <div class="description-content">
                 <h2>Information</h2>
+                <mat-divider></mat-divider>
                 <p>
                     The carousel component provides the possibility to show custom templates ordered in a cylindrical form. 
                     The user can rotate the carousel and therefore navigate through all items. The rotation can be either 
@@ -68,16 +76,10 @@
                     on
                     <a class="external-link" href="https://unsplash.com/" target="_blank">Unsplash</a>
                 </p>
-                <mat-divider></mat-divider>
 
                 <h2>Installation</h2>
                 <mat-divider></mat-divider>
-
-                <h4>1. Install three.js and @angular/cdk via npm:</h4>
-                <app-code-block language="bash">npm install three @types/three @angular/cdk</app-code-block>
-
-                <h4>2. Install ACUW Library</h4>
-                <app-code-block language="bash">npm install ngx-acuw</app-code-block>
+                <app-code-block language="bash">npm install three @types/three @angular/cdk ngx-acuw</app-code-block>
 
                 <h2>Usage</h2>
                 <mat-divider></mat-divider>
@@ -101,6 +103,21 @@
                             <td>@Input() showDots: boolean</td>
                             <td>true</td>
                             <td>Show or hide the dots, which indicate which item is active.</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() dotColor: string</td>
+                            <td>#fff</td>
+                            <td>Color of the dots.</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() activeDotColor: string</td>
+                            <td>#3f51b5</td>
+                            <td>Color of the active dot.</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() dotAnimationCircleColor: string</td>
+                            <td>#fff</td>
+                            <td>Color of the spinner around the dot, which is used to display the interval time when using auto play.</td>
                         </tr>
                         <tr>
                             <td>@Input() activeCarouselElement: number</td>
@@ -136,6 +153,16 @@
                             <td>@Input() cameraDistance: number</td>
                             <td>600</td>
                             <td>Distance of the camera.</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() autoPlay: boolean</td>
+                            <td>false</td>
+                            <td>Automatic change of the carousel elements.</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() autoPlayInterval: number</td>
+                            <td>5000</td>
+                            <td>Interval in ms to be used when autoPlay is active.</td>
                         </tr>
                     </table>
                 </div>
