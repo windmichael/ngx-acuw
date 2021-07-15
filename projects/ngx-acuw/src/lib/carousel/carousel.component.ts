@@ -46,7 +46,7 @@ export class CarouselItem {
   animations: [
     trigger('dotsAnimation', [
       transition(':enter', [
-        query('svg' , [
+        query('svg', [
           style({ opacity: 0, transform: 'translateY(200%)' }),
           stagger(100, [
             animate('300ms ease-in', style({ opacity: 1, transform: 'none' }))
@@ -134,7 +134,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
     });
 
     // Initialize the animation of the inidcation dots
-    if(this.autoPlay){
+    if (this.autoPlay) {
       this.startDotAnimation(this.activeCarouselElement);
     }
 
@@ -147,7 +147,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
     if (change && !change.firstChange && this.carouselGroup) {
       //console.log(`activeCarouselElement change | previousValue=${change.previousValue} | newValue=${change.currentValue} |
       //activeCarouselElement=${this.activeCarouselElement}`);
-      if(change.currentValue !== this.activeCarouselElement){
+      if (change.currentValue !== this.activeCarouselElement) {
         //console.log('rotate to ' + change.currentValue);
         this.rotateTo(change.currentValue);
       }
@@ -167,7 +167,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
       this.camera.updateProjectionMatrix();
     }
     change = changes['autoPlay'];
-    if (change && this.carouselGroup){
+    if (change && this.carouselGroup) {
       if (change.currentValue === true) {
         this.startDotAnimation(this.activeCarouselElement);
       } else {
@@ -219,7 +219,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
    * @returns 
    */
   startDotAnimation(index: number): void {
-    if(this.dotAnimationPlayer || !this.dots){
+    if (this.dotAnimationPlayer || !this.dots) {
       // Animation is already ongoing
       return;
     }
@@ -244,7 +244,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
    * Resets the dot animation
    */
   resetDotAnimation(): void {
-    if(this.dotAnimationPlayer && this.dotAnimationPlayer.hasStarted()){
+    if (this.dotAnimationPlayer && this.dotAnimationPlayer.hasStarted()) {
       this.dotAnimationPlayer.reset();
       this.dotAnimationPlayer = null;
     }
@@ -366,34 +366,29 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
       }
     }
 
+    const startQuaternion = this.carouselGroup.quaternion.clone();
     // Calculate the orientation of the target item
-    var yOrientation = -((targetIndex) * Math.PI * 2 / this.carouselElements.length);
-    var q = new Quaternion().setFromEuler(new Euler(0, yOrientation, 0, 'XYZ'));
+    const yOrientation = -((targetIndex) * Math.PI * 2 / this.carouselElements.length);
+    let targetQuaternion = new Quaternion().setFromEuler(new Euler(0, yOrientation, 0, 'XYZ'));
 
     this.rotationSubscription.unsubscribe();
-    var endReached: boolean = false;
 
     // Run rotation animation outsie zgZone
     this.ngZone.runOutsideAngular(() => {
-      this.rotationSubscription = RxjsTween.createTween(RxjsTween.easeInOutQuad, 0, 1, 2000).subscribe({
+      this.rotationSubscription = RxjsTween.createTween(RxjsTween.easeInOutQuad, 0, 1, 1000).subscribe({
         next: x => {
-          this.carouselGroup.quaternion.slerp(q, x);
-          if (x > 0.4 && !endReached) {
-            endReached = true;
-            // This needs to run insite ngZone, in order that the parent component can detect the change
-            this.ngZone.run(() => {
-              this.activeCarouselElement = targetIndex;
+          Quaternion.slerp(startQuaternion, targetQuaternion, this.carouselGroup.quaternion, x);
+        },
+        complete: () => {
+          Quaternion.slerp(startQuaternion, targetQuaternion, this.carouselGroup.quaternion, 1);
+          this.ngZone.run(() => {
+            this.activeCarouselElement = targetIndex;
               this.activeCarouselElementChange.emit(this.activeCarouselElement);
               this.objectControls.resetUserInteractionFlag();
               if(this.autoPlay) {
                 this.startDotAnimation(this.activeCarouselElement);
               }
-              this.rotationSubscription.unsubscribe();
-            });
-          }
-        },
-        complete: () => {
-          //console.log('rotations observable completed ' + this.activeCarouselElement);
+          });
         }
       });
     });

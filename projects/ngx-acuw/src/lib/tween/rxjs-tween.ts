@@ -21,9 +21,9 @@ export module RxjsTween {
                                 b: number, c: number, d: number, s?: number): Observable<number>;
     export function createTween(easingFunction: (t: number, b: number, pc: number, d: number, s?: number) => number,
                                 b: any, c: any, d: number, s?: number): Observable<any> {
-        return new Observable((observer: Observer<any>) => {
+        return new Observable((observer: Observer<number | number[]>) => {
             let startTime: number;
-            let id = requestAnimationFrame(function sample(time): void {
+            const sample = (time: number): void => {
                 startTime = startTime || time;
                 const t = time - startTime;
                 if (t < d) {
@@ -36,22 +36,27 @@ export module RxjsTween {
                     }else {
                         observer.next(easingFunction(t, b, c, d, s));
                     }
-                    id = requestAnimationFrame(sample);
+                    // Request the animation frame again
+                    requestAnimationFrame(sample);
                 } else {
+                    // End value reached
                     if (Array.isArray(b) && Array.isArray(c)) {
                         const tweenVals: number[] = new Array<number>();
                         for (let idx = 0; idx < b.length; idx++) {
                             tweenVals.push(c[idx]);
                         }
+                        // Emitt end value of arry
                         observer.next(tweenVals);
                     }else{
+                        // Emitt end value
                         observer.next(c);
                     }
-                    id = requestAnimationFrame(function () {
-                        return observer.complete();
-                    });
+                    // Complete the observable
+                    observer.complete();
                 }
-            });
+            }
+            // Initially request the animation frame
+            requestAnimationFrame(sample);
         });
     }
 
