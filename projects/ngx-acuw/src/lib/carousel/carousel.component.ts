@@ -83,6 +83,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input() cameraDistance = 600;
   @Input() autoPlay = false;
   @Input() autoPlayInterval = 5000;
+  @Input() rotationDuration = 500;
 
   @ViewChild('threejsContainer') threejsContainer!: ElementRef;
   @ViewChild('indicationDots') dots!: ElementRef;
@@ -375,7 +376,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
 
     // Run rotation animation outsie zgZone
     this.ngZone.runOutsideAngular(() => {
-      this.rotationSubscription = RxjsTween.createTween(RxjsTween.easeInOutQuad, 0, 1, 1000).subscribe({
+      this.rotationSubscription = RxjsTween.createTween(RxjsTween.easeInOutQuad, 0, 1, this.rotationDuration).subscribe({
         next: x => {
           Quaternion.slerp(startQuaternion, targetQuaternion, this.carouselGroup.quaternion, x);
         },
