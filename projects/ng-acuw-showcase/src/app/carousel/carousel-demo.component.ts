@@ -44,6 +44,7 @@ export class CarouselDemoComponent implements OnInit {
   selectedCameraDistance = 740;
   selectedAutoPlayEnabled = true;
   selectedAutoPlayInterval = 5000;
+  selectedRotationDuration = 500;
   code: any;
 
   /**

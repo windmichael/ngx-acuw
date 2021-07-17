@@ -31,13 +31,17 @@
                         <mat-label>Auto play interval (ms)</mat-label>
                         <input matInput type="number" [(ngModel)]="selectedAutoPlayInterval">
                     </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Rotation duration (ms)</mat-label>
+                        <input matInput type="number" [(ngModel)]="selectedRotationDuration">
+                    </mat-form-field>
                 </div>
             </div>
 
             <div class="container">
                 <acuw-carousel #carousel class="carousel" [(activeCarouselElement)]="activeCarouselItem"
                     [radius]="selectedRadius" [cameraDistance]="selectedCameraDistance" [autoPlay]="selectedAutoPlayEnabled"
-                    [autoPlayInterval]="selectedAutoPlayInterval">
+                    [autoPlayInterval]="selectedAutoPlayInterval" [rotationDuration]="selectedRotationDuration">
                     <acuw-carousel-item *ngFor="let item of carouselItems;index as i" class="carousel-item">
                         <h2>Item {{ i+1 }}</h2>
                         <img [src]="item" loading="lazy">
@@ -163,6 +167,11 @@
                             <td>@Input() autoPlayInterval: number</td>
                             <td>5000</td>
                             <td>Interval in ms to be used when autoPlay is active.</td>
+                        </tr>
+                        <tr>
+                            <td>@Input() rotationDuration: number</td>
+                            <td>500</td>
+                            <td>Duration of the rotation to a next carousel element in ms.</td>
                         </tr>
                     </table>
                 </div>
