@@ -17,14 +17,19 @@
                     </mat-form-field>
                     <mat-form-field appearance="fill">
                         <mat-label>Active carousel Item</mat-label>
-                        <input matInput type="number" min="0" [max]="numberOfCarouselItems-1" [(ngModel)]="activeCarouselItem">
+                        <input matInput type="number" min="0" [max]="numberOfCarouselItems-1"
+                            [(ngModel)]="activeCarouselItem">
                     </mat-form-field>
-                    <span>Radius</span>
-                    <mat-slider thumbLabel tickInterval="1" min="50" max="500" [(ngModel)]="selectedRadius">
-                    </mat-slider>
-                    <span>Camera distance</span>
-                    <mat-slider thumbLabel tickInterval="1" min="400" max="1200" [(ngModel)]="selectedCameraDistance">
-                    </mat-slider>
+                    <div class="slider">
+                        <span>Radius</span>
+                        <mat-slider thumbLabel tickInterval="1" min="50" max="500" [(ngModel)]="selectedRadius">
+                        </mat-slider>
+                    </div>
+                    <div class="slider">
+                        <span>Camera distance</span>
+                        <mat-slider thumbLabel tickInterval="1" min="400" max="1200"
+                            [(ngModel)]="selectedCameraDistance"></mat-slider>
+                    </div>
                     <mat-slide-toggle class="slide-toggle" [(ngModel)]="selectedAutoPlayEnabled">Auto play
                     </mat-slide-toggle>
                     <mat-form-field *ngIf="selectedAutoPlayEnabled==true" appearance="fill">
@@ -39,9 +44,10 @@
             </div>
 
             <div class="container">
-                <acuw-carousel #carousel class="carousel" [(activeCarouselElement)]="activeCarouselItem"
-                    [radius]="selectedRadius" [cameraDistance]="selectedCameraDistance" [autoPlay]="selectedAutoPlayEnabled"
-                    [autoPlayInterval]="selectedAutoPlayInterval" [rotationDuration]="selectedRotationDuration">
+                <acuw-carousel #carousel class="carousel" [activeCarouselElement]="activeCarouselItem"
+                    [radius]="selectedRadius" [cameraDistance]="selectedCameraDistance"
+                    [autoPlay]="selectedAutoPlayEnabled" [autoPlayInterval]="selectedAutoPlayInterval"
+                    [rotationDuration]="selectedRotationDuration">
                     <acuw-carousel-item *ngFor="let item of carouselItems;index as i" class="carousel-item">
                         <h2>Item {{ i+1 }}</h2>
                         <img [src]="item" loading="lazy">
@@ -69,10 +75,13 @@
                 <h2>Information</h2>
                 <mat-divider></mat-divider>
                 <p>
-                    The carousel component provides the possibility to show custom templates ordered in a cylindrical form. 
-                    The user can rotate the carousel and therefore navigate through all items. The rotation can be either 
-                    by using buttons to rotate to the next or previous item, 
-                    or via dragging the mouse. In addition, this component shows the active carousel element via indicator dots. 
+                    The carousel component provides the possibility to show custom templates ordered in a cylindrical
+                    form.
+                    The user can rotate the carousel and therefore navigate through all items. The rotation can be
+                    either
+                    by using buttons to rotate to the next or previous item,
+                    or via dragging the mouse. In addition, this component shows the active carousel element via
+                    indicator dots.
                 </p>
                 <p>
                     Photos by
@@ -121,7 +130,8 @@
                         <tr>
                             <td>@Input() dotAnimationCircleColor: string</td>
                             <td>#fff</td>
-                            <td>Color of the spinner around the dot, which is used to display the interval time when using auto play.</td>
+                            <td>Color of the spinner around the dot, which is used to display the interval time when
+                                using auto play.</td>
                         </tr>
                         <tr>
                             <td>@Input() activeCarouselElement: number</td>
@@ -129,7 +139,7 @@
                             <td>Number of the active carousel element/item.</td>
                         </tr>
                         <tr>
-                            <td>@Output() activeCarouselElementChange: EventEmitter&lt;number&gt;</td>
+                            <td>@Output() activeElementChanged: EventEmitter&lt;number&gt;</td>
                             <td>-</td>
                             <td>Event emitted when the active carousel item/element changes.</td>
                         </tr>
@@ -183,19 +193,19 @@
                             <th>Description</th>
                         </tr>
                         <tr>
-                            <td>next()</td>
+                            <td>next(): Promise&lt;number&gt;</td>
                             <td>Rotate to next carousel item.</td>
                         </tr>
                         <tr>
-                            <td>previous()</td>
+                            <td>previous(): Promise&lt;number&gt;</td>
                             <td>Rotate to previous carousel item.</td>
                         </tr>
                         <tr>
-                            <td>rotateTo(targetIndex: number)</td>
+                            <td>rotateTo(targetIndex: number): Promise&lt;number&gt;</td>
                             <td>Rotates to a sepcific carousel item.</td>
                         </tr>
                         <tr>
-                            <td>updateCarouselItems()</td>
+                            <td>updateCarouselItems(): void</td>
                             <td>Updates and re-initializes the carousel items.</td>
                         </tr>
                     </table>

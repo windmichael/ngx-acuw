@@ -48,11 +48,11 @@
     margin: 0 10px 0 10px;
 }
 
-.carousel{
+.carousel {
     background-color: rgb(0, 0, 0);
 }
 
-.roate-button-container{
+.roate-button-container {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -65,35 +65,35 @@
     pointer-events: none;
 }
 
-.roate-button-container button{
+.roate-button-container button {
     width: 64px;
     height: 64px;
     line-height: 64px;
     pointer-events: all;
 }
 
-.roate-button-container .mat-icon{
+.roate-button-container .mat-icon {
     width: 64px !important;
     height: 64px !important;
     font-size: 64px !important;
 }
 
-.carousel-item{
+.carousel-item {
     position: relative;
     background-color: rgb(255, 255, 255);
-    box-shadow: 0px 0px 20px 10px rgba(255,255,255,0.7);
+    box-shadow: 0px 0px 20px 10px rgba(255, 255, 255, 0.7);
     width: 250px;
     height: 350px;
     padding: 10px;
     pointer-events: none;
 }
 
-.carousel-item img{
+.carousel-item img {
     width: 100%;
     object-fit: cover;
 }
 
-.carousel-item h2{
+.carousel-item h2 {
     width: 100%;
     text-align: center;
     text-transform: uppercase;
@@ -101,7 +101,7 @@
     margin: 5px 0 10px 0;
 }
 
-.carousel-item p{
+.carousel-item p {
     text-align: center;
     color: rgb(0, 0, 0);
     font-size: medium;
@@ -117,4 +117,9 @@
 .table-container {
     max-width: inherit;
     overflow: auto;
+}
+
+.slider {
+    display: flex;
+    flex-direction: column;
 }

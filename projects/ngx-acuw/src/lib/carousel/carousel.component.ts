@@ -28,13 +28,13 @@ export class CarouselItem {
     <div class="carousel-container">
       <div #threejsContainer class="threejs-container"></div>
       <!-- dots -->
-      <div #indicationDots class="dots">
-      <svg *ngFor="let carouselTemplate of carouselItemTemplates; index as i" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="45" [ngStyle]="{'fill': activeCarouselElement===i ? activeDotColor : dotColor}"/>
-          <path id="{{i}}" fill="none" stroke-linecap="round" stroke-width="20" 
-          [ngStyle]="{'stroke': dotAnimationCircleColor, 'visibility': activeCarouselElement===i && autoPlay ? 'visible' : 'hidden'}"
-                d="M50 10 a 40 40 0 0 1 0 80 a 40 40 0 0 1 0 -80"/>
-        </svg>
+      <div #indicationDots class="dots" [ngStyle]="{'visibility': showDots ? 'visible' : 'hidden'}">
+        <svg *ngFor="let carouselTemplate of carouselItemTemplates; index as i" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="45" [ngStyle]="{'fill': activeCarouselElement===i ? activeDotColor : dotColor}"/>
+            <path id="{{i}}" fill="none" stroke-linecap="round" stroke-width="20" 
+            [ngStyle]="{'stroke': dotAnimationCircleColor, 'visibility': activeCarouselElement===i && autoPlay ? 'visible' : 'hidden'}"
+                  d="M50 10 a 40 40 0 0 1 0 80 a 40 40 0 0 1 0 -80"/>
+          </svg>
       </div>
     </div>
     
@@ -75,7 +75,6 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input() activeDotColor = '#3f51b5';
   @Input() dotAnimationCircleColor = '#fff';
   @Input() activeCarouselElement: number = 0;
-  @Output() activeCarouselElementChange = new EventEmitter<number>();
   @Input() initAnimation = true;
   @Input() radius = 200;
   @Input() yPosition = 0;
@@ -84,6 +83,8 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input() autoPlay = false;
   @Input() autoPlayInterval = 5000;
   @Input() rotationDuration = 500;
+
+  @Output() activeElementChanged = new EventEmitter<number>();
 
   @ViewChild('threejsContainer') threejsContainer!: ElementRef;
   @ViewChild('indicationDots') dots!: ElementRef;
@@ -99,8 +100,8 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
   private carouselGroup = new Group();
   private carouselObjSubsciptions: Subscription[] = new Array<Subscription>();
   private rotationSubscription: Subscription = new Subscription();
-  private animation: boolean = true;
-  userMove: boolean = false;
+  private animation = true;
+  userMove = false;
   private dotAnimationPlayer!: AnimationPlayer | null;
 
   constructor(private ngZone: NgZone, private animationBuilder: AnimationBuilder) { }
@@ -146,12 +147,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     let change = changes['activeCarouselElement'];
     if (change && !change.firstChange && this.carouselGroup) {
-      //console.log(`activeCarouselElement change | previousValue=${change.previousValue} | newValue=${change.currentValue} |
-      //activeCarouselElement=${this.activeCarouselElement}`);
-      if (change.currentValue !== this.activeCarouselElement) {
-        //console.log('rotate to ' + change.currentValue);
-        this.rotateTo(change.currentValue);
-      }
+      this.rotateTo(change.currentValue, true);
     }
     change = changes['radius'];
     if (change && !change.firstChange && this.carouselGroup) {
@@ -198,7 +194,6 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
     // Define aspect ratio
     this.camera.aspect = divWidth / divHeight;
     this.camera.updateProjectionMatrix();
-    //this.renderer.setSize(divWidth, divHeight);
     this.css3dRenderer.setSize(divWidth, divHeight);
   }
 
@@ -219,16 +214,25 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
    * @param index index number for which dot the animation should be started
    * @returns 
    */
-  startDotAnimation(index: number): void {
+  private startDotAnimation(index: number): void {
     if (this.dotAnimationPlayer || !this.dots) {
       // Animation is already ongoing
       return;
     }
     // Define the animation
-    const autoPlayAnimation = this.animationBuilder.build([
-      style({ strokeDasharray: '0,250.2', visibility: 'visible' }),
-      animate(this.autoPlayInterval, style({ strokeDasharray: '250.2,250.2' }))
-    ]);
+    let autoPlayAnimation;
+    if(this.showDots){
+      autoPlayAnimation = this.animationBuilder.build([
+        style({ strokeDasharray: '0,250.2', visibility: 'visible' }),
+        animate(this.autoPlayInterval, style({ strokeDasharray: '250.2,250.2', visibility: 'hidden' }))
+      ]);
+    }else{
+      autoPlayAnimation = this.animationBuilder.build([
+        style({ strokeDasharray: '0,250.2', visibility: 'hidden' }),
+        animate(this.autoPlayInterval, style({ strokeDasharray: '250.2,250.2', visibility: 'hidden' }))
+      ]);
+    }
+    
     // Get the element for, which the animation should be applied
     const path = (this.dots.nativeElement as HTMLElement).children[index].getElementsByTagName('path')[0];
     this.dotAnimationPlayer = autoPlayAnimation.create(path);
@@ -244,7 +248,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
   /**
    * Resets the dot animation
    */
-  resetDotAnimation(): void {
+  private resetDotAnimation(): void {
     if (this.dotAnimationPlayer && this.dotAnimationPlayer.hasStarted()) {
       this.dotAnimationPlayer.reset();
       this.dotAnimationPlayer = null;
@@ -328,84 +332,103 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   /**
    * Rotate to next carousel item
+   * @returns Promise with the new active element number 
    */
-  next(): void {
+  next(): Promise<number> {
     let nextElement = this.activeCarouselElement >= this.carouselElements.length - 1 ? 0 : this.activeCarouselElement + 1;
-    this.resetDotAnimation();
-    this.rotateTo(nextElement);
+    return this.rotateTo(nextElement);
   }
 
   /**
-   * Rotate to previous carousel item
+   * Rotate to previous carousel item#
+   * @returns Promise with the new active element number
    */
-  previous(): void {
+  previous(): Promise<number> {
     let nextElement = this.activeCarouselElement == 0 ? this.carouselElements.length - 1 : this.activeCarouselElement - 1;
-    this.resetDotAnimation();
-    this.rotateTo(nextElement);
+    return this.rotateTo(nextElement);
   }
 
   /**
    * Rotates to a sepcific carousel item
    * @param targetIndex index of the carousel item
    */
-  rotateTo(targetIndex: number): void {
-    if (targetIndex > this.carouselElements.length - 1) {
-      console.error('target index is greater than available carousel items');
-      return;
-    }
-    if (targetIndex > this.activeCarouselElement) {
-      // In case the current elment is the first again, reset the orientation
-      if (this.activeCarouselElement == 0 && (this.carouselGroup.rotation.y != 0
-        && this.carouselGroup.rotation.x == 0 && this.carouselGroup.rotation.z == 0)) {
-        this.carouselGroup.rotation.set(0, 0, 0);
+  rotateTo(targetIndex: number, skipAnimation = false): Promise<number> {
+    return new Promise((resolve, reject) => {
+      if (targetIndex > this.carouselElements.length - 1) {
+        console.error('target index is greater than available carousel items');
+        reject('target index is greater than available carousel items');
       }
-    } else if (targetIndex == this.carouselElements.length - 1) {
-      // Set position of the first element to y = -2*PI
-      if (this.activeCarouselElement == 0 && (this.carouselGroup.rotation.y == 0
-        && this.carouselGroup.rotation.x == 0 && this.carouselGroup.rotation.z == 0)) {
-        this.carouselGroup.rotation.set(0, -2 * Math.PI, 0);
-      }
-    }
 
-    const startQuaternion = this.carouselGroup.quaternion.clone();
-    // Calculate the orientation of the target item
-    const yOrientation = -((targetIndex) * Math.PI * 2 / this.carouselElements.length);
-    let targetQuaternion = new Quaternion().setFromEuler(new Euler(0, yOrientation, 0, 'XYZ'));
+      this.resetDotAnimation();
 
-    this.rotationSubscription.unsubscribe();
-
-    // Run rotation animation outsie zgZone
-    this.ngZone.runOutsideAngular(() => {
-      this.rotationSubscription = RxjsTween.createTween(RxjsTween.easeInOutQuad, 0, 1, this.rotationDuration).subscribe({
-        next: x => {
-          Quaternion.slerp(startQuaternion, targetQuaternion, this.carouselGroup.quaternion, x);
-        },
-        complete: () => {
-          Quaternion.slerp(startQuaternion, targetQuaternion, this.carouselGroup.quaternion, 1);
-          this.ngZone.run(() => {
-            this.activeCarouselElement = targetIndex;
-              this.activeCarouselElementChange.emit(this.activeCarouselElement);
-              this.objectControls.resetUserInteractionFlag();
-              if(this.autoPlay) {
-                this.startDotAnimation(this.activeCarouselElement);
-              }
-          });
+      if (targetIndex > this.activeCarouselElement) {
+        // In case the current elment is the first again, reset the orientation
+        if (this.activeCarouselElement == 0 && (this.carouselGroup.rotation.y != 0
+          && this.carouselGroup.rotation.x == 0 && this.carouselGroup.rotation.z == 0)) {
+          this.carouselGroup.rotation.set(0, 0, 0);
         }
-      });
+      } else if (targetIndex == this.carouselElements.length - 1) {
+        // Set position of the first element to y = -2*PI
+        if (this.activeCarouselElement == 0 && (this.carouselGroup.rotation.y == 0
+          && this.carouselGroup.rotation.x == 0 && this.carouselGroup.rotation.z == 0)) {
+          this.carouselGroup.rotation.set(0, -2 * Math.PI, 0);
+        }
+      }
+
+      const startQuaternion = this.carouselGroup.quaternion.clone();
+      // Calculate the orientation of the target item
+      const yOrientation = -((targetIndex) * Math.PI * 2 / this.carouselElements.length);
+      let targetQuaternion = new Quaternion().setFromEuler(new Euler(0, yOrientation, 0, 'XYZ'));
+
+      if (skipAnimation) {
+        Quaternion.slerp(startQuaternion, targetQuaternion, this.carouselGroup.quaternion, 1);
+        this.rotationCompleted(targetIndex);
+        resolve(this.activeCarouselElement);
+      } else {
+        this.rotationSubscription.unsubscribe();
+        // Run rotation animation outsie zgZone
+        this.ngZone.runOutsideAngular(() => {
+          this.rotationSubscription = RxjsTween.createTween(RxjsTween.easeInOutQuad, 0, 1, this.rotationDuration).subscribe({
+            next: x => {
+              Quaternion.slerp(startQuaternion, targetQuaternion, this.carouselGroup.quaternion, x);
+            },
+            complete: () => {
+              Quaternion.slerp(startQuaternion, targetQuaternion, this.carouselGroup.quaternion, 1);
+              this.ngZone.run(() => {
+                this.rotationCompleted(targetIndex);
+                resolve(this.activeCarouselElement);
+              });
+            }
+          });
+        });
+      }
     });
+  }
+
+  /**
+   * things to do when rotation is completed
+   * @param targetIndex 
+   */
+  private rotationCompleted(targetIndex: number): void {
+    this.activeCarouselElement = targetIndex;
+    this.activeElementChanged.emit(this.activeCarouselElement);
+    this.objectControls.resetUserInteractionFlag();
+    if (this.autoPlay) {
+      this.startDotAnimation(this.activeCarouselElement);
+    }
   }
 
   /**
    * Updates and reinits the carousel items
    */
-  public updateCarouselItems() {
+  public updateCarouselItems(): void {
     this.initCarouselObjects(false);
   }
 
   /**
    * Updates the radius of the carousel items
    */
-  private updateRadius() {
+  private updateRadius(): void {
     for (let idx = 0; idx < this.carouselGroup.children.length; idx++) {
       let theta = idx * 2 * (Math.PI / this.carouselGroup.children.length);
       this.carouselGroup.children[idx].position.setFromCylindricalCoords(this.radius, theta, this.yPosition);

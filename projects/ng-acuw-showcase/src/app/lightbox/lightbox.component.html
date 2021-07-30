@@ -42,9 +42,11 @@
                     </mat-form-field>
                     <ng-container>
                         <ng-container *ngIf="selectedTransitionType=='split' || selectedTransitionType=='blur'">
-                            <span>Intensity</span>
-                            <mat-slider thumbLabel tickInterval="1" min="0" max="100" [(ngModel)]="selectedIntensity">
-                            </mat-slider>
+                            <div class="slider">
+                                <span>Intensity</span>
+                                <mat-slider thumbLabel tickInterval="1" min="0" max="100" [(ngModel)]="selectedIntensity">
+                                </mat-slider>
+                            </div>
                         </ng-container>
                         <ng-container *ngIf="selectedTransitionType=='noise'">
                             <div class="slider">

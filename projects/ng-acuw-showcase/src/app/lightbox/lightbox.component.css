@@ -82,3 +82,8 @@
     max-width: inherit;
     overflow: auto;
 }
+
+.slider{
+    display: flex;
+    flex-direction: column;
+}
