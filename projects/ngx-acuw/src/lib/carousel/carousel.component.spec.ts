@@ -7,24 +7,15 @@ import { CarouselComponent, CarouselItem } from './carousel.component';
 @Component({
   selector: 'acuw-carousel-test',
   template: `<acuw-carousel>
-      <acuw-carousel-item>
-          <h2>Item 1</h2>
-          <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-              invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
-      </acuw-carousel-item>
-      <acuw-carousel-item>
-          <h2>Item 2</h2>
-          <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-              invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
-      </acuw-carousel-item>
-      <acuw-carousel-item>
-          <h2>Item 3</h2>
+      <acuw-carousel-item *ngFor="let item of carouselItems;index as i" >
+          <h2>Item {{ item }}</h2>
           <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
               invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
       </acuw-carousel-item>
     </acuw-carousel>`,
 })
 class TestWrapperComponent {
+  carouselItems = ['1', '2', '3'];
 }
 
 describe('CarousellComponent', () => {
@@ -51,7 +42,7 @@ describe('CarousellComponent', () => {
 
   it('should have the correct number of children', () => {
     fixture.detectChanges();
-    expect(component.carouselItemTemplates.length).toBe(3);
+    expect(component.carouselItemTemplates.length).toBe(fixture.componentInstance.carouselItems.length);
   });
 
   it('should rotate to a random element, when calling the <rotateTo(targetIndex: number)> method', fakeAsync(() => {
@@ -111,15 +102,15 @@ describe('CarousellComponent', () => {
     expect(select.getElementsByTagName('svg').length).toBe(3);
   });
 
-  /*
-  it('should rotate automatically when using autoPlay', fakeAsync(() => {
-    component.activeCarouselElement = 0;
-    component.autoPlay = true;
-    tick(component.autoPlayInterval + component.rotationDuration + 1000);
+  it('should change the number of carousel components', () => {
+    fixture.componentInstance.carouselItems.push('4');
     fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      expect(component.activeCarouselElement).toBe(1);
-    });
-  }));
-  */
+    component.updateCarouselItems();
+    expect(component.carouselItemTemplates.length).toBe(fixture.componentInstance.carouselItems.length);
+
+    fixture.componentInstance.carouselItems.pop();
+    fixture.detectChanges();
+    component.updateCarouselItems();
+    expect(component.carouselItemTemplates.length).toBe(fixture.componentInstance.carouselItems.length);
+  });
 });
