@@ -7,6 +7,7 @@
     "build": "ng build",
     "test": "ng test ngx-acuw",
     "test-headless": "ng test ngx-acuw --watch=false --no-progress --browsers=ChromeHeadless",
+    "test-coverage": "ng test --no-watch --code-coverage",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "buildGitPage": "ng build --configuration production --project ng-acuw-showcase --output-path docs --base-href https://windmichael.github.io/ngx-acuw/ && npm run copyIndexHtml",
