@@ -26,6 +26,7 @@ export class LightboxOverlayComponent implements OnInit {
   intensity = 40.0;
   startIndex = 0;
   currentImageIndex = 1;
+  showPerformanceMonitor = false;
 
   swipeCoord = new Array<number>();
   swipeTime = 0;

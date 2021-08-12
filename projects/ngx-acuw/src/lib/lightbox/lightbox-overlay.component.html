@@ -23,6 +23,6 @@
     <lib-image-transition #imageTransition [imageUrls]="imageUrls" [startIndex]="startIndex" (imageIndexChange)="imageIndexChange($event)"
         [imageSize]="imageSize" [autoPlay]="autoPlay" [autoPlayInterval]="autoPlayInterval" [transitionDuration]="transitionDuration"
         [transitionType]="transitionType" [sizeX]="sizeX" [sizeY]="sizeY" [width]="width" [intensity]="intensity"
-        (touchstart)="swipe($event, 'start')" (touchend)="swipe($event, 'end')">
+        (touchstart)="swipe($event, 'start')" (touchend)="swipe($event, 'end')" [showPerformanceMonitor]="showPerformanceMonitor">
     </lib-image-transition>
 </div>

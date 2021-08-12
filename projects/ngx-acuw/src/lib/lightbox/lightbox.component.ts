@@ -21,6 +21,7 @@ export class LightboxComponent implements OnInit {
   @Input() sizeY = 50.0;
   @Input() width = 0.5;
   @Input() intensity = 40.0;
+  @Input() showPerformanceMonitor = false;
 
   private overlayRef?: OverlayRef;
 
@@ -60,6 +61,7 @@ export class LightboxComponent implements OnInit {
     lightboxOverlayRef.instance.width = this.width;
     lightboxOverlayRef.instance.intensity = this.intensity;
     lightboxOverlayRef.instance.startIndex = index;
+    lightboxOverlayRef.instance.showPerformanceMonitor = this.showPerformanceMonitor;
   }
 
   close() {

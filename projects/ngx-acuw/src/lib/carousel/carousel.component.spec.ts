@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { PerformanceMonitorComponent } from '../performance-monitor/performance-monitor.component';
 
 import { CarouselComponent, CarouselItem } from './carousel.component';
 
@@ -25,7 +27,7 @@ describe('CarousellComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NoopAnimationsModule],
-      declarations: [TestWrapperComponent, CarouselComponent, CarouselItem]
+      declarations: [TestWrapperComponent, CarouselComponent, CarouselItem, PerformanceMonitorComponent]
     })
       .compileComponents();
   });
@@ -46,7 +48,7 @@ describe('CarousellComponent', () => {
   });
 
   it('should rotate to a random element, when calling the <rotateTo(targetIndex: number)> method', fakeAsync(() => {
-    const randomElem = Math.round(Math.random() * component.carouselItemTemplates.length);
+    const randomElem = Math.round(Math.random() * (component.carouselItemTemplates.length - 1));
     component.rotateTo(randomElem).then(response => {
       expect(response).toEqual(randomElem);
       expect(component.activeCarouselElement).toEqual(randomElem);
@@ -112,5 +114,15 @@ describe('CarousellComponent', () => {
     fixture.detectChanges();
     component.updateCarouselItems();
     expect(component.carouselItemTemplates.length).toBe(fixture.componentInstance.carouselItems.length);
+  });
+
+  it('should show or hide the performance monitor', () => {
+    expect(component.showPerformanceMonitor).toEqual(false);
+    let elem = fixture.debugElement.query(By.css('acuw-performance-monitor'));
+    expect(elem).toBeNull();
+    component.showPerformanceMonitor = true;
+    fixture.detectChanges();
+    elem = fixture.debugElement.query(By.css('acuw-performance-monitor')).nativeElement;
+    expect(elem).toBeDefined();
   });
 });

@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { PerformanceMonitorComponent } from '../performance-monitor/performance-monitor.component';
 
 import { ImageTransitionComponent } from './image-transition.component';
 
@@ -8,7 +10,7 @@ describe('ImageTransitionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ImageTransitionComponent ]
+      declarations: [ ImageTransitionComponent, PerformanceMonitorComponent ]
     })
     .compileComponents();
   });
@@ -22,5 +24,15 @@ describe('ImageTransitionComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should show or hide the performance monitor', () => {
+    expect(component.showPerformanceMonitor).toEqual(false);
+    let elem = fixture.debugElement.query(By.css('acuw-performance-monitor'));
+    expect(elem).toBeNull();
+    component.showPerformanceMonitor = true;
+    fixture.detectChanges();
+    elem = fixture.debugElement.query(By.css('acuw-performance-monitor')).nativeElement;
+    expect(elem).toBeDefined();
   });
 });

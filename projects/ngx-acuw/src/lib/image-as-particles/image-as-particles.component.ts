@@ -6,6 +6,7 @@ import { Shaders } from './scripts/shaders';
 import { RxjsTween } from '../tween/rxjs-tween';
 import { interval, Observable, Subscription } from 'rxjs';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { PerformanceMonitorComponent } from '../performance-monitor/performance-monitor.component';
 
 @Component({
   selector: 'lib-image-as-particles',
@@ -23,6 +24,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
           </svg>
       </div>
     </div>
+    <acuw-performance-monitor *ngIf="showPerformanceMonitor" #performanceMonitor></acuw-performance-monitor>
   `,
   styles: [`
     .threejs-container{
@@ -140,8 +142,10 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
   }
   get verticalAlignment(): string { return this.alignItems; }
   @Input() animationEnabled = true;
+  @Input() showPerformanceMonitor = false;
 
   @ViewChild('container') canvasRef!: ElementRef;
+  @ViewChild('performanceMonitor') performanceMonitor!: PerformanceMonitorComponent;
 
   constructor(private ngZone: NgZone) {
   }
@@ -375,6 +379,9 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
           (this.mesh.material as RawShaderMaterial).uniforms.uTime.value += delta;
         }
         this.renderer.render(this.scene, this.camera);
+      }
+      if (this.performanceMonitor && this.showPerformanceMonitor) {
+        this.performanceMonitor.end();
       }
     });
   }

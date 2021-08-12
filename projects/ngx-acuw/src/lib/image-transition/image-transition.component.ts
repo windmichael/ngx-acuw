@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input
 import { interval, Observable, Subscription } from 'rxjs';
 import { DoubleSide, Mesh, PerspectiveCamera, PlaneBufferGeometry, Scene, ShaderMaterial, Texture, Vector4, WebGLRenderer } from 'three';
 import { TextureLoader } from 'three';
+import { PerformanceMonitorComponent } from '../performance-monitor/performance-monitor.component';
 import { RxjsTween } from '../tween/rxjs-tween';
 import { ImageTransitionShaders } from './shaders/imageTransitionShaders';
 
@@ -96,6 +97,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   }
 
   @Input() animationEnabled = true;
+  @Input() showPerformanceMonitor = false;
 
   @Input() startIndex = 0;
 
@@ -124,6 +126,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   private autoPlaySubscription: Subscription = new Subscription();
 
   @ViewChild('threejsContainer') threejsContainer!: ElementRef;
+  @ViewChild('performanceMonitor') performanceMonitor!: PerformanceMonitorComponent;
 
   constructor(private ngZone: NgZone) { }
 
@@ -296,6 +299,11 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
     if (this.animationEnabled === true) {
       this.renderer.render(this.scene, this.camera);
     }
+    
+    if (this.performanceMonitor && this.showPerformanceMonitor) {
+      this.performanceMonitor.end();
+    }
+
     this.ngZone.runOutsideAngular(() => {
       this.animationFrameId = window.requestAnimationFrame(() => this.animate());
     });

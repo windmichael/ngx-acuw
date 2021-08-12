@@ -5,6 +5,7 @@ import { Euler, Group, Object3D, PerspectiveCamera, Quaternion, Scene } from 'th
 import { Vector3 } from 'three';
 import { CSS3DObject, CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer';
 import { ObjectControls } from '../controls/object-controls';
+import { PerformanceMonitorComponent } from '../performance-monitor/performance-monitor.component';
 import { RxjsTween } from '../tween/rxjs-tween';
 
 @Directive({
@@ -36,13 +37,11 @@ export class CarouselItem {
                   d="M50 10 a 40 40 0 0 1 0 80 a 40 40 0 0 1 0 -80"/>
           </svg>
       </div>
+     <acuw-performance-monitor *ngIf="showPerformanceMonitor" #performanceMonitor></acuw-performance-monitor>
     </div>
     
   `,
   styleUrls: ['./carousel.component.css'],
-  styles: [`
-  `
-  ],
   animations: [
     trigger('dotsAnimation', [
       transition(':enter', [
@@ -83,11 +82,13 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input() autoPlay = false;
   @Input() autoPlayInterval = 5000;
   @Input() rotationDuration = 500;
+  @Input() showPerformanceMonitor = false;
 
   @Output() activeElementChanged = new EventEmitter<number>();
 
   @ViewChild('threejsContainer') threejsContainer!: ElementRef;
   @ViewChild('indicationDots') dots!: ElementRef;
+  @ViewChild('performanceMonitor') performanceMonitor!: PerformanceMonitorComponent;
 
   @ContentChildren(CarouselItem) carouselItemTemplates!: QueryList<CarouselItem>;
 
@@ -201,9 +202,15 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
    * Animation
    */
   private animate(): void {
+    // Only render if the animation flat is true
     if (this.animation == true) {
       this.css3dRenderer.render(this.scene, this.camera);
     }
+
+    if (this.performanceMonitor && this.showPerformanceMonitor) {
+      this.performanceMonitor.end();
+    }
+
     this.ngZone.runOutsideAngular(() => {
       this.animationFrameId = window.requestAnimationFrame(() => this.animate());
     });
