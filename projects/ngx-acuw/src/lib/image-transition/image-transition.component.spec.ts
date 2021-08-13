@@ -18,12 +18,14 @@ describe('ImageTransitionComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ImageTransitionComponent);
     component = fixture.componentInstance;
-    component.imageUrls = ['src/image1.jpg', 'src/image2.jpg', 'src/image3.jpg'];
+    component.imageUrls = ['https://source.unsplash.com/7BLRSG-AkJs', 'https://source.unsplash.com/rcJbbK5_iIA', 'https://source.unsplash.com/yQUwIlUeU4o'];
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    const elem = fixture.debugElement.query(By.css('.threejs-container')).query(By.css('canvas'));
+    expect(elem).toBeDefined();
   });
 
   it('should show or hide the performance monitor', () => {

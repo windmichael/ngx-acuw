@@ -26,7 +26,7 @@ describe('PerformanceMonitorComponent', () => {
 
   it('should not show any fps after created', () => {
     fixture.detectChanges();
-    const elem = fixture.debugElement.query(By.css('#fps-display')).query(By.css('span'));
+    const elem = fixture.debugElement.query(By.css('#fps-display'));
     expect(elem).toBeNull();
     expect(component.fps).toBe(-1);
   });
@@ -39,7 +39,7 @@ describe('PerformanceMonitorComponent', () => {
     }
 
     expect(component.fps).toEqual(10);
-    const elem = fixture.debugElement.query(By.css('#fps-display')).query(By.css('span')).nativeElement as HTMLSpanElement;
+    const elem = fixture.debugElement.query(By.css('#fps-display')).nativeElement as HTMLSpanElement;
     expect(elem.textContent).toEqual(10 + ' FPS');
   }));
 
@@ -66,6 +66,6 @@ describe('PerformanceMonitorComponent', () => {
 
     expect(component.fpsMax).toEqual(20);
     elem = fixture.debugElement.query(By.css('#max-fps-display')).nativeElement as HTMLSpanElement;
-    expect(elem.textContent).toEqual(20 + 'max');
+    expect(elem.textContent).toEqual(20 + ' max');
   }));
 });
