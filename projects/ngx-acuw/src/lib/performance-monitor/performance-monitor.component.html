@@ -1,0 +1,7 @@
+<div id="fps-display" *ngIf="fps!=-1">
+    <span>{{ fps }} FPS</span>
+    <div id="min-max-display">
+        <span id="max-fps-display" *ngIf="fpsMax!=-1">{{ fpsMax }} max</span>
+        <span id="min-fps-display" *ngIf="fpsMin!=-1">{{ fpsMin }} min</span>
+    </div>
+</div>
