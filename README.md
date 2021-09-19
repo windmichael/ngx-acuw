@@ -28,17 +28,20 @@ npm install three @types/three @angular/cdk ngx-acuw
     <th>Image Transition</th>
     <th>Lightbox</th>
     <th>Carousel</th>
+    <th>Performance-Monitor</th>
   </tr>
   <tr>
     <td><img src="./projects/ng-acuw-showcase/src/assets/image-as-particles/imageAsParticles.gif" width="150"/></td>
     <td><img src="./projects/ng-acuw-showcase/src/assets/image-transition/imageTransition.gif" width="150"/></td>
     <td><img src="./projects/ng-acuw-showcase/src/assets/lightbox/lightbox.jpg" width="150"/></td>
     <td><img src="./projects/ng-acuw-showcase/src/assets/carousel/carousel.gif" width="150"/></td>
+    <td><img src="./projects/ng-acuw-showcase/src/assets/performance-monitor/performance-monitor.png" width="150"/></td>
   </tr>
   <tr>
     <td></td>
     <td><a href="https://stackblitz.com/edit/ngx-acuw-image-transition">stackblitz<a/></td>
     <td><a href="https://stackblitz.com/edit/angular-ngx-acuw-lightbox">stackblitz<a/></td>
     <td><a href="https://stackblitz.com/edit/ngx-acuw-carousel">stackblitz<a/></td>
+    <td></td>
   </tr>
 </table>

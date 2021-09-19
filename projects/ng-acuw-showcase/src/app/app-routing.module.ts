@@ -5,6 +5,7 @@ import { HomeComponent } from './home/home.component';
 import { ImageAsParticlesComponent } from './image-as-particles/image-as-particles.component';
 import { ImageTransitionComponent } from './image-transition/image-transition.component';
 import { LightboxComponent } from './lightbox/lightbox.component';
+import { PerformanceMonitorDemoComponent } from './performance-monitor/performance-monitor.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -16,6 +17,8 @@ const routes: Routes = [
   { path: 'lightbox/:tab', component: LightboxComponent },
   { path: 'carousel', component: CarouselDemoComponent },
   { path: 'carousel/:tab', component: CarouselDemoComponent },
+  { path: 'performanceMonitor', component: PerformanceMonitorDemoComponent },
+  { path: 'performanceMonitor/:tab', component: PerformanceMonitorDemoComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 

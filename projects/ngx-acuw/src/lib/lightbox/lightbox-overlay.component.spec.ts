@@ -1,9 +1,9 @@
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ImageTransitionComponent } from '../image-transition/image-transition.component';
 import { ImageTransitionModule } from '../image-transition/image-transition.module';
 import { PerformanceMonitorComponent } from '../performance-monitor/performance-monitor.component';
-
 import { LightboxOverlayComponent } from './lightbox-overlay.component';
 
 describe('LightboxOverlayComponent', () => {
@@ -37,5 +37,19 @@ describe('LightboxOverlayComponent', () => {
     fixture.detectChanges();
     elem = fixture.debugElement.query(By.css('acuw-performance-monitor')).nativeElement;
     expect(elem).toBeDefined();
+  });
+
+  it('should go to next or prev image on key strokes', () => {
+    let spy = spyOn(component.imageTransition, 'next');
+    component.keyEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+    expect(spy).toHaveBeenCalled();
+
+    spy = spyOn(component.imageTransition, 'prev');
+    component.keyEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
+    expect(spy).toHaveBeenCalled();
+
+    spy = spyOn(component, 'close');
+    component.keyEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
+    expect(spy).toHaveBeenCalled();
   });
 });

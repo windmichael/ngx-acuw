@@ -10,3 +10,5 @@ export * from './lib/lightbox/lightbox.component';
 export * from './lib/lightbox/lightbox.module';
 export * from './lib/carousel/carousel.component';
 export * from './lib/carousel/carousel.module';
+export * from './lib/performance-monitor/performance-monitor.component';
+export * from './lib/performance-monitor/performance-monitor.module';

@@ -11,7 +11,7 @@ export class LightboxOverlayComponent implements OnInit {
 
   @ViewChild(ImageTransitionComponent) imageTransition!: ImageTransitionComponent;
 
-  overlayRef?: OverlayRef;
+  overlayRef!: OverlayRef;
   imageUrls = new Array<string>();
   forceFullscreen = false;
   forceShowNavButtons = false;

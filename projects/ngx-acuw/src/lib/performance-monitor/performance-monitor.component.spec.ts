@@ -40,7 +40,7 @@ describe('PerformanceMonitorComponent', () => {
 
     expect(component.fps).toEqual(10);
     const elem = fixture.debugElement.query(By.css('#fps-display')).nativeElement as HTMLSpanElement;
-    expect(elem.textContent).toEqual(10 + ' FPS');
+    expect(elem.textContent).toEqual('FPS: 10');
   }));
 
   it('should calculate the correct and min. and max fps', fakeAsync(() => {

@@ -12,7 +12,8 @@ export class AppComponent {
     { name: 'Image As Particles', routeLink: 'image-as-particles' },
     { name: 'Image Transition', routeLink: 'image-transition' },
     { name: 'Lightbox', routeLink: 'lightbox' },
-    { name: 'Carousel', routeLink: 'carousel' }
+    { name: 'Carousel', routeLink: 'carousel' },
+    { name: 'Performance Monitor', routeLink: 'performanceMonitor' }
   ];
   activeRoute = '';
 

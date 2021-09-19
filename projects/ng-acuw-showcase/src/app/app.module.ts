@@ -20,8 +20,9 @@ import { ImageTransitionComponent } from './image-transition/image-transition.co
 import { HomeComponent } from './home/home.component';
 import { LightboxComponent } from './lightbox/lightbox.component';
 import { CarouselDemoComponent } from './carousel/carousel-demo.component';
-import { ImageAsParticlesModule, ImageTransitionModule, LightboxModule, CarouselModule } from 'projects/ngx-acuw/src/public-api';
+import { ImageAsParticlesModule, ImageTransitionModule, LightboxModule, CarouselModule, PerformanceMonitorModule } from 'projects/ngx-acuw/src/public-api';
 import { CodeBlockComponent } from './common/code-block/code-block.component';
+import { PerformanceMonitorDemoComponent } from './performance-monitor/performance-monitor.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { CodeBlockComponent } from './common/code-block/code-block.component';
     HomeComponent,
     LightboxComponent,
     CarouselDemoComponent,
-    CodeBlockComponent
+    CodeBlockComponent,
+    PerformanceMonitorDemoComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +54,8 @@ import { CodeBlockComponent } from './common/code-block/code-block.component';
     ImageAsParticlesModule,
     ImageTransitionModule,
     LightboxModule,
-    CarouselModule
+    CarouselModule,
+    PerformanceMonitorModule
   ],
   providers: [
   ],

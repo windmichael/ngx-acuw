@@ -1,0 +1,89 @@
+<mat-tab-group mat-align-tabs="center" backgroundColor="primary" animationDuration="0ms"
+    [selectedIndex]="selectedTabIndex" (selectedIndexChange)="selctedTabChanged($event)">
+    <mat-tab label="Demo">
+        <ng-template matTabContent>
+            <div class="container">
+                <div #threejsContainer class="threejs-container"></div>
+            </div>
+            <acuw-performance-monitor #performanceMonitor></acuw-performance-monitor>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Description">
+        <div class="description-container">
+            <div class="description-content">
+                <h2>Information</h2>
+                <mat-divider></mat-divider>
+                <p>
+                    The performance monitor component is a small display, which shows the number of rendered frames per second.
+                    This component helps to keep track of the performance for WEBGL scenes and can be integrated very easily in 
+                    Angular applications. 
+                    It is already integrated per default in all components of the ngx-acuw library and can be shown by just setting a property of the components.
+                    If you want to use the performance monitor in custom projects you can follow the description below. 
+                </p>
+                <p>
+                    The performance monitor display is strongly inspired by 
+                    <a class="external-link" href="https://mrdoob.github.io/stats.js/" target="_blank">stats.js</a> 
+                    from 
+                    <a class="external-link" href="https://github.com/mrdoob" target="_blank">Mr.doob</a>.
+                </p>
+
+                <h2>Installation</h2>
+                <mat-divider></mat-divider>
+                <app-code-block language="bash">npm install three @types/three @angular/cdk ngx-acuw</app-code-block>
+
+                <h2>Usage</h2>
+                <mat-divider></mat-divider>
+                <h3>Import Module</h3>
+                <app-code-block language="ts">{{code.importModule}}</app-code-block>
+                <h3>Directive Example</h3>
+                <app-code-block language="html">{{code.directiveExample}}</app-code-block>
+                <h3>TS Example</h3>
+                <app-code-block language="ts">{{code.tsExample}}</app-code-block>
+                
+                <h2>Performance-Monitor API</h2>
+                <mat-divider></mat-divider>
+                <h3>Properties</h3>
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Default value</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>fps: number</td>
+                            <td>-1</td>
+                            <td>Current frames per second. The value is calculated every second.</td>
+                        </tr>
+                        <tr>
+                            <td>fpsMin: number</td>
+                            <td>-1</td>
+                            <td>Min. frames per seconds starting from the time the compent has been created.</td>
+                        </tr>
+                        <tr>
+                            <td>fpsMax: number</td>
+                            <td>-1</td>
+                            <td>Max. frames per seconds starting from the time the compent has been created.</td>
+                        </tr>
+                    </table>
+                </div>
+                <h3>Methods</h3>
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>end(): void</td>
+                            <td>Method to be called at the end of a frame</td>
+                        </tr>
+                    </table>
+                </div>
+                <h3>Styling</h3>
+                <p>Available CSS variables:</p>
+                <app-code-block language="css">{{code.cssVariables}}</app-code-block>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>

@@ -1,7 +1,10 @@
-<div id="pm-container" *ngIf="fps!=-1">
-    <span id="fps-display">{{ fps }} FPS</span>
-    <div id="min-max-display">
-        <span id="max-fps-display" *ngIf="fpsMax!=-1">{{ fpsMax }} max</span>
-        <span id="min-fps-display" *ngIf="fpsMin!=-1">{{ fpsMin }} min</span>
+<div id="pm-container">
+    <div id="fps-display-container">
+        <span id="fps-display">FPS: {{ fps != -1 ? (fps | number: '1.0-0') : '-' }}</span>
+        <div id="min-max-display">
+            <span id="max-fps-display">{{ fpsMax != -1 ? (fpsMax | number: '1.0-0') : '-' }} max</span>
+            <span id="min-fps-display">{{ fpsMin != -1 ? (fpsMin | number: '1.0-0') : '-' }} min</span>
+        </div>
     </div>
+    <canvas #chart width="90" height="40"></canvas>
 </div>

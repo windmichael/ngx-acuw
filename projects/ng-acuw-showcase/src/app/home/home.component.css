@@ -77,8 +77,8 @@
 
 .new-badge {
     position: absolute;
-    right: 26px;
-    top: 40px;
+    right: 18px;
+    top: 30px;
     background-color: var(--primary);
     color: white;
     transform: rotate(45deg);
