@@ -26,9 +26,17 @@ describe('PerformanceMonitorComponent', () => {
 
   it('should not show any fps after created', () => {
     fixture.detectChanges();
-    const elem = fixture.debugElement.query(By.css('#fps-display'));
-    expect(elem).toBeNull();
+    let elem = fixture.debugElement.query(By.css('#fps-display')).nativeElement as HTMLSpanElement;
+    expect(elem.textContent).toBe('FPS: -');
     expect(component.fps).toBe(-1);
+
+    elem = fixture.debugElement.query(By.css('#max-fps-display')).nativeElement as HTMLSpanElement;
+    expect(elem.textContent).toBe('- max');
+    expect(component.fpsMax).toBe(-1);
+
+    elem = fixture.debugElement.query(By.css('#min-fps-display')).nativeElement as HTMLSpanElement;
+    expect(elem.textContent).toBe('- min');
+    expect(component.fpsMin).toBe(-1);
   });
 
   it('should calculate the correct fps', fakeAsync(() => {
