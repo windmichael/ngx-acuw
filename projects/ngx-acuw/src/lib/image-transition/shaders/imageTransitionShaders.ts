@@ -299,4 +299,53 @@ export class ImageTransitionShaders{
 			gl_FragColor = mix(t1wb, t2wb, progress);
 		}
 	`;
+	distortionFrag = `
+	uniform float progress;
+	uniform sampler2D displacementTexture;
+	uniform sampler2D texture1;
+    uniform sampler2D texture2;
+    uniform vec4 resolution1;
+    uniform vec4 resolution2;
+	uniform float angle1;
+	uniform float angle2;
+	uniform float intensity;
+
+	varying vec2 vUv;
+
+	mat2 getRotM(float angle) {
+	  float s = sin(angle);
+	  float c = cos(angle);
+	  return mat2(c, -s, s, c);
+	}
+
+	void main() {
+	  vec2 newUV1 = (vUv - vec2(0.5,0.5))*resolution1.zw + vec2(0.5,0.5);
+      vec2 newUV2 = (vUv - vec2(0.5,0.5))*resolution2.zw + vec2(0.5,0.5);
+	  vec4 t1 = texture2D(texture1,newUV1);
+      vec4 t2 = texture2D(texture2,newUV2);
+
+	  vec4 disp = texture2D(displacementTexture, newUV1);
+	  vec2 dispVec = vec2(disp.r, disp.g);
+
+	  vec2 distortedPosition1 = newUV1 + getRotM(angle1) * dispVec * intensity / 100.0 * progress;
+	  vec2 distortedPosition2 = newUV2 + getRotM(angle2) * dispVec * intensity / 100.0 * (1.0 - progress);
+	  vec4 t1d = texture2D(texture1, distortedPosition1);
+	  vec4 t2d = texture2D(texture2, distortedPosition2);
+
+	  // Use black background color
+	  // Top right
+	  vec2 tr1 = step(newUV1, vec2(1.0, 1.0));
+	  vec2 tr2 = step(newUV2, vec2(1.0, 1.0));
+	  float pct1 = tr1.x * tr1.y;
+	  float pct2 = tr2.x * tr2.y;
+	  // Bottom left
+	  vec2 bl1 = step(vec2(0.0, 0.0), newUV1);
+	  vec2 bl2 = step(vec2(0.0, 0.0), newUV2);
+	  pct1 *= bl1.x * bl1.y;
+	  pct2 *= bl2.x * bl2.y;
+	  vec4 t1wb = t1d * vec4(pct1,pct1,pct1,1.0);
+	  vec4 t2wb = t2d * vec4(pct2,pct2,pct2,1.0);
+	  gl_FragColor = mix(t1wb, t2wb, progress);
+	}
+	`;
 }

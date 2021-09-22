@@ -5,13 +5,15 @@
 
 .container {
   width: 100%;
-  height: calc(100vh - 104px);
+  height: calc(100vh - 104px - 64px);
+  overflow: hidden;
 }
 
 @media (min-width: 600px) {
   .container {
       width: 100%;
-      height: calc(100vh - 112px);
+      height: calc(100vh - 112px - 64px);
+      overflow: hidden;
   }
 }
 

@@ -15,6 +15,15 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
 
   @Input() imageUrls: string[] = new Array<string>();
 
+  @Input() 
+  get displacementImageUrl(): string { return this.pDistortionImageUrl; }
+  set displacementImageUrl(displacementImageUrl: string){
+    this.pDistortionImageUrl = displacementImageUrl;
+    if (this.material != null) {
+      this.setShaderProperties();
+    }
+  }
+
   @Input()
   get imageSize(): string { return this.pImageSize; }
   set imageSize(imageSize: string) {
@@ -97,9 +106,8 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   }
 
   @Input() animationEnabled = true;
-  @Input() showPerformanceMonitor = false;
-
   @Input() startIndex = 0;
+  @Input() showPerformanceMonitor = false;
 
   @Output() imageIndexChange = new EventEmitter<number>();
 
@@ -111,6 +119,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
   private pScaleX = 50.0;
   private pScaleY = 50.0;
   private pWidth = 0.5;
+  private pDistortionImageUrl = '';
 
   private animationFrameId!: number;
   private renderer: WebGLRenderer = new WebGLRenderer({ antialias: true, alpha: true });
@@ -163,6 +172,13 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
       }
     }
 
+    let displacementTexture: Texture;
+    if(this.displacementImageUrl !== ''){
+      promises.push(new Promise(resolve => {
+        displacementTexture = (new TextureLoader()).load(this.displacementImageUrl, resolve);
+      }));
+    }
+
     this.nextImageIndex = this.startIndex;
     // Emit event to set current image index
     this.imageIndexChange.emit(this.nextImageIndex);
@@ -177,6 +193,8 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
           progress: { value: 0 },
           border: { value: 0 },
           intensity: { value: 50.0 },
+          angle1: { value: Math.PI / 4 },
+          angle2: { value: - Math.PI + Math.PI / 4 },
           scaleX: { value: 40.0 },
           scaleY: { value: 40.0 },
           transition: { value: 40.0 },
@@ -185,6 +203,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
           radius: { value: 0 },
           texture1: { value: this.textures[this.startIndex] },
           texture2: { value: this.textures[nextImg] },
+          displacementTexture: { value: displacementTexture },
           resolution1: { value: new Vector4() },
           resolution2: { value: new Vector4() }
         },
@@ -279,6 +298,11 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
       case 'blur':
         this.material.uniforms.intensity.value = this.pIntensity;
         this.material.fragmentShader = this.shaders.blurFrag;
+        break;
+      case 'distortion':
+        this.material.uniforms.displacementTexture.value = new TextureLoader().load(this.displacementImageUrl);
+        this.material.uniforms.intensity.value = this.pIntensity;
+        this.material.fragmentShader = this.shaders.distortionFrag;
         break;
       default:
         break;

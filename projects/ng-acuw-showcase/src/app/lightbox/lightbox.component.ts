@@ -38,10 +38,20 @@ export class LightboxComponent implements OnInit {
     'assets/image-transition/img9.jpg',
     'assets/image-transition/img10.jpg'
   ];
+  disImgUrls = [
+    'assets/image-transition/circle_bump.jpg',
+    'assets/image-transition/plastic_bump.jpg',
+    'assets/image-transition/mosaik_bump.jpg',
+    'assets/image-transition/wave_bump.jpg',
+    'assets/image-transition/wires_bump.jpg',
+    'assets/image-transition/heightMap.png',
+    'assets/image-transition/stripe1.png',
+    'assets/image-transition/stripes.png'
+  ];
   settingsOpen = false;
   selectForceFullscreen = false;
   selectedforceShowNavButtons = false;
-  selectedTransitionType = 'split';
+  selectedTransitionType = 'distortion';
   selectedImageSize = 'cover';
   selectedTransitionDuration = 1000;
   selectedAutoPlayEnabled = false;
@@ -50,6 +60,7 @@ export class LightboxComponent implements OnInit {
   selectedSizeX = 40.0;
   selectedSizeY = 40.0;
   selectedWidth = 0.5;
+  selectedDistUrl = this.disImgUrls[0];
   code: any;
 
   /**

@@ -33,3 +33,38 @@ table td, table th {
 table tr:nth-child(even) {
     background-color: rgba(0, 0, 0, .03);
 }
+
+.image-selection-container {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 10px 5px 10px 0;
+    max-width: 350px;
+    min-height: 120px;
+  }
+  
+  .image-selection-container:after, .image-selection-container:before {
+    content: '';
+    flex: 0 0 5px;
+  }
+  
+  .image-selection {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin: 0 5px 0 5px;
+    cursor: pointer;
+    border-radius: 3px;
+    opacity: 0.5;
+    box-shadow: 0 0px 5px 3px rgba(0, 0, 0, 0.3);
+  }
+  
+  .image-selection:hover {
+    opacity: 1;
+    box-shadow: 0 0px 10px 5px rgba(0, 0, 0, 0.8);
+  }
+  
+  .image-active {
+    opacity: 1;
+    box-shadow: 0 0px 10px 5px rgba(0, 0, 0, 0.8);
+  }

@@ -23,7 +23,7 @@
             <div class="container">
                 <lib-image-as-particles [imageUrl]="selectedUrl" touchAction="none" imageWidth="100%" imageHeight="100%"
                     [backgroundColor]="backgroundColor" horizontalAlignment="center" verticalAlignment="center" [animationEnabled]="animationEnabled"
-                    [showPerformanceMonitor]="true">
+                    [showPerformanceMonitor]="false">
                 </lib-image-as-particles>
             </div>
         </ng-template>
@@ -113,6 +113,13 @@
                             <td>true</td>
                             <td>
                                 The animation can be stopped by setting the property to "false", e.g. if the element is not in viewport anymore.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>@Input() showPerformanceMonitor: boolean</td>
+                            <td>false</td>
+                            <td>
+                                Show or hide the performance monitor display.
                             </td>
                         </tr>
                     </table>

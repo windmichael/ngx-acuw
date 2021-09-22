@@ -1,5 +1,5 @@
-<mat-tab-group mat-align-tabs="center" backgroundColor="primary" animationDuration="0ms" [selectedIndex]="selectedTabIndex"
-    (selectedIndexChange)="selctedTabChanged($event)">
+<mat-tab-group mat-align-tabs="center" backgroundColor="primary" animationDuration="0ms"
+    [selectedIndex]="selectedTabIndex" (selectedIndexChange)="selctedTabChanged($event)">
     <mat-tab label="Demo">
         <ng-template matTabContent>
             <button class="settings-button" mat-mini-fab color="accent" aria-label="settings button"
@@ -34,10 +34,11 @@
                             <mat-option value="fade">fade</mat-option>
                             <mat-option value="noise">noise</mat-option>
                             <mat-option value="blur">blur</mat-option>
+                            <mat-option value="distortion">distortion</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <ng-container>
-                        <ng-container *ngIf="selectedTransitionType=='split' || selectedTransitionType=='blur'">
+                        <ng-container *ngIf="selectedTransitionType=='split' || selectedTransitionType=='blur' || selectedTransitionType=='distortion'">
                             <span>Intensity</span>
                             <mat-slider thumbLabel tickInterval="1" min="0" max="100" [(ngModel)]="selectedIntensity">
                             </mat-slider>
@@ -59,15 +60,24 @@
                                     [(ngModel)]="selectedWidth"></mat-slider>
                             </div>
                         </ng-container>
+                        <ng-container *ngIf="selectedTransitionType=='distortion'">
+                            <p>Distortion image:</p>
+                            <div class="image-selection-container">
+                                <img class="image-selection" [ngClass]="{'image-active' : disImgUrl === selectedDistUrl}"
+                                    *ngFor="let disImgUrl of disImgUrls" [src]="disImgUrl" (click)="selectedDistUrl=disImgUrl">
+                            </div>
+                        </ng-container>
                     </ng-container>
                 </div>
             </div>
 
             <div class="container" (click)="imageTransition.next()">
                 <lib-image-transition #imageTransition [imageUrls]="imageUrls" [transitionType]="selectedTransitionType"
-                    [imageSize]="selectedImageSize" [transitionDuration]="selectedTransitionDuration" [autoPlay]="selectedAutoPlayEnabled"
-                    [autoPlayInterval]="selectedAutoPlayInterval" [intensity]="selectedIntensity"
-                    [sizeX]="selectedSizeX" [sizeY]="selectedSizeY" [width]="selectedWidth" [showPerformanceMonitor]="true"></lib-image-transition>
+                    [imageSize]="selectedImageSize" [transitionDuration]="selectedTransitionDuration"
+                    [autoPlay]="selectedAutoPlayEnabled" [autoPlayInterval]="selectedAutoPlayInterval"
+                    [intensity]="selectedIntensity" [sizeX]="selectedSizeX" [sizeY]="selectedSizeY"
+                    [width]="selectedWidth" [showPerformanceMonitor]="false"
+                    [displacementImageUrl]="selectedDistUrl"></lib-image-transition>
             </div>
         </ng-template>
     </mat-tab>
@@ -123,6 +133,11 @@
                             <td>Urls to the images</td>
                         </tr>
                         <tr>
+                            <td>@Input() displacementImageUrl: string</td>
+                            <td>[]</td>
+                            <td>Url of the displacement image (applicable for type: "distortion")</td>
+                        </tr>
+                        <tr>
                             <td>@Input() imageSize: string</td>
                             <td>cover</td>
                             <td>Size of the image ("cover", "contain")</td>
@@ -152,33 +167,34 @@
                         <tr>
                             <td>@Input() transitionType: string</td>
                             <td>split</td>
-                            <td>Type of the transition (split, fade, noise, blur)</td>
+                            <td>Type of the transition ("split", "fade", "noise", "blur", "distortion")</td>
                         </tr>
                         <tr>
                             <td>@Input() sizeX: string</td>
                             <td>50.0</td>
-                            <td>Size at x-axis of the transition effect (applicable for type: 'noise')</td>
+                            <td>Size at x-axis of the transition effect (applicable for type: "noise")</td>
                         </tr>
                         <tr>
                             <td>@Input() sizeY: string</td>
                             <td>50.0</td>
-                            <td>Size at y-axis of the transition effect (applicable for type: 'noise')</td>
+                            <td>Size at y-axis of the transition effect (applicable for type: "noise")</td>
                         </tr>
                         <tr>
                             <td>@Input() width: string</td>
                             <td>0.5</td>
-                            <td>Width of the transition effect (applicable for type: 'noise')</td>
+                            <td>Width of the transition effect (applicable for type: "noise")</td>
                         </tr>
                         <tr>
                             <td>@Input() intensity: string</td>
                             <td>40.0</td>
-                            <td>Intensity of the transition effect (applicable for type: 'split', 'blur'</td>
+                            <td>Intensity of the transition effect (applicable for type: "split", "blur", "distortion"</td>
                         </tr>
                         <tr>
                             <td>@Input() animationEnabled: boolean</td>
                             <td>true</td>
                             <td>
-                                The animation can be stopped by setting the property to "false", e.g. if the element is not in viewport anymore.
+                                The animation can be stopped by setting the property to "false", e.g. if the element is
+                                not in viewport anymore.
                             </td>
                         </tr>
                         <tr>
@@ -186,6 +202,13 @@
                             <td>0</td>
                             <td>
                                 Defines with which image should be shown first when the component is created.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>@Input() showPerformanceMonitor: boolean</td>
+                            <td>false</td>
+                            <td>
+                                Show or hide the performance monitor display.
                             </td>
                         </tr>
                         <tr>

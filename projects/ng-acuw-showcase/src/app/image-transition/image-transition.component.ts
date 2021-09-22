@@ -24,14 +24,24 @@ export class ImageTransitionComponent implements OnInit {
 
   /** Properties */
   selectedTabIndex = 0;
-  imageUrls: string[] = [
+  imageUrls = [
     'assets/image-transition/img1.jpg',
     'assets/image-transition/img2.jpg',
     'assets/image-transition/img3.jpg',
     'assets/image-transition/img4.jpg'
   ];
+  disImgUrls = [
+    'assets/image-transition/circle_bump.jpg',
+    'assets/image-transition/plastic_bump.jpg',
+    'assets/image-transition/mosaik_bump.jpg',
+    'assets/image-transition/wave_bump.jpg',
+    'assets/image-transition/wires_bump.jpg',
+    'assets/image-transition/heightMap.png',
+    'assets/image-transition/stripe1.png',
+    'assets/image-transition/stripes.png'
+  ];
   settingsOpen = false;
-  selectedTransitionType = 'noise';
+  selectedTransitionType = 'distortion';
   selectedImageSize = 'cover';
   selectedTransitionDuration = 1000;
   selectedAutoPlayEnabled = true;
@@ -40,6 +50,7 @@ export class ImageTransitionComponent implements OnInit {
   selectedSizeX = 40.0;
   selectedSizeY = 40.0;
   selectedWidth = 0.5;
+  selectedDistUrl = '';
   code: any;
 
   /** Constructor */
@@ -50,6 +61,7 @@ export class ImageTransitionComponent implements OnInit {
 
   /** Angular ngOnInit */
   ngOnInit(): void {
+    this.selectedDistUrl = this.disImgUrls[0];
     const activeTab = this.route.snapshot.paramMap.get('tab');
     this.selectedTabIndex = this.utility.getTabIndexFromParam(activeTab);
   }

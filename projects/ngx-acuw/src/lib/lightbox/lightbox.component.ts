@@ -10,6 +10,7 @@ import { LightboxOverlayComponent } from './lightbox-overlay.component';
 export class LightboxComponent implements OnInit {
 
   @Input() imageUrls = new Array<string>();
+  @Input() displacementImageUrl = '';
   @Input() forceFullscreen = false;
   @Input() forceShowNavButtons = false;
   @Input() imageSize = 'cover';
@@ -49,6 +50,7 @@ export class LightboxComponent implements OnInit {
     // Pass data to the LightboxOverlayComponent
     lightboxOverlayRef.instance.overlayRef = this.overlayRef;
     lightboxOverlayRef.instance.imageUrls = this.imageUrls;
+    lightboxOverlayRef.instance.displacementImageUrl = this.displacementImageUrl;
     lightboxOverlayRef.instance.forceFullscreen = this.forceFullscreen;
     lightboxOverlayRef.instance.forceShowNavButtons = this.forceShowNavButtons;
     lightboxOverlayRef.instance.imageSize = this.imageSize;

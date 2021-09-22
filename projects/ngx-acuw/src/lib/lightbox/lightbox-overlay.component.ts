@@ -13,6 +13,7 @@ export class LightboxOverlayComponent implements OnInit {
 
   overlayRef!: OverlayRef;
   imageUrls = new Array<string>();
+  displacementImageUrl = '';
   forceFullscreen = false;
   forceShowNavButtons = false;
   imageSize = 'cover';
