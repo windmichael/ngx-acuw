@@ -13,7 +13,8 @@ export class AppComponent {
     { name: 'Image Transition', routeLink: 'image-transition' },
     { name: 'Lightbox', routeLink: 'lightbox' },
     { name: 'Carousel', routeLink: 'carousel' },
-    { name: 'Performance Monitor', routeLink: 'performanceMonitor' }
+    { name: 'Performance Monitor', routeLink: 'performanceMonitor' },
+    { name: 'Particles', routeLink: 'particles' }
   ];
   activeRoute = '';
 

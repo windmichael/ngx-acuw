@@ -23,6 +23,8 @@ import { CarouselDemoComponent } from './carousel/carousel-demo.component';
 import { ImageAsParticlesModule, ImageTransitionModule, LightboxModule, CarouselModule, PerformanceMonitorModule } from 'projects/ngx-acuw/src/public-api';
 import { CodeBlockComponent } from './common/code-block/code-block.component';
 import { PerformanceMonitorDemoComponent } from './performance-monitor/performance-monitor.component';
+import { ParticlesComponent } from './particles/particles.component';
+import { ParticlesModule } from 'projects/ngx-acuw/src/lib/particles/particles.module';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,8 @@ import { PerformanceMonitorDemoComponent } from './performance-monitor/performan
     LightboxComponent,
     CarouselDemoComponent,
     CodeBlockComponent,
-    PerformanceMonitorDemoComponent
+    PerformanceMonitorDemoComponent,
+    ParticlesComponent
   ],
   imports: [
     BrowserModule,
@@ -55,7 +58,8 @@ import { PerformanceMonitorDemoComponent } from './performance-monitor/performan
     ImageTransitionModule,
     LightboxModule,
     CarouselModule,
-    PerformanceMonitorModule
+    PerformanceMonitorModule,
+    ParticlesModule
   ],
   providers: [
   ],
