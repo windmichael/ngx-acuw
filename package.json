@@ -1,6 +1,6 @@
 {
   "name": "ngx-acuw",
-  "version": "2.0.0",
+  "version": "3.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -10,10 +10,10 @@
     "test-coverage": "ng test --no-watch --code-coverage",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "buildGitPage": "ng build --configuration production --project ng-acuw-showcase --output-path docs --base-href https://windmichael.github.io/ngx-acuw/ && npm run copyIndexHtml",
-    "copyIndexHtml": "cpy './docs/index.html' './docs/' --rename='404.html'",
-    "buildLibrary": "cpy './README.md' './projects/ngx-acuw/' && ng build --configuration production --project ngx-acuw",
-    "publishLibrary": "npm publish ./dist/ngx-acuw"
+    "buildGitPage": "ng build --configuration production --project ng-acuw-showcase --output-path docs --base-href https://windmichael.github.io/ngx-acuw/ && node ./scripts/create-404-html.js",
+    "buildLibrary": "node ./scripts/copy-readme.js && ng build --configuration production --project ngx-acuw",
+    "prepublish": "npm run buildGitPage && npm run buildLibrary",
+    "publish": "npm publish ./dist/ngx-acuw"
   },
   "private": true,
   "dependencies": {
@@ -42,7 +42,7 @@
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
-    "cpy-cli": "^3.1.1",
+    "fs-extra": "^10.0.0",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~6.3.4",
