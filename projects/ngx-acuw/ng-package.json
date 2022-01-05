@@ -2,10 +2,6 @@
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/ngx-acuw",
   "lib": {
-    "entryFile": "src/public-api.ts",
-    "umdModuleIds": {
-      "three": "three",
-      "three/examples/jsm/renderers/CSS3DRenderer": "CSS3DRenderer"
-    }
+    "entryFile": "src/public-api.ts"
   }
 }

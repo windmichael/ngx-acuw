@@ -7,14 +7,13 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { PerformanceMonitorModule } from '../performance-monitor/performance-monitor.module';
 
 @NgModule({
-  declarations: [LightboxComponent, LightboxOverlayComponent],
-  imports: [
-    CommonModule,
-    ImageTransitionModule,
-    OverlayModule,
-    PerformanceMonitorModule
-  ],
-  exports: [ LightboxComponent ],
-  entryComponents: [ LightboxOverlayComponent ]
+    declarations: [LightboxComponent, LightboxOverlayComponent],
+    imports: [
+        CommonModule,
+        ImageTransitionModule,
+        OverlayModule,
+        PerformanceMonitorModule
+    ],
+    exports: [LightboxComponent]
 })
 export class LightboxModule { }
