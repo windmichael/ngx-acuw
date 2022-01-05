@@ -388,7 +388,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
       let targetQuaternion = new Quaternion().setFromEuler(new Euler(0, yOrientation, 0, 'XYZ'));
 
       if (skipAnimation) {
-        Quaternion.slerp(startQuaternion, targetQuaternion, this.carouselGroup.quaternion, 1);
+        this.carouselGroup.quaternion.slerpQuaternions(startQuaternion, targetQuaternion, 1)
         this.rotationCompleted(targetIndex);
         resolve(this.activeCarouselElement);
       } else {
@@ -397,10 +397,10 @@ export class CarouselComponent implements AfterViewInit, OnDestroy, OnChanges {
         this.ngZone.runOutsideAngular(() => {
           this.rotationSubscription = RxjsTween.createTween(RxjsTween.easeInOutQuad, 0, 1, this.rotationDuration).subscribe({
             next: x => {
-              Quaternion.slerp(startQuaternion, targetQuaternion, this.carouselGroup.quaternion, x);
+              this.carouselGroup.quaternion.slerpQuaternions(startQuaternion, targetQuaternion, x);
             },
             complete: () => {
-              Quaternion.slerp(startQuaternion, targetQuaternion, this.carouselGroup.quaternion, 1);
+              this.carouselGroup.quaternion.slerpQuaternions(startQuaternion, targetQuaternion, 1);
               this.ngZone.run(() => {
                 this.rotationCompleted(targetIndex);
                 resolve(this.activeCarouselElement);

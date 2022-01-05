@@ -32,18 +32,6 @@
             "tsConfig": "projects/ngx-acuw/tsconfig.spec.json",
             "karmaConfig": "projects/ngx-acuw/karma.conf.js"
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/ngx-acuw/tsconfig.lib.json",
-              "projects/ngx-acuw/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
         }
       }
     },
@@ -154,19 +142,6 @@
               "projects/ng-acuw-showcase/src/styles.css"
             ],
             "scripts": []
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/ng-acuw-showcase/tsconfig.app.json",
-              "projects/ng-acuw-showcase/tsconfig.spec.json",
-              "projects/ng-acuw-showcase/e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         },
         "e2e": {
