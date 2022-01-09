@@ -151,6 +151,7 @@ export class ImageTransitionComponent implements AfterViewInit, OnDestroy {
 
     // Init renderer
     this.renderer.setSize(this.threejsContainer.nativeElement.clientWidth, this.threejsContainer.nativeElement.clientHeight);
+    this.renderer.setPixelRatio(window.devicePixelRatio);
     this.threejsContainer.nativeElement.appendChild(this.renderer.domElement);
 
     // Create scene
