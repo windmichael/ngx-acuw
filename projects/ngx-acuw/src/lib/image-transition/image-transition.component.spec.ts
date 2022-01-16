@@ -37,17 +37,4 @@ describe('ImageTransitionComponent', () => {
     elem = fixture.debugElement.query(By.css('acuw-performance-monitor')).nativeElement;
     expect(elem).toBeDefined();
   });
-
-  it('should go to the next or previous image correctly', fakeAsync(() => {
-    component.readyForImageTransition.subscribe({
-      complete: async () => {
-        let imgIdx = await component.next();
-        expect(imgIdx).toBe(1);
-        imgIdx = await component.prev();
-        expect(imgIdx).toBe(0);
-        imgIdx = await component.prev();
-        expect(imgIdx).toBe(component.imageUrls.length -1);
-      }
-    });
-  }));
 });

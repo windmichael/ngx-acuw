@@ -81,7 +81,7 @@
                 <h2 class="centered-text">Lightbox Demo</h2>
                 <h4 class="centered-text">Click on an image to open the lightbox...</h4>
                 <div class="gallery">
-                    <img *ngFor="let imgUrl of imageUrls; let idx = index" [src]="imgUrl" (click)="lightbox.open(idx)" loading="lazy">
+                    <img *ngFor="let imgUrl of imageThumbUrls; let idx = index" [src]="imgUrl" (click)="lightbox.open(idx)" loading="lazy">
                 </div>
                 <p class="centered-text">
                     Photos by

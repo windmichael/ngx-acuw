@@ -26,18 +26,8 @@ export class LightboxComponent implements OnInit {
    * Properties
    */
   selectedTabIndex = 0;
-  imageUrls: string[] = [
-    'assets/image-transition/img1.jpg',
-    'assets/image-transition/img2.jpg',
-    'assets/image-transition/img3.jpg',
-    'assets/image-transition/img4.jpg',
-    'assets/image-transition/img5.jpg',
-    'assets/image-transition/img6.jpg',
-    'assets/image-transition/img7.jpg',
-    'assets/image-transition/img8.jpg',
-    'assets/image-transition/img9.jpg',
-    'assets/image-transition/img10.jpg'
-  ];
+  imageThumbUrls = new Array<string>();
+  imageUrls: string[] = new Array<string>();
   disImgUrls = [
     'assets/image-transition/circle_bump.jpg',
     'assets/image-transition/plastic_bump.jpg',
@@ -69,6 +59,10 @@ export class LightboxComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private router: Router, private utility: UtilityService) {
       this.code = code;
+      for (let idx = 1; idx <= 10; idx++) {
+        this.imageThumbUrls.push(`assets/image-transition/thumb/img${idx}.jpg`);
+        this.imageUrls.push(`assets/image-transition/img${idx}.jpg`);
+      }
   }
 
   /**

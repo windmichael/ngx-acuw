@@ -1,2 +1,12 @@
-<div #threejsContainer class="threejs-container"></div>
-<acuw-performance-monitor *ngIf="showPerformanceMonitor" #performanceMonitor></acuw-performance-monitor>
+<div #threejsContainer class="threejs-container">
+  <div *ngIf="showLoadingSpinner$ | async" class="loading-container">
+    <div class="lds-ripple">
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+</div>
+<acuw-performance-monitor
+  *ngIf="showPerformanceMonitor"
+  #performanceMonitor
+></acuw-performance-monitor>
