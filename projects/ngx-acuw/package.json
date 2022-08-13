@@ -1,6 +1,6 @@
 {
   "name": "ngx-acuw",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Angular components using WEBGL (threejs)",
   "author": "Michael Wind",
   "repository": {
@@ -30,11 +30,9 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@angular/common": ">=11.1.1",
-    "@angular/core": ">= 11.1.1",
     "@angular/cdk": ">= 11.1.1",
-    "three": "^0.136.0",
-    "@types/three": "^0.136.1"
+    "three": "^0.x",
+    "@types/three": "^0.x"
   },
   "dependencies": {
     "tslib": "^2.0.0"

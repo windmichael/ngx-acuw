@@ -1,5 +1,30 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy, HostListener, NgZone, DoCheck } from '@angular/core';
-import { BufferAttribute, Clock, InstancedBufferAttribute, InstancedBufferGeometry, LinearFilter, Mesh, MeshBasicMaterial, PerspectiveCamera, PlaneGeometry, Raycaster, RGBFormat, Scene, TextureLoader, Vector2, WebGLRenderer } from 'three';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  Input,
+  OnDestroy,
+  HostListener,
+  NgZone,
+} from '@angular/core';
+import {
+  BufferAttribute,
+  Clock,
+  InstancedBufferAttribute,
+  InstancedBufferGeometry,
+  LinearFilter,
+  Mesh,
+  MeshBasicMaterial,
+  PerspectiveCamera,
+  PlaneGeometry,
+  Raycaster,
+  RGBAFormat,
+  Scene,
+  TextureLoader,
+  Vector2,
+  WebGLRenderer,
+} from 'three';
 import { Object3D, RawShaderMaterial, Texture } from 'three';
 import { TouchTexture } from './scripts/touch-texture';
 import { Shaders } from './scripts/shaders';
@@ -11,67 +36,98 @@ import { PerformanceMonitorComponent } from '../performance-monitor/performance-
 @Component({
   selector: 'lib-image-as-particles',
   template: `
-    <div #container class="threejs-container" [style.background-color]="backgroundColor"
-                      [style.justify-content]="justifyContent"
-                      [style.align-items]="alignItems"
-                      (mousemove)="onMouseMove($event)" (touchmove)="onTouchMove($event)"></div>
-    <div *ngIf="showTouchGestureInfo==true" class="touch-gesture-info" [@showHideGestureInformation]>
+    <div
+      #container
+      class="threejs-container"
+      [style.background-color]="backgroundColor"
+      [style.justify-content]="justifyContent"
+      [style.align-items]="alignItems"
+      (mousemove)="onMouseMove($event)"
+      (touchmove)="onTouchMove($event)"
+    ></div>
+    <div
+      *ngIf="showTouchGestureInfo == true"
+      class="touch-gesture-info"
+      [@showHideGestureInformation]
+    >
       <div>
         <span>Use two fingers for touch animation</span>
-        <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" fill="white" width="18px" height="18px">
-          <g><rect fill="none" height="24" width="24" x="0"/></g><g><g><g>
-            <path d="M9,11.24V7.5C9,6.12,10.12,5,11.5,5S14,6.12,14,7.5v3.74c1.21-0.81,2-2.18,2-3.74C16,5.01,13.99,3,11.5,3S7,5.01,7,7.5 C7,9.06,7.79,10.43,9,11.24z M18.84,15.87l-4.54-2.26c-0.17-0.07-0.35-0.11-0.54-0.11H13v-6C13,6.67,12.33,6,11.5,6 S10,6.67,10,7.5v10.74c-3.6-0.76-3.54-0.75-3.67-0.75c-0.31,0-0.59,0.13-0.79,0.33l-0.79,0.8l4.94,4.94 C9.96,23.83,10.34,24,10.75,24h6.79c0.75,0,1.33-0.55,1.44-1.28l0.75-5.27c0.01-0.07,0.02-0.14,0.02-0.2 C19.75,16.63,19.37,16.09,18.84,15.87z"/></g></g></g>
-          </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          enable-background="new 0 0 24 24"
+          viewBox="0 0 24 24"
+          fill="white"
+          width="18px"
+          height="18px"
+        >
+          <g><rect fill="none" height="24" width="24" x="0" /></g>
+          <g>
+            <g>
+              <g>
+                <path
+                  d="M9,11.24V7.5C9,6.12,10.12,5,11.5,5S14,6.12,14,7.5v3.74c1.21-0.81,2-2.18,2-3.74C16,5.01,13.99,3,11.5,3S7,5.01,7,7.5 C7,9.06,7.79,10.43,9,11.24z M18.84,15.87l-4.54-2.26c-0.17-0.07-0.35-0.11-0.54-0.11H13v-6C13,6.67,12.33,6,11.5,6 S10,6.67,10,7.5v10.74c-3.6-0.76-3.54-0.75-3.67-0.75c-0.31,0-0.59,0.13-0.79,0.33l-0.79,0.8l4.94,4.94 C9.96,23.83,10.34,24,10.75,24h6.79c0.75,0,1.33-0.55,1.44-1.28l0.75-5.27c0.01-0.07,0.02-0.14,0.02-0.2 C19.75,16.63,19.37,16.09,18.84,15.87z"
+                />
+              </g>
+            </g>
+          </g>
+        </svg>
       </div>
     </div>
-    <acuw-performance-monitor *ngIf="showPerformanceMonitor" #performanceMonitor></acuw-performance-monitor>
+    <acuw-performance-monitor
+      *ngIf="showPerformanceMonitor"
+      #performanceMonitor
+    ></acuw-performance-monitor>
   `,
-  styles: [`
-    .threejs-container{
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 100%;
-      background-color: #222222;
-    }
+  styles: [
+    `
+      .threejs-container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        background-color: #222222;
+      }
 
-    .touch-gesture-info{
-      position: absolute;
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      top: 20px;
-      color: white;
-    }
+      .touch-gesture-info {
+        position: absolute;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        top: 20px;
+        color: white;
+      }
 
-    .touch-gesture-info div{
-      background-color: rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: row;
-      padding: 6px 10px 6px 10px;
-      border-radius: 5px;
-    }
-  `],
+      .touch-gesture-info div {
+        background-color: rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: row;
+        padding: 6px 10px 6px 10px;
+        border-radius: 5px;
+      }
+    `,
+  ],
   animations: [
     trigger('showHideGestureInformation', [
       transition(':enter', [
         style({ opacity: '0' }),
-        animate('300ms ease-in', style({ opacity: '1' }))
+        animate('300ms ease-in', style({ opacity: '1' })),
       ]),
       transition(':leave', [
         style({ opacity: '1' }),
-        animate('300ms ease-in', style({ opacity: '0' }))
-      ])
-    ])
-  ]
+        animate('300ms ease-in', style({ opacity: '0' })),
+      ]),
+    ]),
+  ],
 })
 export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
-
   // Declare variables
-  private renderer: WebGLRenderer = new WebGLRenderer({ antialias: true, alpha: true });
+  private renderer: WebGLRenderer = new WebGLRenderer({
+    antialias: true,
+    alpha: true,
+  });
   private scene: Scene = new Scene();
   private camera!: PerspectiveCamera;
   private clock: Clock = new Clock(true);
@@ -95,13 +151,17 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
   @Input()
   set imageUrl(imageUrl: string) {
     this.pImageUrl = imageUrl;
-    if (this.pImageChanging === true) { return; }
+    if (this.pImageChanging === true) {
+      return;
+    }
     if (this.mesh != null) {
       this.pImageChanging = true;
       this.triggerImageChange();
     }
   }
-  get imageUrl(): string { return this.pImageUrl; }
+  get imageUrl(): string {
+    return this.pImageUrl;
+  }
   @Input() backgroundColor = '#000000';
   @Input() imageWidth = '100%';
   @Input() imageHeight = '100%';
@@ -122,7 +182,9 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
         break;
     }
   }
-  get horizontalAlignment(): string { return this.justifyContent; }
+  get horizontalAlignment(): string {
+    return this.justifyContent;
+  }
   @Input()
   set verticalAlignment(verticalAlignment: string) {
     switch (verticalAlignment) {
@@ -140,23 +202,32 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
         break;
     }
   }
-  get verticalAlignment(): string { return this.alignItems; }
+  get verticalAlignment(): string {
+    return this.alignItems;
+  }
   @Input() animationEnabled = true;
   @Input() showPerformanceMonitor = false;
 
   @ViewChild('container') canvasRef!: ElementRef;
-  @ViewChild('performanceMonitor') performanceMonitor!: PerformanceMonitorComponent;
+  @ViewChild('performanceMonitor')
+  performanceMonitor!: PerformanceMonitorComponent;
 
-  constructor(private ngZone: NgZone) {
-  }
+  constructor(private ngZone: NgZone) {}
 
   ngAfterViewInit(): void {
-    if (this.pImageUrl === '') { return; }
+    if (this.pImageUrl === '') {
+      return;
+    }
 
     const canvasWidth = this.canvasRef.nativeElement.clientWidth;
     const canvasHeight = this.canvasRef.nativeElement.clientHeight;
     // Set camera
-    this.camera = new PerspectiveCamera(50, canvasWidth / canvasHeight, 1, 10000);
+    this.camera = new PerspectiveCamera(
+      50,
+      canvasWidth / canvasHeight,
+      1,
+      10000
+    );
     this.camera.position.z = 300;
     // Init particles
     this.initParticles(this.pImageUrl);
@@ -184,7 +255,7 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
       this.texture = texture;
       this.texture.minFilter = LinearFilter;
       this.texture.magFilter = LinearFilter;
-      this.texture.format = RGBFormat;
+      this.texture.format = RGBAFormat;
 
       this.width = texture.image.width;
       this.height = texture.image.height;
@@ -226,7 +297,9 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
         originalColors = Float32Array.from(imgData.data);
 
         for (let i = 0; i < numPoints; i++) {
-          if (originalColors[i * 4 + 0] > threshold) { numVisible++; }
+          if (originalColors[i * 4 + 0] > threshold) {
+            numVisible++;
+          }
         }
       }
     }
@@ -270,14 +343,18 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
     geometry.setAttribute('uv', uvs);
 
     // index
-    geometry.setIndex(new BufferAttribute(new Uint16Array([0, 2, 1, 2, 3, 1]), 1));
+    geometry.setIndex(
+      new BufferAttribute(new Uint16Array([0, 2, 1, 2, 3, 1]), 1)
+    );
 
     const indices = new Uint16Array(numVisible);
     const offsets = new Float32Array(numVisible * 3);
     const angles = new Float32Array(numVisible);
 
     for (let i = 0, j = 0; i < numPoints; i++) {
-      if (discard && originalColors[i * 4 + 0] <= threshold) { continue; }
+      if (discard && originalColors[i * 4 + 0] <= threshold) {
+        continue;
+      }
 
       offsets[j * 3 + 0] = i % this.width;
       offsets[j * 3 + 1] = Math.floor(i / this.width);
@@ -289,9 +366,18 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
       j++;
     }
 
-    geometry.setAttribute('pindex', new InstancedBufferAttribute(indices, 1, false));
-    geometry.setAttribute('offset', new InstancedBufferAttribute(offsets, 3, false));
-    geometry.setAttribute('angle', new InstancedBufferAttribute(angles, 1, false));
+    geometry.setAttribute(
+      'pindex',
+      new InstancedBufferAttribute(indices, 1, false)
+    );
+    geometry.setAttribute(
+      'offset',
+      new InstancedBufferAttribute(offsets, 3, false)
+    );
+    geometry.setAttribute(
+      'angle',
+      new InstancedBufferAttribute(angles, 1, false)
+    );
 
     this.mesh = new Mesh(geometry, material);
     const object3d = new Object3D();
@@ -303,7 +389,8 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    * Initializes the touch area
    */
   private initTouch(): void {
-    (this.mesh.material as RawShaderMaterial).uniforms.uTouch.value = this.touch.texture;
+    (this.mesh.material as RawShaderMaterial).uniforms.uTouch.value =
+      this.touch.texture;
   }
 
   /**
@@ -311,7 +398,11 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    */
   private initHitArea(): void {
     const geometry = new PlaneGeometry(this.width, this.height, 1, 1);
-    const material = new MeshBasicMaterial({ color: 0xFFFFFF, wireframe: true, depthTest: false });
+    const material = new MeshBasicMaterial({
+      color: 0xffffff,
+      wireframe: true,
+      depthTest: false,
+    });
     material.visible = false;
     this.hitArea = new Mesh(geometry, material);
     this.mesh.add(this.hitArea);
@@ -324,13 +415,25 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
   private show(time: number = 1000): void {
     // Tween in
     this.ngZone.runOutsideAngular(() => {
-      RxjsTween.createTween(RxjsTween.easeInOutQuad, [0.5, 0.0, 70.0], [1.5, 2.0, 4.0], time).subscribe(val => {
-        (this.mesh.material as RawShaderMaterial).uniforms.uSize.value = val[0];
-        (this.mesh.material as RawShaderMaterial).uniforms.uRandom.value = val[1];
-        (this.mesh.material as RawShaderMaterial).uniforms.uDepth.value = val[2];
-      }, () => { }, () => {
-        this.pImageChanging = false;
-      });
+      RxjsTween.createTween(
+        RxjsTween.easeInOutQuad,
+        [0.5, 0.0, 70.0],
+        [1.5, 2.0, 4.0],
+        time
+      ).subscribe(
+        (val) => {
+          (this.mesh.material as RawShaderMaterial).uniforms.uSize.value =
+            val[0];
+          (this.mesh.material as RawShaderMaterial).uniforms.uRandom.value =
+            val[1];
+          (this.mesh.material as RawShaderMaterial).uniforms.uDepth.value =
+            val[2];
+        },
+        () => {},
+        () => {
+          this.pImageChanging = false;
+        }
+      );
     });
   }
 
@@ -339,30 +442,49 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
    * @param time time of animation in ms
    */
   private triggerImageChange(time: number = 1000): void {
-    const uSizeStart = (this.mesh.material as RawShaderMaterial).uniforms.uSize.value;
-    const uRandomStart = (this.mesh.material as RawShaderMaterial).uniforms.uRandom.value;
-    const uDepth = (this.mesh.material as RawShaderMaterial).uniforms.uDepth.value;
+    const uSizeStart = (this.mesh.material as RawShaderMaterial).uniforms.uSize
+      .value;
+    const uRandomStart = (this.mesh.material as RawShaderMaterial).uniforms
+      .uRandom.value;
+    const uDepth = (this.mesh.material as RawShaderMaterial).uniforms.uDepth
+      .value;
     this.ngZone.runOutsideAngular(() => {
       // Tween out
-      RxjsTween.createTween(RxjsTween.easeInOutQuad, [uSizeStart, uRandomStart, uDepth], [0.0, 5.0, -20.0], time).subscribe(val => {
-        (this.mesh.material as RawShaderMaterial).uniforms.uSize.value = val[0];
-        (this.mesh.material as RawShaderMaterial).uniforms.uRandom.value = val[1];
-        (this.mesh.material as RawShaderMaterial).uniforms.uDepth.value = val[2];
-      }, () => { }, () => {
-        if (this.mesh != null) {
-          if (this.mesh.parent != null) { this.mesh.parent.remove(this.mesh); }
-          this.mesh.geometry.dispose();
-          (this.mesh.material as RawShaderMaterial).dispose();
-        }
+      RxjsTween.createTween(
+        RxjsTween.easeInOutQuad,
+        [uSizeStart, uRandomStart, uDepth],
+        [0.0, 5.0, -20.0],
+        time
+      ).subscribe(
+        (val) => {
+          (this.mesh.material as RawShaderMaterial).uniforms.uSize.value =
+            val[0];
+          (this.mesh.material as RawShaderMaterial).uniforms.uRandom.value =
+            val[1];
+          (this.mesh.material as RawShaderMaterial).uniforms.uDepth.value =
+            val[2];
+        },
+        () => {},
+        () => {
+          if (this.mesh != null) {
+            if (this.mesh.parent != null) {
+              this.mesh.parent.remove(this.mesh);
+            }
+            this.mesh.geometry.dispose();
+            (this.mesh.material as RawShaderMaterial).dispose();
+          }
 
-        if (this.hitArea != null) {
-          if (this.hitArea.parent != null) { this.hitArea.parent.remove(this.hitArea); }
-          this.hitArea.geometry.dispose();
-          (this.hitArea.material as RawShaderMaterial).dispose();
+          if (this.hitArea != null) {
+            if (this.hitArea.parent != null) {
+              this.hitArea.parent.remove(this.hitArea);
+            }
+            this.hitArea.geometry.dispose();
+            (this.hitArea.material as RawShaderMaterial).dispose();
+          }
+          this.initParticles(this.pImageUrl);
+          this.pImageChanging = false;
         }
-        this.initParticles(this.pImageUrl);
-        this.pImageChanging = false;
-      });
+      );
     });
   }
 
@@ -375,8 +497,11 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
       if (this.animationEnabled === true) {
         const delta = this.clock.getDelta();
         if (this.mesh != null) {
-          if (this.touch) { this.touch.update(); }
-          (this.mesh.material as RawShaderMaterial).uniforms.uTime.value += delta;
+          if (this.touch) {
+            this.touch.update();
+          }
+          (this.mesh.material as RawShaderMaterial).uniforms.uTime.value +=
+            delta;
         }
         this.renderer.render(this.scene, this.camera);
       }
@@ -393,19 +518,37 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
   onMouseMove(event: MouseEvent): void {
     // getBoundingClientRect retruns the distance in pixels of the top left corner of the element
     // to the top left corner of the viewport
-    const domRect = (this.canvasRef.nativeElement as HTMLElement).getBoundingClientRect();
+    const domRect = (
+      this.canvasRef.nativeElement as HTMLElement
+    ).getBoundingClientRect();
     // get the offset distance between the canvas, which contains the particles, to the outer container element
-    const canvasEl: HTMLElement = (this.canvasRef.nativeElement.children[0] as HTMLElement);
+    const canvasEl: HTMLElement = this.canvasRef.nativeElement
+      .children[0] as HTMLElement;
     // Calculate the relative mouse position
-    this.mouse.x = (event.clientX - domRect.left - canvasEl.offsetLeft) / canvasEl.clientWidth * 2 - 1;
-    this.mouse.y = - (event.clientY - domRect.top - canvasEl.offsetTop) / canvasEl.clientHeight * 2 + 1;
+    this.mouse.x =
+      ((event.clientX - domRect.left - canvasEl.offsetLeft) /
+        canvasEl.clientWidth) *
+        2 -
+      1;
+    this.mouse.y =
+      (-(event.clientY - domRect.top - canvasEl.offsetTop) /
+        canvasEl.clientHeight) *
+        2 +
+      1;
     // console.info('raw: x= ' + event.clientX + ' , y= ' + event.clientY);
     // console.info('normalized: x= ' + this.mouse.x + ' , y= ' + this.mouse.y);
     this.raycaster.setFromCamera(this.mouse, this.camera);
 
-    if (this.hitArea === undefined) { return; }
+    if (this.hitArea === undefined) {
+      return;
+    }
     const intersects = this.raycaster.intersectObject(this.hitArea);
-    if (intersects !== undefined && intersects.length > 0 && this.touch && intersects[0].uv !== undefined) {
+    if (
+      intersects !== undefined &&
+      intersects.length > 0 &&
+      this.touch &&
+      intersects[0].uv !== undefined
+    ) {
       this.touch.addTouch(intersects[0].uv.x, intersects[0].uv.y);
     }
   }
@@ -422,40 +565,71 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
         next: () => {
           this.showTouchGestureInfo = false;
           this.gestureInfoSubscription.unsubscribe();
-        }
+        },
       });
       return;
     }
     event.preventDefault();
     // getBoundingClientRect retruns the distance in pixels of the top left corner of the element
     // to the top left corner of the viewport
-    const domRect = (this.canvasRef.nativeElement as HTMLElement).getBoundingClientRect();
+    const domRect = (
+      this.canvasRef.nativeElement as HTMLElement
+    ).getBoundingClientRect();
     // get the offset distance between the canvas, which contains the particles, to the outer container element
-    const canvasEl: HTMLElement = (this.canvasRef.nativeElement.children[0] as HTMLElement);
+    const canvasEl: HTMLElement = this.canvasRef.nativeElement
+      .children[0] as HTMLElement;
     // Calculate the relative mouse position
-    this.mouse.x = (event.touches[0].clientX - domRect.left - canvasEl.offsetLeft) / canvasEl.clientWidth * 2 - 1;
-    this.mouse.y = - (event.touches[0].clientY - domRect.top - canvasEl.offsetTop) / canvasEl.clientHeight * 2 + 1;
+    this.mouse.x =
+      ((event.touches[0].clientX - domRect.left - canvasEl.offsetLeft) /
+        canvasEl.clientWidth) *
+        2 -
+      1;
+    this.mouse.y =
+      (-(event.touches[0].clientY - domRect.top - canvasEl.offsetTop) /
+        canvasEl.clientHeight) *
+        2 +
+      1;
     this.raycaster.setFromCamera(this.mouse, this.camera);
 
     const intersects = this.raycaster.intersectObject(this.hitArea);
-    if (intersects !== undefined && intersects.length > 0 && this.touch && intersects[0].uv !== undefined) {
+    if (
+      intersects !== undefined &&
+      intersects.length > 0 &&
+      this.touch &&
+      intersects[0].uv !== undefined
+    ) {
       this.touch.addTouch(intersects[0].uv.x, intersects[0].uv.y);
     }
   }
 
   @HostListener('window:resize') resize(): void {
     if (this.height !== undefined) {
-      this.camera.aspect = this.canvasRef.nativeElement.clientWidth / this.canvasRef.nativeElement.clientHeight;
+      this.camera.aspect =
+        this.canvasRef.nativeElement.clientWidth /
+        this.canvasRef.nativeElement.clientHeight;
       this.camera.updateProjectionMatrix();
-      const fovHeight = 2 * Math.tan(this.camera.fov * Math.PI / 180 / 2) * this.camera.position.z;
+      const fovHeight =
+        2 *
+        Math.tan((this.camera.fov * Math.PI) / 180 / 2) *
+        this.camera.position.z;
       const scale = fovHeight / this.height;
       this.mesh.scale.set(scale, scale, 1);
       // this.hitArea.scale.set(scale, scale, 1);
       if (this.renderer !== undefined) {
-        const width = this.imageWidth == null ? this.canvasRef.nativeElement.clientWidth :
-          this.distanceAsNumber(this.imageWidth, this.canvasRef.nativeElement.clientWidth);
-        const height = this.imageHeight == null ? this.canvasRef.nativeElement.clientHeight :
-          this.distanceAsNumber(this.imageHeight, this.canvasRef.nativeElement.clientHeight);
+        const width =
+          this.imageWidth == null
+            ? this.canvasRef.nativeElement.clientWidth
+            : this.distanceAsNumber(
+                this.imageWidth,
+                this.canvasRef.nativeElement.clientWidth
+              );
+        const height =
+          this.imageHeight == null
+            ? this.canvasRef.nativeElement.clientHeight
+            : this.distanceAsNumber(
+                this.imageHeight,
+                this.canvasRef.nativeElement.clientHeight
+              );
         this.renderer.setSize(width, height);
       }
     }
@@ -466,7 +640,8 @@ export class ImageAsParticlesComponent implements AfterViewInit, OnDestroy {
     if (distance.includes('px')) {
       returnVal = Number.parseInt(distance.replace('px', ''), 10);
     } else if (distance.includes('%')) {
-      returnVal = Number.parseInt(distance.replace('%', ''), 10) / 100 * parentDistance;
+      returnVal =
+        (Number.parseInt(distance.replace('%', ''), 10) / 100) * parentDistance;
     } else {
       returnVal = Number.parseInt(distance, 10);
     }
